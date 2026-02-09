@@ -47,6 +47,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 	root.AddCommand(
 		newIssueCmd(opts),
 		newCompletionCmd(),
+		newListCmd(opts),
 	)
 	return root
 }

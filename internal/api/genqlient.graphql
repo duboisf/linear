@@ -117,3 +117,76 @@ query ActiveIssuesForCompletion($first: Int!) {
     }
   }
 }
+
+query ListUserIssues($first: Int!, $after: String, $assigneeName: String!) {
+  issues(
+    first: $first
+    after: $after
+    filter: {
+      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
+      state: { type: { nin: ["completed", "canceled"] } }
+    }
+  ) {
+    nodes {
+      id
+      identifier
+      title
+      state {
+        name
+        type
+      }
+      priority
+      updatedAt
+      labels {
+        nodes {
+          name
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query ListAllUserIssues($first: Int!, $after: String, $assigneeName: String!) {
+  issues(
+    first: $first
+    after: $after
+    filter: {
+      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
+    }
+  ) {
+    nodes {
+      id
+      identifier
+      title
+      state {
+        name
+        type
+      }
+      priority
+      updatedAt
+      labels {
+        nodes {
+          name
+        }
+      }
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query UsersForCompletion($first: Int!) {
+  users(first: $first) {
+    nodes {
+      id
+      name
+      displayName
+    }
+  }
+}
