@@ -3,7 +3,6 @@ package format
 import (
 	"fmt"
 	"strings"
-	"text/tabwriter"
 
 	"github.com/duboisf/linear/internal/api"
 )
@@ -60,18 +59,37 @@ func StateColor(stateType string) string {
 
 // FormatIssueList formats a slice of issues as an aligned table for terminal output.
 func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
+	const gap = "  "
+
+	// Compute max visible widths per column.
+	maxID := len("IDENTIFIER")
+	maxState := len("STATUS")
+	maxPri := len("PRIORITY")
+	for _, issue := range issues {
+		if len(issue.Identifier) > maxID {
+			maxID = len(issue.Identifier)
+		}
+		if issue.State != nil && len(issue.State.Name) > maxState {
+			maxState = len(issue.State.Name)
+		}
+		if l := len(PriorityLabel(issue.Priority)); l > maxPri {
+			maxPri = l
+		}
+	}
+
 	var buf strings.Builder
-	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', tabwriter.StripEscape)
 
 	// Header
-	header := fmt.Sprintf("%s\t%s\t%s\t%s",
-		ColorizeTab(color, Bold, "IDENTIFIER"),
-		ColorizeTab(color, Bold, "STATUS"),
-		ColorizeTab(color, Bold, "PRIORITY"),
-		ColorizeTab(color, Bold, "TITLE"),
-	)
-	fmt.Fprintln(w, header)
+	buf.WriteString(PadColor(color, Bold, "IDENTIFIER", maxID))
+	buf.WriteString(gap)
+	buf.WriteString(PadColor(color, Bold, "STATUS", maxState))
+	buf.WriteString(gap)
+	buf.WriteString(PadColor(color, Bold, "PRIORITY", maxPri))
+	buf.WriteString(gap)
+	buf.WriteString(Colorize(color, Bold, "TITLE"))
+	buf.WriteByte('\n')
 
+	// Rows
 	for _, issue := range issues {
 		stateName := ""
 		stateType := ""
@@ -80,19 +98,16 @@ func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIss
 			stateType = issue.State.Type
 		}
 
-		stateStr := ColorizeTab(color, StateColor(stateType), stateName)
-
-		priorityStr := ColorizeTab(color, PriorityColor(issue.Priority), PriorityLabel(issue.Priority))
-
-		fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
-			issue.Identifier,
-			stateStr,
-			priorityStr,
-			issue.Title,
-		)
+		buf.WriteString(fmt.Sprintf("%-*s", maxID, issue.Identifier))
+		buf.WriteString(gap)
+		buf.WriteString(PadColor(color, StateColor(stateType), stateName, maxState))
+		buf.WriteString(gap)
+		buf.WriteString(PadColor(color, PriorityColor(issue.Priority), PriorityLabel(issue.Priority), maxPri))
+		buf.WriteString(gap)
+		buf.WriteString(issue.Title)
+		buf.WriteByte('\n')
 	}
 
-	w.Flush()
 	return buf.String()
 }
 

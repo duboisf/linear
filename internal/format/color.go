@@ -47,16 +47,6 @@ func Colorize(enabled bool, code, text string) string {
 	return code + text + Reset
 }
 
-// ColorizeTab wraps text in ANSI escape codes bracketed by tabwriter escape
-// characters (\xff) so that tabwriter counts only the visible text width.
-// Requires the tabwriter to use tabwriter.StripEscape.
-func ColorizeTab(enabled bool, code, text string) string {
-	if !enabled || code == "" {
-		return text
-	}
-	return "\xff" + code + "\xff" + text + "\xff" + Reset + "\xff"
-}
-
 // PadColor formats text to a fixed visible width, then applies color.
 // The padding is added outside the color codes so alignment is correct.
 func PadColor(enabled bool, code, text string, width int) string {
