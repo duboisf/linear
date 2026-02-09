@@ -31,7 +31,7 @@ func newListCmd(opts Options) *cobra.Command {
 				if err != nil || resp.Users == nil {
 					return nil, cobra.ShellCompDirectiveNoFileComp
 				}
-				comps := []string{"my\tYour own issues"}
+				comps := []string{"@my\tYour own issues"}
 				for _, u := range resp.Users.Nodes {
 					firstName := strings.ToLower(strings.Fields(u.DisplayName)[0])
 					comps = append(comps, fmt.Sprintf("%s\t%s", firstName, u.DisplayName))
@@ -62,7 +62,7 @@ func newListCmd(opts Options) *cobra.Command {
 
 			var nodes []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
 
-			if user == "my" {
+			if user == "@my" {
 				if all {
 					resp, err := api.ListMyAllIssues(cmd.Context(), client, limit, nil)
 					if err != nil {

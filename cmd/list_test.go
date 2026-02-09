@@ -46,7 +46,7 @@ func TestList_MyIssues(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "issues"})
+	root.SetArgs([]string{"list", "@my", "issues"})
 
 	err := root.Execute()
 	if err != nil {
@@ -90,7 +90,7 @@ func TestList_MyIssues_AllFlag(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "issues", "--all"})
+	root.SetArgs([]string{"list", "@my", "issues", "--all"})
 
 	err := root.Execute()
 	if err != nil {
@@ -165,7 +165,7 @@ func TestList_UnsupportedResource(t *testing.T) {
 	server := newMockGraphQLServer(t, nil)
 	opts, _, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "projects"})
+	root.SetArgs([]string{"list", "@my", "projects"})
 
 	err := root.Execute()
 	if err == nil {
@@ -181,7 +181,7 @@ func TestList_ResolveClientError(t *testing.T) {
 
 	opts, _, _ := testOptionsKeyringError(t)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "issues"})
+	root.SetArgs([]string{"list", "@my", "issues"})
 
 	err := root.Execute()
 	if err == nil {
@@ -198,7 +198,7 @@ func TestList_APIError(t *testing.T) {
 	server := newErrorGraphQLServer(t)
 	opts, _, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "issues"})
+	root.SetArgs([]string{"list", "@my", "issues"})
 
 	err := root.Execute()
 	if err == nil {
@@ -218,7 +218,7 @@ func TestList_LimitZero(t *testing.T) {
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"list", "my", "issues", "--limit", "0"})
+	root.SetArgs([]string{"list", "@my", "issues", "--limit", "0"})
 
 	err := root.Execute()
 	if err == nil {
@@ -251,8 +251,8 @@ func TestList_ValidArgsFunction_Users(t *testing.T) {
 	if len(completions) != 3 {
 		t.Fatalf("expected 3 completions (my + 2 users), got %d: %v", len(completions), completions)
 	}
-	if !strings.Contains(completions[0], "my") {
-		t.Errorf("first completion should contain 'my', got %q", completions[0])
+	if !strings.Contains(completions[0], "@my") {
+		t.Errorf("first completion should contain '@my', got %q", completions[0])
 	}
 	if !strings.Contains(completions[1], "marc") {
 		t.Errorf("second completion should contain 'marc', got %q", completions[1])
@@ -274,7 +274,7 @@ func TestList_ValidArgsFunction_Resources(t *testing.T) {
 		t.Fatal("list command should have ValidArgsFunction")
 	}
 
-	completions, directive := listCmd.ValidArgsFunction(listCmd, []string{"my"}, "")
+	completions, directive := listCmd.ValidArgsFunction(listCmd, []string{"@my"}, "")
 	if directive != 4 { // cobra.ShellCompDirectiveNoFileComp
 		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 	}
