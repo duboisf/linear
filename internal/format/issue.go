@@ -61,14 +61,14 @@ func StateColor(stateType string) string {
 // FormatIssueList formats a slice of issues as an aligned table for terminal output.
 func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
 	var buf strings.Builder
-	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', 0)
+	w := tabwriter.NewWriter(&buf, 0, 0, 2, ' ', tabwriter.StripEscape)
 
 	// Header
 	header := fmt.Sprintf("%s\t%s\t%s\t%s",
-		Colorize(color, Bold, "IDENTIFIER"),
-		Colorize(color, Bold, "STATUS"),
-		Colorize(color, Bold, "PRIORITY"),
-		Colorize(color, Bold, "TITLE"),
+		ColorizeTab(color, Bold, "IDENTIFIER"),
+		ColorizeTab(color, Bold, "STATUS"),
+		ColorizeTab(color, Bold, "PRIORITY"),
+		ColorizeTab(color, Bold, "TITLE"),
 	)
 	fmt.Fprintln(w, header)
 
@@ -80,15 +80,9 @@ func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIss
 			stateType = issue.State.Type
 		}
 
-		stateStr := stateName
-		if sc := StateColor(stateType); sc != "" {
-			stateStr = Colorize(color, sc, stateName)
-		}
+		stateStr := ColorizeTab(color, StateColor(stateType), stateName)
 
-		priorityStr := PriorityLabel(issue.Priority)
-		if pc := PriorityColor(issue.Priority); pc != "" {
-			priorityStr = Colorize(color, pc, priorityStr)
-		}
+		priorityStr := ColorizeTab(color, PriorityColor(issue.Priority), PriorityLabel(issue.Priority))
 
 		fmt.Fprintf(w, "%s\t%s\t%s\t%s\n",
 			issue.Identifier,

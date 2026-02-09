@@ -124,17 +124,21 @@ func TestIssueGet_NotFound(t *testing.T) {
 	}
 }
 
-func TestIssueGet_NoArgs(t *testing.T) {
+func TestIssueGet_NoArgs_NonInteractive(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, nil)
 	opts, _, _ := testOptionsWithBuffers(t, server)
+	opts.Stdin = strings.NewReader("")
 	root := cmd.NewRootCmd(opts)
 	root.SetArgs([]string{"issue", "get"})
 
 	err := root.Execute()
 	if err == nil {
-		t.Fatal("expected error when no args provided")
+		t.Fatal("expected error when no args provided in non-interactive mode")
+	}
+	if !strings.Contains(err.Error(), "no issue identifier provided") {
+		t.Errorf("error %q should contain 'no issue identifier provided'", err.Error())
 	}
 }
 
