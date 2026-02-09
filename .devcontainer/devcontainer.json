@@ -45,7 +45,8 @@
   "remoteUser": "dev",
   "mounts": [
     "source=claude-code-bashhistory-${devcontainerId},target=/commandhistory,type=volume",
-    "source=claude-code-config-${devcontainerId},target=/home/dev/.claude,type=volume",
+    "source=${localEnv:HOME}/.claude,target=/home/dev/.claude,type=bind",
+    "source=${localEnv:HOME}/.claude.json,target=/home/dev/.claude.json,type=bind",
     "source=codex-config-${devcontainerId},target=/home/dev/.codex,type=volume",
     "source=mise-data-${devcontainerId},target=/home/dev/.local/share/mise,type=volume"
   ],
