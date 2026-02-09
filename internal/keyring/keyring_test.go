@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"testing"
@@ -238,6 +239,288 @@ func TestSecretToolProvider_StoreAPIKey(t *testing.T) {
 			t.Parallel()
 
 			provider := &keyring.SecretToolProvider{
+				CommandRunner: fakeCommandRunner("", tt.exitCode),
+			}
+
+			err := provider.StoreAPIKey("test-key")
+			if (err != nil) != tt.wantError {
+				t.Errorf("StoreAPIKey() error = %v, wantError %v", err, tt.wantError)
+			}
+		})
+	}
+}
+
+// --- memFS for FileProvider testing ---
+
+type memFS struct {
+	files    map[string][]byte
+	readErr  error
+	writeErr error
+	mkdirErr error
+
+	writtenPath string
+	writtenData []byte
+	writtenPerm os.FileMode
+}
+
+var _ keyring.FileSystem = (*memFS)(nil)
+
+func (m *memFS) ReadFile(name string) ([]byte, error) {
+	if m.readErr != nil {
+		return nil, m.readErr
+	}
+	data, ok := m.files[name]
+	if !ok {
+		return nil, os.ErrNotExist
+	}
+	return data, nil
+}
+
+func (m *memFS) WriteFile(name string, data []byte, perm os.FileMode) error {
+	if m.writeErr != nil {
+		return m.writeErr
+	}
+	m.writtenPath = name
+	m.writtenData = data
+	m.writtenPerm = perm
+	return nil
+}
+
+func (m *memFS) MkdirAll(path string, perm os.FileMode) error {
+	return m.mkdirErr
+}
+
+// --- FileProvider Tests ---
+
+func TestFileProvider_GetAPIKey(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		fs        *memFS
+		wantKey   string
+		wantError bool
+	}{
+		{
+			name:      "success",
+			fs:        &memFS{files: map[string][]byte{"/fake/config/linear/credentials": []byte("lin_api_file123\n")}},
+			wantKey:   "lin_api_file123",
+			wantError: false,
+		},
+		{
+			name:      "success with whitespace",
+			fs:        &memFS{files: map[string][]byte{"/fake/config/linear/credentials": []byte("  lin_api_trimmed  \n")}},
+			wantKey:   "lin_api_trimmed",
+			wantError: false,
+		},
+		{
+			name:      "file not found",
+			fs:        &memFS{files: map[string][]byte{}},
+			wantKey:   "",
+			wantError: true,
+		},
+		{
+			name:      "empty file",
+			fs:        &memFS{files: map[string][]byte{"/fake/config/linear/credentials": []byte("")}},
+			wantKey:   "",
+			wantError: true,
+		},
+		{
+			name:      "read error",
+			fs:        &memFS{readErr: errors.New("permission denied")},
+			wantKey:   "",
+			wantError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			provider := &keyring.FileProvider{
+				FS:        tt.fs,
+				ConfigDir: func() (string, error) { return "/fake/config", nil },
+			}
+
+			key, err := provider.GetAPIKey()
+			if (err != nil) != tt.wantError {
+				t.Errorf("GetAPIKey() error = %v, wantError %v", err, tt.wantError)
+				return
+			}
+			if key != tt.wantKey {
+				t.Errorf("GetAPIKey() = %q, want %q", key, tt.wantKey)
+			}
+		})
+	}
+}
+
+func TestFileProvider_GetAPIKey_ConfigDirError(t *testing.T) {
+	t.Parallel()
+
+	provider := &keyring.FileProvider{
+		FS:        &memFS{},
+		ConfigDir: func() (string, error) { return "", errors.New("no home dir") },
+	}
+	_, err := provider.GetAPIKey()
+	if err == nil {
+		t.Fatal("expected error when config dir fails")
+	}
+}
+
+func TestFileProvider_StoreAPIKey(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		fs        *memFS
+		wantError bool
+	}{
+		{
+			name:      "success",
+			fs:        &memFS{},
+			wantError: false,
+		},
+		{
+			name:      "mkdir failure",
+			fs:        &memFS{mkdirErr: errors.New("permission denied")},
+			wantError: true,
+		},
+		{
+			name:      "write failure",
+			fs:        &memFS{writeErr: errors.New("disk full")},
+			wantError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			provider := &keyring.FileProvider{
+				FS:        tt.fs,
+				ConfigDir: func() (string, error) { return "/fake/config", nil },
+			}
+
+			err := provider.StoreAPIKey("test-key")
+			if (err != nil) != tt.wantError {
+				t.Errorf("StoreAPIKey() error = %v, wantError %v", err, tt.wantError)
+			}
+			if !tt.wantError {
+				wantPath := filepath.Join("/fake/config", "linear", "credentials")
+				if tt.fs.writtenPath != wantPath {
+					t.Errorf("wrote to %q, want %q", tt.fs.writtenPath, wantPath)
+				}
+				if string(tt.fs.writtenData) != "test-key\n" {
+					t.Errorf("wrote data %q, want %q", tt.fs.writtenData, "test-key\n")
+				}
+				if tt.fs.writtenPerm != 0600 {
+					t.Errorf("wrote perm %o, want %o", tt.fs.writtenPerm, 0600)
+				}
+			}
+		})
+	}
+}
+
+func TestFileProvider_StoreAPIKey_ConfigDirError(t *testing.T) {
+	t.Parallel()
+
+	provider := &keyring.FileProvider{
+		FS:        &memFS{},
+		ConfigDir: func() (string, error) { return "", errors.New("no home dir") },
+	}
+	err := provider.StoreAPIKey("test-key")
+	if err == nil {
+		t.Fatal("expected error when config dir fails")
+	}
+}
+
+// --- KeychainProvider Tests ---
+
+func TestKeychainProvider_GetAPIKey(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		stdout    string
+		exitCode  int
+		wantKey   string
+		wantError bool
+	}{
+		{
+			name:      "success",
+			stdout:    "lin_api_keychain123",
+			exitCode:  0,
+			wantKey:   "lin_api_keychain123",
+			wantError: false,
+		},
+		{
+			name:      "success with whitespace",
+			stdout:    "  lin_api_trimmed  \n",
+			exitCode:  0,
+			wantKey:   "lin_api_trimmed",
+			wantError: false,
+		},
+		{
+			name:      "empty output",
+			stdout:    "",
+			exitCode:  0,
+			wantKey:   "",
+			wantError: true,
+		},
+		{
+			name:      "command failure",
+			stdout:    "",
+			exitCode:  1,
+			wantKey:   "",
+			wantError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			provider := &keyring.KeychainProvider{
+				CommandRunner: fakeCommandRunner(tt.stdout, tt.exitCode),
+			}
+
+			key, err := provider.GetAPIKey()
+			if (err != nil) != tt.wantError {
+				t.Errorf("GetAPIKey() error = %v, wantError %v", err, tt.wantError)
+				return
+			}
+			if key != tt.wantKey {
+				t.Errorf("GetAPIKey() = %q, want %q", key, tt.wantKey)
+			}
+		})
+	}
+}
+
+func TestKeychainProvider_StoreAPIKey(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		name      string
+		exitCode  int
+		wantError bool
+	}{
+		{
+			name:      "success",
+			exitCode:  0,
+			wantError: false,
+		},
+		{
+			name:      "command failure",
+			exitCode:  1,
+			wantError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			provider := &keyring.KeychainProvider{
 				CommandRunner: fakeCommandRunner("", tt.exitCode),
 			}
 
@@ -505,13 +788,15 @@ func TestResolve(t *testing.T) {
 	t.Parallel()
 
 	tests := []struct {
-		name          string
-		provider      keyring.Provider
-		prompter      keyring.Prompter
-		storeProvider keyring.Provider
-		wantKey       string
-		wantError     bool
-		wantWarning   string
+		name        string
+		provider    keyring.Provider
+		prompter    keyring.Prompter
+		nativeStore keyring.Provider
+		fileStore   keyring.Provider
+		readLine    func() (string, error)
+		wantKey     string
+		wantError   bool
+		wantOutput  string
 	}{
 		{
 			name:     "provider succeeds",
@@ -520,32 +805,53 @@ func TestResolve(t *testing.T) {
 			wantKey:  "key-from-provider",
 		},
 		{
-			name:          "provider fails prompt succeeds store succeeds",
-			provider:      &mockProvider{getErr: keyring.ErrNoAPIKey},
-			prompter:      &mockPrompter{key: "prompted-key"},
-			storeProvider: &mockProvider{storeErr: nil},
-			wantKey:       "prompted-key",
+			name:        "native store succeeds",
+			provider:    &mockProvider{getErr: keyring.ErrNoAPIKey},
+			prompter:    &mockPrompter{key: "prompted-key"},
+			nativeStore: &mockProvider{},
+			wantKey:     "prompted-key",
 		},
 		{
-			name:          "provider fails prompt succeeds store fails warning",
-			provider:      &mockProvider{getErr: keyring.ErrNoAPIKey},
-			prompter:      &mockPrompter{key: "prompted-key"},
-			storeProvider: &mockProvider{storeErr: errors.New("store failed")},
-			wantKey:       "prompted-key",
-			wantWarning:   "Warning",
+			name:        "native store fails falls back to file with confirmation",
+			provider:    &mockProvider{getErr: keyring.ErrNoAPIKey},
+			prompter:    &mockPrompter{key: "prompted-key"},
+			nativeStore: &mockProvider{storeErr: errors.New("store failed")},
+			fileStore:   &mockProvider{},
+			readLine:    func() (string, error) { return "y", nil },
+			wantKey:     "prompted-key",
+			wantOutput:  "Warning",
 		},
 		{
-			name:      "provider fails prompt fails",
+			name:        "native tool not found shows install hint",
+			provider:    &mockProvider{getErr: keyring.ErrNoAPIKey},
+			prompter:    &mockPrompter{key: "prompted-key"},
+			nativeStore: &mockProvider{storeErr: fmt.Errorf("%w: secret-tool", keyring.ErrToolNotFound)},
+			fileStore:   &mockProvider{},
+			readLine:    func() (string, error) { return "y", nil },
+			wantKey:     "prompted-key",
+			wantOutput:  "Install",
+		},
+		{
+			name:        "file fallback declined",
+			provider:    &mockProvider{getErr: keyring.ErrNoAPIKey},
+			prompter:    &mockPrompter{key: "prompted-key"},
+			nativeStore: &mockProvider{storeErr: errors.New("store failed")},
+			fileStore:   &mockProvider{},
+			readLine:    func() (string, error) { return "n", nil },
+			wantKey:     "prompted-key",
+			wantOutput:  "not saved",
+		},
+		{
+			name:      "prompt fails",
 			provider:  &mockProvider{getErr: keyring.ErrNoAPIKey},
 			prompter:  &mockPrompter{err: errors.New("prompt error")},
 			wantError: true,
 		},
 		{
-			name:          "provider fails prompt succeeds store is nil",
-			provider:      &mockProvider{getErr: keyring.ErrNoAPIKey},
-			prompter:      &mockPrompter{key: "prompted-key"},
-			storeProvider: nil,
-			wantKey:       "prompted-key",
+			name:     "both stores nil",
+			provider: &mockProvider{getErr: keyring.ErrNoAPIKey},
+			prompter: &mockPrompter{key: "prompted-key"},
+			wantKey:  "prompted-key",
 		},
 	}
 
@@ -553,9 +859,17 @@ func TestResolve(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			var stdout bytes.Buffer
+			var msgBuf bytes.Buffer
 
-			key, err := keyring.Resolve(tt.provider, tt.prompter, tt.storeProvider, nil, &stdout)
+			key, err := keyring.Resolve(keyring.ResolveOptions{
+				Provider:    tt.provider,
+				Prompter:    tt.prompter,
+				NativeStore: tt.nativeStore,
+				FileStore:   tt.fileStore,
+				Stdin:       strings.NewReader(""),
+				MsgWriter:   &msgBuf,
+				ReadLine:    tt.readLine,
+			})
 			if (err != nil) != tt.wantError {
 				t.Errorf("Resolve() error = %v, wantError %v", err, tt.wantError)
 				return
@@ -563,8 +877,8 @@ func TestResolve(t *testing.T) {
 			if key != tt.wantKey {
 				t.Errorf("Resolve() = %q, want %q", key, tt.wantKey)
 			}
-			if tt.wantWarning != "" && !strings.Contains(stdout.String(), tt.wantWarning) {
-				t.Errorf("stdout %q does not contain warning %q", stdout.String(), tt.wantWarning)
+			if tt.wantOutput != "" && !strings.Contains(msgBuf.String(), tt.wantOutput) {
+				t.Errorf("output %q does not contain %q", msgBuf.String(), tt.wantOutput)
 			}
 		})
 	}

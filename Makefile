@@ -27,5 +27,6 @@ test:
 
 .PHONY: cover
 cover:
-	go test -race -coverprofile=coverage.out ./...
+	go test -race -coverprofile=coverage.raw.out ./...
+	grep -v '/generated\.go:' coverage.raw.out > coverage.out
 	go tool cover -func=coverage.out

@@ -121,7 +121,7 @@ func testOptions(t *testing.T, server *httptest.Server) cmd.Options {
 		},
 		KeyringProvider: &staticProvider{key: "test-api-key"},
 		Prompter:        &noopPrompter{},
-		StoreProvider:   &staticProvider{key: "test-api-key"},
+		NativeStore:     &staticProvider{key: "test-api-key"},
 		Stdout:          &stdout,
 		Stderr:          &stderr,
 	}
@@ -139,7 +139,7 @@ func testOptionsWithBuffers(t *testing.T, server *httptest.Server) (cmd.Options,
 		},
 		KeyringProvider: &staticProvider{key: "test-api-key"},
 		Prompter:        &noopPrompter{},
-		StoreProvider:   &staticProvider{key: "test-api-key"},
+		NativeStore:     &staticProvider{key: "test-api-key"},
 		Stdout:          stdout,
 		Stderr:          stderr,
 	}
@@ -159,7 +159,7 @@ func testOptionsKeyringError(t *testing.T) (cmd.Options, *bytes.Buffer, *bytes.B
 		},
 		KeyringProvider: &errorProvider{err: keyErr},
 		Prompter:        &errorPrompter{err: keyErr},
-		StoreProvider:   &errorProvider{err: keyErr},
+		NativeStore:     &errorProvider{err: keyErr},
 		Stdout:          stdout,
 		Stderr:          stderr,
 	}

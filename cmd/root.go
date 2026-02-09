@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"runtime"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/spf13/cobra"
@@ -21,8 +22,10 @@ type Options struct {
 	KeyringProvider keyring.Provider
 	// Prompter handles interactive API key prompts.
 	Prompter keyring.Prompter
-	// StoreProvider stores API keys after prompting.
-	StoreProvider keyring.Provider
+	// NativeStore is the platform-specific credential store.
+	NativeStore keyring.Provider
+	// FileStore is the file-based fallback credential store.
+	FileStore keyring.Provider
 	// Stdin for interactive input.
 	Stdin io.Reader
 	// Stdout for command output.
@@ -54,7 +57,19 @@ func Execute() error {
 	return NewRootCmd(opts).ExecuteContext(context.Background())
 }
 
+// nativeKeyringProvider returns the platform-specific keyring provider.
+func nativeKeyringProvider() keyring.Provider {
+	switch runtime.GOOS {
+	case "darwin":
+		return &keyring.KeychainProvider{}
+	default:
+		return &keyring.SecretToolProvider{}
+	}
+}
+
 func defaultOptions() Options {
+	native := nativeKeyringProvider()
+	file := &keyring.FileProvider{}
 	return Options{
 		NewAPIClient: func(apiKey string) graphql.Client {
 			return api.NewClient(apiKey, "")
@@ -62,20 +77,29 @@ func defaultOptions() Options {
 		KeyringProvider: &keyring.ChainProvider{
 			Providers: []keyring.Provider{
 				&keyring.EnvProvider{},
-				&keyring.SecretToolProvider{},
+				native,
+				file,
 			},
 		},
-		Prompter:      &keyring.InteractivePrompter{},
-		StoreProvider: &keyring.SecretToolProvider{},
-		Stdin:         os.Stdin,
-		Stdout:        os.Stdout,
-		Stderr:        os.Stderr,
+		Prompter:    &keyring.InteractivePrompter{},
+		NativeStore: native,
+		FileStore:   file,
+		Stdin:       os.Stdin,
+		Stdout:      os.Stdout,
+		Stderr:      os.Stderr,
 	}
 }
 
 // resolveClient resolves an API key and returns an authenticated GraphQL client.
 func resolveClient(cmd *cobra.Command, opts Options) (graphql.Client, error) {
-	apiKey, err := keyring.Resolve(opts.KeyringProvider, opts.Prompter, opts.StoreProvider, opts.Stdin, opts.Stderr)
+	apiKey, err := keyring.Resolve(keyring.ResolveOptions{
+		Provider:    opts.KeyringProvider,
+		Prompter:    opts.Prompter,
+		NativeStore: opts.NativeStore,
+		FileStore:   opts.FileStore,
+		Stdin:       opts.Stdin,
+		MsgWriter:   opts.Stderr,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("resolving API key: %w", err)
 	}
