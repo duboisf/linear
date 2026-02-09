@@ -1,0 +1,40 @@
+schema: ../../schema.graphql
+operations:
+  - genqlient.graphql
+generated: generated.go
+package: api
+use_struct_references: true
+optional: pointer
+bindings:
+  DateTime:
+    type: string
+  DateTimeOrDuration:
+    type: string
+  Duration:
+    type: string
+  TimelessDate:
+    type: string
+  TimelessDateOrDuration:
+    type: string
+  JSON:
+    type: any
+  JSONObject:
+    type: map[string]any
+  UUID:
+    type: string
+  IssueAssignedToYouNotificationType:
+    type: string
+  IssueCommentMentionNotificationType:
+    type: string
+  IssueCommentReactionNotificationType:
+    type: string
+  IssueEmojiReactionNotificationType:
+    type: string
+  IssueMentionNotificationType:
+    type: string
+  IssueNewCommentNotificationType:
+    type: string
+  IssueStatusChangedNotificationType:
+    type: string
+  IssueUnassignedFromYouNotificationType:
+    type: string

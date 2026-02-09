@@ -1,0 +1,119 @@
+query Viewer {
+  viewer {
+    id
+    name
+    email
+  }
+}
+
+query ListMyActiveIssues($first: Int!, $after: String) {
+  viewer {
+    assignedIssues(
+      first: $first
+      after: $after
+      filter: { state: { type: { nin: ["completed", "canceled"] } } }
+    ) {
+      nodes {
+        id
+        identifier
+        title
+        state {
+          name
+          type
+        }
+        priority
+        updatedAt
+        labels {
+          nodes {
+            name
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}
+
+query ListMyAllIssues($first: Int!, $after: String) {
+  viewer {
+    assignedIssues(first: $first, after: $after) {
+      nodes {
+        id
+        identifier
+        title
+        state {
+          name
+          type
+        }
+        priority
+        updatedAt
+        labels {
+          nodes {
+            name
+          }
+        }
+      }
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+    }
+  }
+}
+
+query GetIssue($id: String!) {
+  issue(id: $id) {
+    id
+    identifier
+    title
+    description
+    url
+    priority
+    estimate
+    dueDate
+    createdAt
+    updatedAt
+    branchName
+    state {
+      name
+      type
+    }
+    assignee {
+      name
+      email
+    }
+    team {
+      name
+      key
+    }
+    project {
+      name
+    }
+    labels {
+      nodes {
+        name
+      }
+    }
+    parent {
+      identifier
+      title
+    }
+  }
+}
+
+query ActiveIssuesForCompletion($first: Int!) {
+  viewer {
+    assignedIssues(
+      first: $first
+      filter: { state: { type: { nin: ["completed", "canceled"] } } }
+    ) {
+      nodes {
+        identifier
+        title
+      }
+    }
+  }
+}
