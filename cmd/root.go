@@ -46,6 +46,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 	root.SetErr(opts.Stderr)
 	root.AddCommand(
 		newIssueCmd(opts),
+		newUserCmd(opts),
 		newCompletionCmd(),
 		newListCmd(opts),
 		newGetCmd(opts),
