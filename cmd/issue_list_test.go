@@ -234,6 +234,165 @@ func TestIssueList_LimitNegative(t *testing.T) {
 	}
 }
 
+const sortableIssuesResponse = `{
+	"data": {
+		"viewer": {
+			"assignedIssues": {
+				"nodes": [
+					{
+						"id": "id-1",
+						"identifier": "AIS-273",
+						"title": "Replace polling",
+						"state": {"name": "In Progress", "type": "started"},
+						"priority": 3,
+						"updatedAt": "2025-01-01T00:00:00Z",
+						"labels": {"nodes": []}
+					},
+					{
+						"id": "id-2",
+						"identifier": "AIS-265",
+						"title": "Add middleware",
+						"state": {"name": "In Progress", "type": "started"},
+						"priority": 2,
+						"updatedAt": "2025-01-02T00:00:00Z",
+						"labels": {"nodes": []}
+					},
+					{
+						"id": "id-3",
+						"identifier": "AIS-271",
+						"title": "Rotate keys",
+						"state": {"name": "Todo", "type": "unstarted"},
+						"priority": 4,
+						"updatedAt": "2025-01-03T00:00:00Z",
+						"labels": {"nodes": []}
+					},
+					{
+						"id": "id-4",
+						"identifier": "AIS-215",
+						"title": "Lightweight memory",
+						"state": {"name": "Todo", "type": "unstarted"},
+						"priority": 2,
+						"updatedAt": "2025-01-04T00:00:00Z",
+						"labels": {"nodes": []}
+					},
+					{
+						"id": "id-5",
+						"identifier": "AIS-147",
+						"title": "Security review",
+						"state": {"name": "Backlog", "type": "backlog"},
+						"priority": 3,
+						"updatedAt": "2025-01-05T00:00:00Z",
+						"labels": {"nodes": []}
+					}
+				],
+				"pageInfo": {"hasNextPage": false, "endCursor": null}
+			}
+		}
+	}
+}`
+
+func TestIssueList_SortByStatus(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": sortableIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--sort", "status"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --sort status returned error: %v", err)
+	}
+
+	output := stdout.String()
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	// Skip header, check order: started (high pri first), then unstarted, then backlog
+	if len(lines) < 6 {
+		t.Fatalf("expected 6 lines (header + 5 issues), got %d", len(lines))
+	}
+	// First data line should be AIS-265 (started, High)
+	if !strings.Contains(lines[1], "AIS-265") {
+		t.Errorf("line 1 should be AIS-265 (started/High), got %q", lines[1])
+	}
+	// Second should be AIS-273 (started, Normal)
+	if !strings.Contains(lines[2], "AIS-273") {
+		t.Errorf("line 2 should be AIS-273 (started/Normal), got %q", lines[2])
+	}
+	// Third should be AIS-215 (todo, High)
+	if !strings.Contains(lines[3], "AIS-215") {
+		t.Errorf("line 3 should be AIS-215 (todo/High), got %q", lines[3])
+	}
+	// Last should be AIS-147 (backlog)
+	if !strings.Contains(lines[5], "AIS-147") {
+		t.Errorf("line 5 should be AIS-147 (backlog), got %q", lines[5])
+	}
+}
+
+func TestIssueList_SortByPriority(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": sortableIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-s", "priority"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -s priority returned error: %v", err)
+	}
+
+	output := stdout.String()
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) < 6 {
+		t.Fatalf("expected 6 lines, got %d", len(lines))
+	}
+	// High priority issues first (AIS-265 and AIS-215 are both High=2)
+	firstTwo := lines[1] + lines[2]
+	if !strings.Contains(firstTwo, "AIS-265") || !strings.Contains(firstTwo, "AIS-215") {
+		t.Errorf("first two issues should be High priority (AIS-265, AIS-215), got %q and %q", lines[1], lines[2])
+	}
+	// Low priority last
+	if !strings.Contains(lines[5], "AIS-271") {
+		t.Errorf("last issue should be AIS-271 (Low), got %q", lines[5])
+	}
+}
+
+func TestIssueList_SortByTitle(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": sortableIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-s", "title"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -s title returned error: %v", err)
+	}
+
+	output := stdout.String()
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) < 6 {
+		t.Fatalf("expected 6 lines, got %d", len(lines))
+	}
+	// Alphabetical: Add middleware, Lightweight memory, Replace polling, Rotate keys, Security review
+	if !strings.Contains(lines[1], "Add middleware") {
+		t.Errorf("first issue should be 'Add middleware', got %q", lines[1])
+	}
+	if !strings.Contains(lines[5], "Security review") {
+		t.Errorf("last issue should be 'Security review', got %q", lines[5])
+	}
+}
+
 func TestIssueList_ResolveClientError(t *testing.T) {
 	t.Parallel()
 
