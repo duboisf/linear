@@ -181,6 +181,21 @@ query ListAllUserIssues($first: Int!, $after: String, $assigneeName: String!) {
   }
 }
 
+query UserIssuesForCompletion($first: Int!, $assigneeName: String!) {
+  issues(
+    first: $first
+    filter: {
+      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
+      state: { type: { nin: ["completed", "canceled"] } }
+    }
+  ) {
+    nodes {
+      identifier
+      title
+    }
+  }
+}
+
 query UsersForCompletion($first: Int!) {
   users(first: $first) {
     nodes {

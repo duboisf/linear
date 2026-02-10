@@ -36,7 +36,7 @@ func newListCmd(opts Options) *cobra.Command {
 					firstName := strings.ToLower(strings.Fields(u.DisplayName)[0])
 					comps = append(comps, fmt.Sprintf("%s\t%s", firstName, u.DisplayName))
 				}
-				return comps, cobra.ShellCompDirectiveNoFileComp
+				return comps, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 			case 1: // completing resource
 				return []string{"issues\tList issues"}, cobra.ShellCompDirectiveNoFileComp
 			default:

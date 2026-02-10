@@ -852,6 +852,46 @@ type ListUserIssuesResponse struct {
 // GetIssues returns ListUserIssuesResponse.Issues, and is useful for accessing the field via an interface.
 func (v *ListUserIssuesResponse) GetIssues() *ListUserIssuesIssuesIssueConnection { return v.Issues }
 
+// UserIssuesForCompletionIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type UserIssuesForCompletionIssuesIssueConnection struct {
+	Nodes []*UserIssuesForCompletionIssuesIssueConnectionNodesIssue `json:"nodes"`
+}
+
+// GetNodes returns UserIssuesForCompletionIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnection) GetNodes() []*UserIssuesForCompletionIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// UserIssuesForCompletionIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type UserIssuesForCompletionIssuesIssueConnectionNodesIssue struct {
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+}
+
+// GetIdentifier returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+
+// UserIssuesForCompletionResponse is returned by UserIssuesForCompletion on success.
+type UserIssuesForCompletionResponse struct {
+	// All issues.
+	Issues *UserIssuesForCompletionIssuesIssueConnection `json:"issues"`
+}
+
+// GetIssues returns UserIssuesForCompletionResponse.Issues, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionResponse) GetIssues() *UserIssuesForCompletionIssuesIssueConnection {
+	return v.Issues
+}
+
 // UsersForCompletionResponse is returned by UsersForCompletion on success.
 type UsersForCompletionResponse struct {
 	// All users for the organization.
@@ -1000,6 +1040,18 @@ func (v *__ListUserIssuesInput) GetAfter() *string { return v.After }
 // GetAssigneeName returns __ListUserIssuesInput.AssigneeName, and is useful for accessing the field via an interface.
 func (v *__ListUserIssuesInput) GetAssigneeName() string { return v.AssigneeName }
 
+// __UserIssuesForCompletionInput is used internally by genqlient
+type __UserIssuesForCompletionInput struct {
+	First        int    `json:"first"`
+	AssigneeName string `json:"assigneeName"`
+}
+
+// GetFirst returns __UserIssuesForCompletionInput.First, and is useful for accessing the field via an interface.
+func (v *__UserIssuesForCompletionInput) GetFirst() int { return v.First }
+
+// GetAssigneeName returns __UserIssuesForCompletionInput.AssigneeName, and is useful for accessing the field via an interface.
+func (v *__UserIssuesForCompletionInput) GetAssigneeName() string { return v.AssigneeName }
+
 // __UsersForCompletionInput is used internally by genqlient
 type __UsersForCompletionInput struct {
 	First int `json:"first"`
@@ -1008,7 +1060,7 @@ type __UsersForCompletionInput struct {
 // GetFirst returns __UsersForCompletionInput.First, and is useful for accessing the field via an interface.
 func (v *__UsersForCompletionInput) GetFirst() int { return v.First }
 
-// The query or mutation executed by ActiveIssuesForCompletion.
+// The query executed by ActiveIssuesForCompletion.
 const ActiveIssuesForCompletion_Operation = `
 query ActiveIssuesForCompletion ($first: Int!) {
 	viewer {
@@ -1026,7 +1078,7 @@ func ActiveIssuesForCompletion(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	first int,
-) (*ActiveIssuesForCompletionResponse, error) {
+) (data_ *ActiveIssuesForCompletionResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "ActiveIssuesForCompletion",
 		Query:  ActiveIssuesForCompletion_Operation,
@@ -1034,10 +1086,9 @@ func ActiveIssuesForCompletion(
 			First: first,
 		},
 	}
-	var err_ error
 
-	var data_ ActiveIssuesForCompletionResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ActiveIssuesForCompletionResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1045,10 +1096,10 @@ func ActiveIssuesForCompletion(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by GetIssue.
+// The query executed by GetIssue.
 const GetIssue_Operation = `
 query GetIssue ($id: String!) {
 	issue(id: $id) {
@@ -1095,7 +1146,7 @@ func GetIssue(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	id string,
-) (*GetIssueResponse, error) {
+) (data_ *GetIssueResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "GetIssue",
 		Query:  GetIssue_Operation,
@@ -1103,10 +1154,9 @@ func GetIssue(
 			Id: id,
 		},
 	}
-	var err_ error
 
-	var data_ GetIssueResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &GetIssueResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1114,10 +1164,10 @@ func GetIssue(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by ListAllUserIssues.
+// The query executed by ListAllUserIssues.
 const ListAllUserIssues_Operation = `
 query ListAllUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
 	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}}}) {
@@ -1151,7 +1201,7 @@ func ListAllUserIssues(
 	first int,
 	after *string,
 	assigneeName string,
-) (*ListAllUserIssuesResponse, error) {
+) (data_ *ListAllUserIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "ListAllUserIssues",
 		Query:  ListAllUserIssues_Operation,
@@ -1161,10 +1211,9 @@ func ListAllUserIssues(
 			AssigneeName: assigneeName,
 		},
 	}
-	var err_ error
 
-	var data_ ListAllUserIssuesResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ListAllUserIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1172,10 +1221,10 @@ func ListAllUserIssues(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by ListMyActiveIssues.
+// The query executed by ListMyActiveIssues.
 const ListMyActiveIssues_Operation = `
 query ListMyActiveIssues ($first: Int!, $after: String) {
 	viewer {
@@ -1210,7 +1259,7 @@ func ListMyActiveIssues(
 	client_ graphql.Client,
 	first int,
 	after *string,
-) (*ListMyActiveIssuesResponse, error) {
+) (data_ *ListMyActiveIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "ListMyActiveIssues",
 		Query:  ListMyActiveIssues_Operation,
@@ -1219,10 +1268,9 @@ func ListMyActiveIssues(
 			After: after,
 		},
 	}
-	var err_ error
 
-	var data_ ListMyActiveIssuesResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ListMyActiveIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1230,10 +1278,10 @@ func ListMyActiveIssues(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by ListMyAllIssues.
+// The query executed by ListMyAllIssues.
 const ListMyAllIssues_Operation = `
 query ListMyAllIssues ($first: Int!, $after: String) {
 	viewer {
@@ -1268,7 +1316,7 @@ func ListMyAllIssues(
 	client_ graphql.Client,
 	first int,
 	after *string,
-) (*ListMyAllIssuesResponse, error) {
+) (data_ *ListMyAllIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "ListMyAllIssues",
 		Query:  ListMyAllIssues_Operation,
@@ -1277,10 +1325,9 @@ func ListMyAllIssues(
 			After: after,
 		},
 	}
-	var err_ error
 
-	var data_ ListMyAllIssuesResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ListMyAllIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1288,10 +1335,10 @@ func ListMyAllIssues(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by ListUserIssues.
+// The query executed by ListUserIssues.
 const ListUserIssues_Operation = `
 query ListUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
 	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},state:{type:{nin:["completed","canceled"]}}}) {
@@ -1325,7 +1372,7 @@ func ListUserIssues(
 	first int,
 	after *string,
 	assigneeName string,
-) (*ListUserIssuesResponse, error) {
+) (data_ *ListUserIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "ListUserIssues",
 		Query:  ListUserIssues_Operation,
@@ -1335,10 +1382,9 @@ func ListUserIssues(
 			AssigneeName: assigneeName,
 		},
 	}
-	var err_ error
 
-	var data_ ListUserIssuesResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ListUserIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1346,10 +1392,49 @@ func ListUserIssues(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by UsersForCompletion.
+// The query executed by UserIssuesForCompletion.
+const UserIssuesForCompletion_Operation = `
+query UserIssuesForCompletion ($first: Int!, $assigneeName: String!) {
+	issues(first: $first, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},state:{type:{nin:["completed","canceled"]}}}) {
+		nodes {
+			identifier
+			title
+		}
+	}
+}
+`
+
+func UserIssuesForCompletion(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	assigneeName string,
+) (data_ *UserIssuesForCompletionResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "UserIssuesForCompletion",
+		Query:  UserIssuesForCompletion_Operation,
+		Variables: &__UserIssuesForCompletionInput{
+			First:        first,
+			AssigneeName: assigneeName,
+		},
+	}
+
+	data_ = &UserIssuesForCompletionResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by UsersForCompletion.
 const UsersForCompletion_Operation = `
 query UsersForCompletion ($first: Int!) {
 	users(first: $first) {
@@ -1366,7 +1451,7 @@ func UsersForCompletion(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	first int,
-) (*UsersForCompletionResponse, error) {
+) (data_ *UsersForCompletionResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "UsersForCompletion",
 		Query:  UsersForCompletion_Operation,
@@ -1374,10 +1459,9 @@ func UsersForCompletion(
 			First: first,
 		},
 	}
-	var err_ error
 
-	var data_ UsersForCompletionResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &UsersForCompletionResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1385,10 +1469,10 @@ func UsersForCompletion(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }
 
-// The query or mutation executed by Viewer.
+// The query executed by Viewer.
 const Viewer_Operation = `
 query Viewer {
 	viewer {
@@ -1402,15 +1486,14 @@ query Viewer {
 func Viewer(
 	ctx_ context.Context,
 	client_ graphql.Client,
-) (*ViewerResponse, error) {
+) (data_ *ViewerResponse, err_ error) {
 	req_ := &graphql.Request{
 		OpName: "Viewer",
 		Query:  Viewer_Operation,
 	}
-	var err_ error
 
-	var data_ ViewerResponse
-	resp_ := &graphql.Response{Data: &data_}
+	data_ = &ViewerResponse{}
+	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
 		ctx_,
@@ -1418,5 +1501,5 @@ func Viewer(
 		resp_,
 	)
 
-	return &data_, err_
+	return data_, err_
 }

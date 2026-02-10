@@ -245,8 +245,8 @@ func TestList_ValidArgsFunction_Users(t *testing.T) {
 	}
 
 	completions, directive := listCmd.ValidArgsFunction(listCmd, []string{}, "")
-	if directive != 4 { // cobra.ShellCompDirectiveNoFileComp
-		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
+	if directive != 36 { // cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp|ShellCompDirectiveKeepOrder (36)", directive)
 	}
 	if len(completions) != 3 {
 		t.Fatalf("expected 3 completions (my + 2 users), got %d: %v", len(completions), completions)
