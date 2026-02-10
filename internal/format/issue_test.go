@@ -521,26 +521,67 @@ func TestFormatIssueDetailMarkdown(t *testing.T) {
 	got := format.FormatIssueDetailMarkdown(issue)
 
 	// Should have markdown table header
-	if !strings.Contains(got, "| Field | Value |") {
+	if !strings.Contains(got, "| Field") || !strings.Contains(got, "Value") {
 		t.Error("expected markdown table header")
 	}
-	if !strings.Contains(got, "|-------|-------|") {
-		t.Error("expected markdown table separator")
+
+	lines := strings.Split(got, "\n")
+	if len(lines) < 2 {
+		t.Fatal("expected at least header and separator lines")
+	}
+	// Separator line should be all dashes between pipes
+	if !strings.Contains(lines[1], "|--") {
+		t.Errorf("expected separator line, got %q", lines[1])
 	}
 
-	// Check rows
-	checks := []string{
-		"| Identifier | ENG-42 |",
-		"| Title | Implement feature X |",
-		"| State | In Progress |",
-		"| Priority | High |",
-		"| Assignee | Jane Doe |",
-		"| Team | Engineering |",
-		"| Labels | bug |",
+	// Check that columns are aligned: all pipes at same positions
+	var pipePositions []int
+	for i, ch := range lines[0] {
+		if ch == '|' {
+			pipePositions = append(pipePositions, i)
+		}
 	}
-	for _, check := range checks {
-		if !strings.Contains(got, check) {
-			t.Errorf("expected output to contain %q", check)
+	for lineNum, line := range lines[2:] {
+		if line == "" {
+			break // description separator
+		}
+		var pos []int
+		for i, ch := range line {
+			if ch == '|' {
+				pos = append(pos, i)
+			}
+		}
+		if len(pos) != len(pipePositions) {
+			t.Errorf("line %d has %d pipes, header has %d", lineNum+2, len(pos), len(pipePositions))
+			continue
+		}
+		for j := range pos {
+			if pos[j] != pipePositions[j] {
+				t.Errorf("line %d pipe %d at col %d, want %d", lineNum+2, j, pos[j], pipePositions[j])
+			}
+		}
+	}
+
+	// Check rows contain expected values
+	checks := map[string]string{
+		"Identifier": "ENG-42",
+		"Title":      "Implement feature X",
+		"State":      "In Progress",
+		"Priority":   "High",
+		"Assignee":   "Jane Doe",
+		"Team":       "Engineering",
+		"Labels":     "bug",
+	}
+	for label, value := range checks {
+		found := false
+		for _, line := range lines {
+			if strings.Contains(line, label) && strings.Contains(line, value) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			t.Errorf("expected row with %s = %s", label, value)
 		}
 	}
 

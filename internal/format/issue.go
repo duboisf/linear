@@ -228,13 +228,30 @@ func FormatIssueDetail(issue *api.GetIssueIssue, color bool) string {
 func FormatIssueDetailMarkdown(issue *api.GetIssueIssue) string {
 	fields := extractIssueFields(issue)
 
-	var buf strings.Builder
-	buf.WriteString("| Field | Value |\n")
-	buf.WriteString("|-------|-------|\n")
-	for _, f := range fields {
-		// Escape pipes in values for valid markdown tables.
+	// Compute max widths for aligned columns.
+	maxLabel := len("Field")
+	maxValue := len("Value")
+	type escapedField struct {
+		Label string
+		Value string
+	}
+	escaped := make([]escapedField, len(fields))
+	for i, f := range fields {
 		value := strings.ReplaceAll(f.Value, "|", "\\|")
-		fmt.Fprintf(&buf, "| %s | %s |\n", f.Label, value)
+		escaped[i] = escapedField{Label: f.Label, Value: value}
+		if len(f.Label) > maxLabel {
+			maxLabel = len(f.Label)
+		}
+		if len(value) > maxValue {
+			maxValue = len(value)
+		}
+	}
+
+	var buf strings.Builder
+	fmt.Fprintf(&buf, "| %-*s | %-*s |\n", maxLabel, "Field", maxValue, "Value")
+	fmt.Fprintf(&buf, "|-%s-|-%s-|\n", strings.Repeat("-", maxLabel), strings.Repeat("-", maxValue))
+	for _, f := range escaped {
+		fmt.Fprintf(&buf, "| %-*s | %-*s |\n", maxLabel, f.Label, maxValue, f.Value)
 	}
 
 	if issue.Description != nil && *issue.Description != "" {

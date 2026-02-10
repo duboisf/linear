@@ -184,10 +184,10 @@ func TestIssueGet_OutputMarkdown(t *testing.T) {
 	}
 
 	output := stdout.String()
-	if !strings.Contains(output, "| Field | Value |") {
+	if !strings.Contains(output, "Field") || !strings.Contains(output, "Value") {
 		t.Error("markdown output missing table header")
 	}
-	if !strings.Contains(output, "| Identifier | ENG-42 |") {
+	if !strings.Contains(output, "Identifier") || !strings.Contains(output, "ENG-42") {
 		t.Error("markdown output missing Identifier row")
 	}
 }
