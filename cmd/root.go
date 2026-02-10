@@ -26,6 +26,8 @@ type Options struct {
 	NativeStore keyring.Provider
 	// FileStore is the file-based fallback credential store.
 	FileStore keyring.Provider
+	// GitWorktreeCreator abstracts git worktree operations.
+	GitWorktreeCreator GitWorktreeCreator
 	// Stdin for interactive input.
 	Stdin io.Reader
 	// Stdout for command output.
@@ -84,12 +86,13 @@ func defaultOptions() Options {
 				file,
 			},
 		},
-		Prompter:    &keyring.InteractivePrompter{},
-		NativeStore: native,
-		FileStore:   file,
-		Stdin:       os.Stdin,
-		Stdout:      os.Stdout,
-		Stderr:      os.Stderr,
+		Prompter:           &keyring.InteractivePrompter{},
+		NativeStore:        native,
+		FileStore:          file,
+		GitWorktreeCreator: &execGitWorktreeCreator{ctx: context.Background()},
+		Stdin:              os.Stdin,
+		Stdout:             os.Stdout,
+		Stderr:             os.Stderr,
 	}
 }
 
