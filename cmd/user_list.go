@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"slices"
+	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -9,10 +11,19 @@ import (
 	"github.com/duboisf/linear/internal/format"
 )
 
+// isIntegrationUser returns true if the user is a Linear integration/bot
+// (identified by email ending in linear.app).
+func isIntegrationUser(email string) bool {
+	return strings.HasSuffix(email, "linear.app")
+}
+
 // newUserListCmd creates the "user list" subcommand that lists users
 // in the organization.
 func newUserListCmd(opts Options) *cobra.Command {
-	var limit int
+	var (
+		limit       int
+		includeBots bool
+	)
 
 	cmd := &cobra.Command{
 		Use:     "list",
@@ -37,7 +48,25 @@ func newUserListCmd(opts Options) *cobra.Command {
 				return fmt.Errorf("no users data returned from API")
 			}
 
-			out := format.FormatUserList(resp.Users.Nodes, format.ColorEnabled(cmd.OutOrStdout()))
+			users := resp.Users.Nodes
+			if !includeBots {
+				filtered := make([]*api.ListUsersUsersUserConnectionNodesUser, 0, len(users))
+				for _, u := range users {
+					if !isIntegrationUser(u.Email) {
+						filtered = append(filtered, u)
+					}
+				}
+				users = filtered
+			}
+
+			slices.SortFunc(users, func(a, b *api.ListUsersUsersUserConnectionNodesUser) int {
+				return strings.Compare(
+					strings.ToLower(a.DisplayName),
+					strings.ToLower(b.DisplayName),
+				)
+			})
+
+			out := format.FormatUserList(users, format.ColorEnabled(cmd.OutOrStdout()))
 			fmt.Fprint(opts.Stdout, out)
 
 			return nil
@@ -45,6 +74,7 @@ func newUserListCmd(opts Options) *cobra.Command {
 	}
 
 	cmd.Flags().IntVarP(&limit, "limit", "n", 50, "Maximum number of users to return")
+	cmd.Flags().BoolVar(&includeBots, "include-bots", false, "Include integration/bot users")
 
 	return cmd
 }

@@ -35,6 +35,43 @@ const listUsersResponse = `{
 	}
 }`
 
+const listUsersWithBotsResponse = `{
+	"data": {
+		"users": {
+			"nodes": [
+				{
+					"id": "u1",
+					"name": "Jane Doe",
+					"displayName": "Jane Doe",
+					"email": "jane@example.com",
+					"active": true,
+					"admin": true,
+					"isMe": false
+				},
+				{
+					"id": "u2",
+					"name": "Slack",
+					"displayName": "slack",
+					"email": "4a168c20-6793-4125-aa28-c85edc3c6c53@integration.linear.app",
+					"active": true,
+					"admin": false,
+					"isMe": false
+				},
+				{
+					"id": "u3",
+					"name": "Cursor",
+					"displayName": "cursor",
+					"email": "afd5064f-8c2e-4f60-a91a-2b753321d325@oauthapp.linear.app",
+					"active": true,
+					"admin": false,
+					"isMe": false
+				}
+			],
+			"pageInfo": {"hasNextPage": false, "endCursor": null}
+		}
+	}
+}`
+
 const emptyUsersResponse = `{
 	"data": {
 		"users": {
@@ -186,6 +223,62 @@ func TestUserList_Alias(t *testing.T) {
 	output := stdout.String()
 	if !strings.Contains(output, "Jane Doe") {
 		t.Error("expected output from ls alias")
+	}
+}
+
+func TestUserList_FiltersBotsByDefault(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListUsers": listUsersWithBotsResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"user", "list"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("user list returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "Jane Doe") {
+		t.Error("expected output to contain real user Jane Doe")
+	}
+	if strings.Contains(output, "Slack") {
+		t.Error("expected output to NOT contain integration user Slack")
+	}
+	if strings.Contains(output, "Cursor") {
+		t.Error("expected output to NOT contain oauth app user Cursor")
+	}
+}
+
+func TestUserList_IncludeBots(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListUsers": listUsersWithBotsResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"user", "list", "--include-bots"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("user list --include-bots returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "Jane Doe") {
+		t.Error("expected output to contain Jane Doe")
+	}
+	if !strings.Contains(output, "Slack") {
+		t.Error("expected output to contain Slack with --include-bots")
+	}
+	if !strings.Contains(output, "Cursor") {
+		t.Error("expected output to contain Cursor with --include-bots")
 	}
 }
 
