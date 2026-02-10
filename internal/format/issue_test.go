@@ -263,241 +263,381 @@ func TestFormatIssueList(t *testing.T) {
 	}
 }
 
+// hasField checks that the output contains a line with the given label and value,
+// separated by any amount of whitespace. Used for testing aligned key-value output.
+func hasField(output, label, value string) bool {
+	for _, line := range strings.Split(output, "\n") {
+		trimmed := strings.TrimSpace(line)
+		if strings.HasPrefix(trimmed, label) && strings.Contains(line, value) {
+			return true
+		}
+	}
+	return false
+}
+
 func TestFormatIssueDetail(t *testing.T) {
 	t.Parallel()
 
 	strPtr := func(s string) *string { return &s }
 	floatPtr := func(f float64) *float64 { return &f }
 
-	tests := []struct {
-		name   string
-		issue  *api.GetIssueIssue
-		color  bool
-		checks func(t *testing.T, got string)
-	}{
-		{
-			name: "full issue with all fields",
-			issue: &api.GetIssueIssue{
-				Id:          "issue-1",
-				Identifier:  "ENG-42",
-				Title:       "Implement feature X",
-				Description: strPtr("This is a detailed description."),
-				Url:         "https://linear.app/team/ENG-42",
-				Priority:    2,
-				Estimate:    floatPtr(5),
-				DueDate:     strPtr("2025-12-31"),
-				BranchName:  "feat/implement-feature-x",
-				State: &api.GetIssueIssueStateWorkflowState{
-					Name: "In Progress",
-					Type: "started",
-				},
-				Assignee: &api.GetIssueIssueAssigneeUser{
-					Name:  "Jane Doe",
-					Email: "jane@example.com",
-				},
-				Team: &api.GetIssueIssueTeam{
-					Name: "Engineering",
-					Key:  "ENG",
-				},
-				Project: &api.GetIssueIssueProject{
-					Name: "Project Alpha",
-				},
-				Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
-					Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{
-						{Name: "bug"},
-						{Name: "frontend"},
-					},
-				},
-				Parent: &api.GetIssueIssueParentIssue{
-					Identifier: "ENG-1",
-					Title:      "Parent Epic",
-				},
-			},
-			color: false,
-			checks: func(t *testing.T, got string) {
-				t.Helper()
-				expectations := []string{
-					"Identifier: ENG-42",
-					"Title: Implement feature X",
-					"State: In Progress",
-					"Priority: High",
-					"Assignee: Jane Doe",
-					"Team: Engineering",
-					"Project: Project Alpha",
-					"Labels: bug, frontend",
-					"Due Date: 2025-12-31",
-					"Estimate: 5",
-					"Branch Name: feat/implement-feature-x",
-					"URL: https://linear.app/team/ENG-42",
-					"Parent: ENG-1 Parent Epic",
-					"This is a detailed description.",
-				}
-				for _, exp := range expectations {
-					if !strings.Contains(got, exp) {
-						t.Errorf("expected output to contain %q", exp)
-					}
-				}
+	fullIssue := &api.GetIssueIssue{
+		Id:          "issue-1",
+		Identifier:  "ENG-42",
+		Title:       "Implement feature X",
+		Description: strPtr("This is a detailed description."),
+		Url:         "https://linear.app/team/ENG-42",
+		Priority:    2,
+		Estimate:    floatPtr(5),
+		DueDate:     strPtr("2025-12-31"),
+		BranchName:  "feat/implement-feature-x",
+		State: &api.GetIssueIssueStateWorkflowState{
+			Name: "In Progress",
+			Type: "started",
+		},
+		Assignee: &api.GetIssueIssueAssigneeUser{
+			Name:  "Jane Doe",
+			Email: "jane@example.com",
+		},
+		Team: &api.GetIssueIssueTeam{
+			Name: "Engineering",
+			Key:  "ENG",
+		},
+		Project: &api.GetIssueIssueProject{
+			Name: "Project Alpha",
+		},
+		Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
+			Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				{Name: "bug"},
+				{Name: "frontend"},
 			},
 		},
-		{
-			name: "issue with nil optional fields",
-			issue: &api.GetIssueIssue{
-				Id:          "issue-2",
-				Identifier:  "ENG-100",
-				Title:       "Minimal issue",
-				Description: nil,
-				Url:         "https://linear.app/team/ENG-100",
-				Priority:    0,
-				Estimate:    nil,
-				DueDate:     nil,
-				BranchName:  "fix/minimal",
-				State:       nil,
-				Assignee:    nil,
-				Team:        nil,
-				Project:     nil,
-				Labels:      nil,
-				Parent:      nil,
-			},
-			color: false,
-			checks: func(t *testing.T, got string) {
-				t.Helper()
-				if !strings.Contains(got, "Identifier: ENG-100") {
-					t.Error("expected Identifier")
-				}
-				if !strings.Contains(got, "Title: Minimal issue") {
-					t.Error("expected Title")
-				}
-				if !strings.Contains(got, "State: ") {
-					t.Error("expected empty State field")
-				}
-				if !strings.Contains(got, "Priority: None") {
-					t.Error("expected Priority: None for 0")
-				}
-				if !strings.Contains(got, "Assignee: Unassigned") {
-					t.Error("expected Assignee: Unassigned")
-				}
-				if !strings.Contains(got, "Team: ") {
-					t.Error("expected empty Team field")
-				}
-				if !strings.Contains(got, "Project: ") {
-					t.Error("expected empty Project field")
-				}
-				if !strings.Contains(got, "Labels: ") {
-					t.Error("expected empty Labels field")
-				}
-				if !strings.Contains(got, "Due Date: ") {
-					t.Error("expected empty Due Date field")
-				}
-				if !strings.Contains(got, "Estimate: ") {
-					t.Error("expected empty Estimate field")
-				}
-				// Should NOT contain Parent line when parent is nil
-				if strings.Contains(got, "Parent:") {
-					t.Error("expected no Parent field when parent is nil")
-				}
-				// Should NOT contain description block when description is nil
-				// Count blank lines - description adds a blank line before it
-				// The output should not have description content
-			},
+		Parent: &api.GetIssueIssueParentIssue{
+			Identifier: "ENG-1",
+			Title:      "Parent Epic",
 		},
-		{
-			name: "issue with empty description",
-			issue: &api.GetIssueIssue{
-				Id:          "issue-3",
-				Identifier:  "ENG-200",
-				Title:       "Empty desc",
-				Description: strPtr(""),
-				Url:         "https://linear.app/team/ENG-200",
-				Priority:    3,
-				BranchName:  "fix/empty",
-				Team:        &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+	}
+
+	t.Run("full issue fields present", func(t *testing.T) {
+		t.Parallel()
+		got := format.FormatIssueDetail(fullIssue, false)
+		fields := map[string]string{
+			"Identifier":  "ENG-42",
+			"Title":       "Implement feature X",
+			"State":       "In Progress",
+			"Priority":    "High",
+			"Assignee":    "Jane Doe",
+			"Team":        "Engineering",
+			"Project":     "Project Alpha",
+			"Labels":      "bug, frontend",
+			"Due Date":    "2025-12-31",
+			"Estimate":    "5",
+			"Branch Name": "feat/implement-feature-x",
+			"URL":         "https://linear.app/team/ENG-42",
+			"Parent":      "ENG-1 Parent Epic",
+		}
+		for label, value := range fields {
+			if !hasField(got, label, value) {
+				t.Errorf("missing field %s: %s", label, value)
+			}
+		}
+		if !strings.Contains(got, "This is a detailed description.") {
+			t.Error("expected description in output")
+		}
+	})
+
+	t.Run("values are column-aligned", func(t *testing.T) {
+		t.Parallel()
+		got := format.FormatIssueDetail(fullIssue, false)
+		lines := strings.Split(strings.TrimSpace(got), "\n")
+		// Find where values start on each metadata line (before blank line for description).
+		// The format is "Label  Value" with the label padded to a fixed width.
+		var valuePositions []int
+		for _, line := range lines {
+			if line == "" {
+				break // description separator
+			}
+			// Find first run of 2+ spaces (gap between label and value)
+			gapIdx := strings.Index(line, "  ")
+			if gapIdx < 0 {
+				continue
+			}
+			// Skip all spaces to find value start
+			valStart := gapIdx
+			for valStart < len(line) && line[valStart] == ' ' {
+				valStart++
+			}
+			valuePositions = append(valuePositions, valStart)
+		}
+		if len(valuePositions) < 2 {
+			t.Fatal("expected multiple fields to check alignment")
+		}
+		for i := 1; i < len(valuePositions); i++ {
+			if valuePositions[i] != valuePositions[0] {
+				t.Errorf("value column not aligned: position %d vs %d on line %d", valuePositions[i], valuePositions[0], i)
+			}
+		}
+	})
+
+	t.Run("nil optional fields", func(t *testing.T) {
+		t.Parallel()
+		issue := &api.GetIssueIssue{
+			Id:         "issue-2",
+			Identifier: "ENG-100",
+			Title:      "Minimal issue",
+			Url:        "https://linear.app/team/ENG-100",
+			Priority:   0,
+			BranchName: "fix/minimal",
+		}
+		got := format.FormatIssueDetail(issue, false)
+		if !hasField(got, "Identifier", "ENG-100") {
+			t.Error("expected Identifier")
+		}
+		if !hasField(got, "Priority", "None") {
+			t.Error("expected Priority: None for 0")
+		}
+		if !hasField(got, "Assignee", "Unassigned") {
+			t.Error("expected Assignee: Unassigned")
+		}
+		if strings.Contains(got, "Parent") {
+			t.Error("expected no Parent field when parent is nil")
+		}
+	})
+
+	t.Run("empty description omitted", func(t *testing.T) {
+		t.Parallel()
+		issue := &api.GetIssueIssue{
+			Id:          "issue-3",
+			Identifier:  "ENG-200",
+			Title:       "Empty desc",
+			Description: strPtr(""),
+			Url:         "https://linear.app/team/ENG-200",
+			Priority:    3,
+			BranchName:  "fix/empty",
+			Team:        &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+		}
+		got := format.FormatIssueDetail(issue, false)
+		if !hasField(got, "Priority", "Normal") {
+			t.Error("expected Priority: Normal for 3")
+		}
+		// Last non-empty line should be URL
+		lines := strings.Split(got, "\n")
+		lastNonEmpty := ""
+		for i := len(lines) - 1; i >= 0; i-- {
+			if strings.TrimSpace(lines[i]) != "" {
+				lastNonEmpty = lines[i]
+				break
+			}
+		}
+		if !strings.HasPrefix(strings.TrimSpace(lastNonEmpty), "URL") {
+			t.Errorf("expected last content line to be URL, got %q", lastNonEmpty)
+		}
+	})
+
+	t.Run("color enabled", func(t *testing.T) {
+		t.Parallel()
+		issue := &api.GetIssueIssue{
+			Id:         "issue-4",
+			Identifier: "ENG-300",
+			Title:      "Urgent issue",
+			Url:        "https://linear.app/ENG-300",
+			Priority:   1,
+			BranchName: "fix/urgent",
+			State: &api.GetIssueIssueStateWorkflowState{
+				Name: "Done",
+				Type: "completed",
 			},
-			color: false,
-			checks: func(t *testing.T, got string) {
-				t.Helper()
-				if !strings.Contains(got, "Priority: Normal") {
-					t.Error("expected Priority: Normal for 3")
-				}
-				// Empty description should not add extra blank line
-				lines := strings.Split(got, "\n")
-				lastNonEmpty := ""
-				for i := len(lines) - 1; i >= 0; i-- {
-					if strings.TrimSpace(lines[i]) != "" {
-						lastNonEmpty = lines[i]
-						break
-					}
-				}
-				// Last non-empty line should be URL since description is empty
-				if !strings.Contains(lastNonEmpty, "URL:") {
-					t.Errorf("expected last content line to be URL, got %q", lastNonEmpty)
-				}
+			Team: &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+		}
+		got := format.FormatIssueDetail(issue, true)
+		if !strings.Contains(got, format.Red) {
+			t.Error("expected red ANSI code for urgent priority")
+		}
+		if !strings.Contains(got, format.Green) {
+			t.Error("expected green ANSI code for completed state")
+		}
+		if !strings.Contains(got, format.Bold) {
+			t.Error("expected bold ANSI codes in field labels")
+		}
+	})
+
+	t.Run("empty labels", func(t *testing.T) {
+		t.Parallel()
+		issue := &api.GetIssueIssue{
+			Id:         "issue-5",
+			Identifier: "ENG-400",
+			Title:      "Empty labels",
+			Url:        "https://linear.app/ENG-400",
+			Priority:   4,
+			BranchName: "fix/labels",
+			Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
+				Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{},
 			},
+			Team: &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+		}
+		got := format.FormatIssueDetail(issue, false)
+		if !hasField(got, "Priority", "Low") {
+			t.Error("expected Priority: Low for 4")
+		}
+		if !strings.Contains(got, "Labels") {
+			t.Error("expected Labels field")
+		}
+	})
+}
+
+func TestFormatIssueDetailMarkdown(t *testing.T) {
+	t.Parallel()
+
+	strPtr := func(s string) *string { return &s }
+	floatPtr := func(f float64) *float64 { return &f }
+
+	issue := &api.GetIssueIssue{
+		Id:          "issue-1",
+		Identifier:  "ENG-42",
+		Title:       "Implement feature X",
+		Description: strPtr("Some **markdown** description."),
+		Url:         "https://linear.app/team/ENG-42",
+		Priority:    2,
+		Estimate:    floatPtr(5),
+		DueDate:     strPtr("2025-12-31"),
+		BranchName:  "feat/implement-feature-x",
+		State: &api.GetIssueIssueStateWorkflowState{
+			Name: "In Progress",
+			Type: "started",
 		},
-		{
-			name: "priority colors with color enabled",
-			issue: &api.GetIssueIssue{
-				Id:         "issue-4",
-				Identifier: "ENG-300",
-				Title:      "Urgent issue",
-				Url:        "https://linear.app/ENG-300",
-				Priority:   1,
-				BranchName: "fix/urgent",
-				State: &api.GetIssueIssueStateWorkflowState{
-					Name: "Done",
-					Type: "completed",
-				},
-				Team: &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
-			},
-			color: true,
-			checks: func(t *testing.T, got string) {
-				t.Helper()
-				// Urgent priority should use Red
-				if !strings.Contains(got, format.Red) {
-					t.Error("expected red ANSI code for urgent priority")
-				}
-				// Completed state should use Green
-				if !strings.Contains(got, format.Green) {
-					t.Error("expected green ANSI code for completed state")
-				}
-				// Bold should be in field labels
-				if !strings.Contains(got, format.Bold) {
-					t.Error("expected bold ANSI codes in field labels")
-				}
-			},
+		Assignee: &api.GetIssueIssueAssigneeUser{
+			Name:  "Jane Doe",
+			Email: "jane@example.com",
 		},
-		{
-			name: "issue with labels but empty nodes",
-			issue: &api.GetIssueIssue{
-				Id:         "issue-5",
-				Identifier: "ENG-400",
-				Title:      "Empty labels",
-				Url:        "https://linear.app/ENG-400",
-				Priority:   4,
-				BranchName: "fix/labels",
-				Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
-					Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{},
-				},
-				Team: &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
-			},
-			color: false,
-			checks: func(t *testing.T, got string) {
-				t.Helper()
-				if !strings.Contains(got, "Priority: Low") {
-					t.Error("expected Priority: Low for 4")
-				}
-				// Labels field should be present but empty
-				if !strings.Contains(got, "Labels: ") {
-					t.Error("expected empty Labels field")
-				}
+		Team:    &api.GetIssueIssueTeam{Name: "Engineering", Key: "ENG"},
+		Project: &api.GetIssueIssueProject{Name: "Project Alpha"},
+		Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
+			Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				{Name: "bug"},
 			},
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-			got := format.FormatIssueDetail(tt.issue, tt.color)
-			tt.checks(t, got)
-		})
+	got := format.FormatIssueDetailMarkdown(issue)
+
+	// Should have markdown table header
+	if !strings.Contains(got, "| Field | Value |") {
+		t.Error("expected markdown table header")
+	}
+	if !strings.Contains(got, "|-------|-------|") {
+		t.Error("expected markdown table separator")
+	}
+
+	// Check rows
+	checks := []string{
+		"| Identifier | ENG-42 |",
+		"| Title | Implement feature X |",
+		"| State | In Progress |",
+		"| Priority | High |",
+		"| Assignee | Jane Doe |",
+		"| Team | Engineering |",
+		"| Labels | bug |",
+	}
+	for _, check := range checks {
+		if !strings.Contains(got, check) {
+			t.Errorf("expected output to contain %q", check)
+		}
+	}
+
+	// Description should appear after the table
+	tableEnd := strings.LastIndex(got, "|")
+	descIdx := strings.Index(got, "Some **markdown** description.")
+	if descIdx < 0 || descIdx < tableEnd {
+		t.Error("expected description after table")
+	}
+}
+
+func TestFormatIssueDetailJSON(t *testing.T) {
+	t.Parallel()
+
+	strPtr := func(s string) *string { return &s }
+
+	issue := &api.GetIssueIssue{
+		Id:          "issue-1",
+		Identifier:  "ENG-42",
+		Title:       "Test issue",
+		Description: strPtr("A description"),
+		Url:         "https://linear.app/ENG-42",
+		Priority:    2,
+		BranchName:  "feat/test",
+		State: &api.GetIssueIssueStateWorkflowState{
+			Name: "In Progress",
+			Type: "started",
+		},
+		Assignee: &api.GetIssueIssueAssigneeUser{Name: "Jane", Email: "jane@example.com"},
+		Team:     &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+		Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
+			Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				{Name: "bug"},
+				{Name: "frontend"},
+			},
+		},
+	}
+
+	got, err := format.FormatIssueDetailJSON(issue)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+
+	checks := []string{
+		`"identifier": "ENG-42"`,
+		`"title": "Test issue"`,
+		`"state": "In Progress"`,
+		`"priority": "High"`,
+		`"labels": [`,
+		`"bug"`,
+		`"frontend"`,
+		`"description": "A description"`,
+	}
+	for _, check := range checks {
+		if !strings.Contains(got, check) {
+			t.Errorf("JSON output missing %q", check)
+		}
+	}
+}
+
+func TestFormatIssueDetailYAML(t *testing.T) {
+	t.Parallel()
+
+	strPtr := func(s string) *string { return &s }
+
+	issue := &api.GetIssueIssue{
+		Id:          "issue-1",
+		Identifier:  "ENG-42",
+		Title:       "Test issue",
+		Description: strPtr("A description"),
+		Url:         "https://linear.app/ENG-42",
+		Priority:    2,
+		BranchName:  "feat/test",
+		State: &api.GetIssueIssueStateWorkflowState{
+			Name: "In Progress",
+			Type: "started",
+		},
+		Team: &api.GetIssueIssueTeam{Name: "Eng", Key: "ENG"},
+		Labels: &api.GetIssueIssueLabelsIssueLabelConnection{
+			Nodes: []*api.GetIssueIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				{Name: "bug"},
+			},
+		},
+	}
+
+	got := format.FormatIssueDetailYAML(issue)
+
+	checks := []string{
+		"identifier: ENG-42",
+		"state: In Progress",
+		"priority: High",
+		"labels:\n  - bug\n",
+		"description: |\n  A description\n",
+	}
+	for _, check := range checks {
+		if !strings.Contains(got, check) {
+			t.Errorf("YAML output missing %q\ngot:\n%s", check, got)
+		}
 	}
 }

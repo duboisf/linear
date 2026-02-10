@@ -1,11 +1,92 @@
 package format
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
 	"github.com/duboisf/linear/internal/api"
 )
+
+// issueField holds a single key-value pair for issue detail rendering.
+type issueField struct {
+	Label string
+	Value string
+	// Color holds the ANSI color code for the value (used by plaintext only).
+	Color string
+}
+
+// extractIssueFields extracts display fields from a GetIssueIssue.
+// The returned slice omits Parent when nil. Description is not included
+// since it is rendered separately after the metadata.
+func extractIssueFields(issue *api.GetIssueIssue) []issueField {
+	var fields []issueField
+
+	add := func(label, value, color string) {
+		fields = append(fields, issueField{Label: label, Value: value, Color: color})
+	}
+
+	add("Identifier", issue.Identifier, "")
+	add("Title", issue.Title, "")
+
+	stateName, stateColor := "", ""
+	if issue.State != nil {
+		stateName = issue.State.Name
+		stateColor = StateColor(issue.State.Type)
+	}
+	add("State", stateName, stateColor)
+
+	add("Priority", PriorityLabel(issue.Priority), PriorityColor(issue.Priority))
+
+	assignee := "Unassigned"
+	if issue.Assignee != nil {
+		assignee = issue.Assignee.Name
+	}
+	add("Assignee", assignee, "")
+
+	team := ""
+	if issue.Team != nil {
+		team = issue.Team.Name
+	}
+	add("Team", team, "")
+
+	project := ""
+	if issue.Project != nil {
+		project = issue.Project.Name
+	}
+	add("Project", project, "")
+
+	labelStr := ""
+	if issue.Labels != nil && len(issue.Labels.Nodes) > 0 {
+		names := make([]string, len(issue.Labels.Nodes))
+		for i, l := range issue.Labels.Nodes {
+			names[i] = l.Name
+		}
+		labelStr = strings.Join(names, ", ")
+	}
+	add("Labels", labelStr, "")
+
+	dueDate := ""
+	if issue.DueDate != nil {
+		dueDate = *issue.DueDate
+	}
+	add("Due Date", dueDate, "")
+
+	estimate := ""
+	if issue.Estimate != nil {
+		estimate = fmt.Sprintf("%.0f", *issue.Estimate)
+	}
+	add("Estimate", estimate, "")
+
+	add("Branch Name", issue.BranchName, "")
+	add("URL", issue.Url, "")
+
+	if issue.Parent != nil {
+		add("Parent", fmt.Sprintf("%s %s", issue.Parent.Identifier, issue.Parent.Title), "")
+	}
+
+	return fields
+}
 
 // PriorityLabel returns a human-readable label for the given priority value.
 func PriorityLabel(p float64) string {
@@ -111,96 +192,182 @@ func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIss
 	return buf.String()
 }
 
-// FormatIssueDetail formats a single issue in a detailed key-value format.
+// FormatIssueDetail formats a single issue as aligned key-value plaintext.
 func FormatIssueDetail(issue *api.GetIssueIssue, color bool) string {
+	fields := extractIssueFields(issue)
+
+	// Find the widest label for alignment.
+	maxLabel := 0
+	for _, f := range fields {
+		if len(f.Label) > maxLabel {
+			maxLabel = len(f.Label)
+		}
+	}
+
+	var buf strings.Builder
+	for _, f := range fields {
+		label := fmt.Sprintf("%-*s", maxLabel, f.Label)
+		value := f.Value
+		if color && f.Color != "" {
+			value = Colorize(true, f.Color, value)
+		}
+		fmt.Fprintf(&buf, "%s  %s\n", Colorize(color, Bold, label), value)
+	}
+
+	if issue.Description != nil && *issue.Description != "" {
+		buf.WriteByte('\n')
+		buf.WriteString(*issue.Description)
+		buf.WriteByte('\n')
+	}
+
+	return buf.String()
+}
+
+// FormatIssueDetailMarkdown formats a single issue as a markdown table
+// with the description as the body.
+func FormatIssueDetailMarkdown(issue *api.GetIssueIssue) string {
+	fields := extractIssueFields(issue)
+
+	var buf strings.Builder
+	buf.WriteString("| Field | Value |\n")
+	buf.WriteString("|-------|-------|\n")
+	for _, f := range fields {
+		// Escape pipes in values for valid markdown tables.
+		value := strings.ReplaceAll(f.Value, "|", "\\|")
+		fmt.Fprintf(&buf, "| %s | %s |\n", f.Label, value)
+	}
+
+	if issue.Description != nil && *issue.Description != "" {
+		buf.WriteByte('\n')
+		buf.WriteString(*issue.Description)
+		buf.WriteByte('\n')
+	}
+
+	return buf.String()
+}
+
+// issueDetailJSON is the serialization struct for JSON/YAML output.
+type issueDetailJSON struct {
+	Identifier  string   `json:"identifier"`
+	Title       string   `json:"title"`
+	State       string   `json:"state"`
+	Priority    string   `json:"priority"`
+	Assignee    string   `json:"assignee"`
+	Team        string   `json:"team"`
+	Project     string   `json:"project"`
+	Labels      []string `json:"labels"`
+	DueDate     string   `json:"due_date,omitempty"`
+	Estimate    *float64 `json:"estimate,omitempty"`
+	BranchName  string   `json:"branch_name"`
+	URL         string   `json:"url"`
+	Parent      string   `json:"parent,omitempty"`
+	Description string   `json:"description,omitempty"`
+}
+
+func newIssueDetailJSON(issue *api.GetIssueIssue) issueDetailJSON {
+	d := issueDetailJSON{
+		Identifier: issue.Identifier,
+		Title:      issue.Title,
+		Priority:   PriorityLabel(issue.Priority),
+		BranchName: issue.BranchName,
+		URL:        issue.Url,
+		Estimate:   issue.Estimate,
+	}
+
+	if issue.State != nil {
+		d.State = issue.State.Name
+	}
+	if issue.Assignee != nil {
+		d.Assignee = issue.Assignee.Name
+	} else {
+		d.Assignee = "Unassigned"
+	}
+	if issue.Team != nil {
+		d.Team = issue.Team.Name
+	}
+	if issue.Project != nil {
+		d.Project = issue.Project.Name
+	}
+	if issue.Labels != nil {
+		d.Labels = make([]string, len(issue.Labels.Nodes))
+		for i, l := range issue.Labels.Nodes {
+			d.Labels[i] = l.Name
+		}
+	}
+	if issue.DueDate != nil {
+		d.DueDate = *issue.DueDate
+	}
+	if issue.Parent != nil {
+		d.Parent = fmt.Sprintf("%s %s", issue.Parent.Identifier, issue.Parent.Title)
+	}
+	if issue.Description != nil {
+		d.Description = *issue.Description
+	}
+
+	return d
+}
+
+// FormatIssueDetailJSON formats a single issue as indented JSON.
+func FormatIssueDetailJSON(issue *api.GetIssueIssue) (string, error) {
+	data := newIssueDetailJSON(issue)
+	b, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return "", fmt.Errorf("marshaling issue to JSON: %w", err)
+	}
+	return string(b) + "\n", nil
+}
+
+// FormatIssueDetailYAML formats a single issue as YAML.
+// Hand-written to avoid a gopkg.in/yaml.v3 dependency.
+func FormatIssueDetailYAML(issue *api.GetIssueIssue) string {
+	d := newIssueDetailJSON(issue)
+
 	var buf strings.Builder
 
-	field := func(label, value string) {
-		fmt.Fprintf(&buf, "%s %s\n", Colorize(color, Bold, label+":"), value)
-	}
-
-	field("Identifier", issue.Identifier)
-	field("Title", issue.Title)
-
-	// State
-	if issue.State != nil {
-		stateName := issue.State.Name
-		if sc := StateColor(issue.State.Type); sc != "" {
-			stateName = Colorize(color, sc, stateName)
+	yamlStr := func(key, value string) {
+		if strings.ContainsAny(value, ":#{}[]|>&*!%@`'\"") || value == "" {
+			fmt.Fprintf(&buf, "%s: %q\n", key, value)
+		} else {
+			fmt.Fprintf(&buf, "%s: %s\n", key, value)
 		}
-		field("State", stateName)
+	}
+
+	yamlStr("identifier", d.Identifier)
+	yamlStr("title", d.Title)
+	yamlStr("state", d.State)
+	yamlStr("priority", d.Priority)
+	yamlStr("assignee", d.Assignee)
+	yamlStr("team", d.Team)
+	yamlStr("project", d.Project)
+
+	if len(d.Labels) == 0 {
+		buf.WriteString("labels: []\n")
 	} else {
-		field("State", "")
-	}
-
-	// Priority
-	priorityStr := PriorityLabel(issue.Priority)
-	if pc := PriorityColor(issue.Priority); pc != "" {
-		priorityStr = Colorize(color, pc, priorityStr)
-	}
-	field("Priority", priorityStr)
-
-	// Assignee
-	if issue.Assignee != nil {
-		field("Assignee", issue.Assignee.Name)
-	} else {
-		field("Assignee", "Unassigned")
-	}
-
-	// Team
-	if issue.Team != nil {
-		field("Team", issue.Team.Name)
-	} else {
-		field("Team", "")
-	}
-
-	// Project
-	if issue.Project != nil {
-		field("Project", issue.Project.Name)
-	} else {
-		field("Project", "")
-	}
-
-	// Labels
-	labelStr := ""
-	if issue.Labels != nil && len(issue.Labels.Nodes) > 0 {
-		names := make([]string, len(issue.Labels.Nodes))
-		for i, l := range issue.Labels.Nodes {
-			names[i] = l.Name
+		buf.WriteString("labels:\n")
+		for _, l := range d.Labels {
+			fmt.Fprintf(&buf, "  - %s\n", l)
 		}
-		labelStr = strings.Join(names, ", ")
-	}
-	field("Labels", labelStr)
-
-	// Due date
-	dueDate := ""
-	if issue.DueDate != nil {
-		dueDate = *issue.DueDate
-	}
-	field("Due Date", dueDate)
-
-	// Estimate
-	estimate := ""
-	if issue.Estimate != nil {
-		estimate = fmt.Sprintf("%.0f", *issue.Estimate)
-	}
-	field("Estimate", estimate)
-
-	// Branch name
-	field("Branch Name", issue.BranchName)
-
-	// URL
-	field("URL", issue.Url)
-
-	// Parent
-	if issue.Parent != nil {
-		field("Parent", fmt.Sprintf("%s %s", issue.Parent.Identifier, issue.Parent.Title))
 	}
 
-	// Description at the end, separated by a blank line
-	if issue.Description != nil && *issue.Description != "" {
-		fmt.Fprintln(&buf)
-		fmt.Fprintln(&buf, *issue.Description)
+	if d.DueDate != "" {
+		yamlStr("due_date", d.DueDate)
+	}
+	if d.Estimate != nil {
+		fmt.Fprintf(&buf, "estimate: %.0f\n", *d.Estimate)
+	}
+
+	yamlStr("branch_name", d.BranchName)
+	yamlStr("url", d.URL)
+
+	if d.Parent != "" {
+		yamlStr("parent", d.Parent)
+	}
+
+	if d.Description != "" {
+		buf.WriteString("description: |\n")
+		for _, line := range strings.Split(d.Description, "\n") {
+			fmt.Fprintf(&buf, "  %s\n", line)
+		}
 	}
 
 	return buf.String()

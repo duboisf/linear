@@ -107,6 +107,91 @@ func TestIssueGet_Success(t *testing.T) {
 	}
 }
 
+func TestIssueGet_OutputJSON(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "get", "ENG-42", "--output", "json"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue get --output json returned error: %v", err)
+	}
+
+	output := stdout.String()
+	checks := []string{
+		`"identifier": "ENG-42"`,
+		`"title": "Implement feature X"`,
+		`"state": "In Progress"`,
+		`"priority": "High"`,
+		`"assignee": "Jane Doe"`,
+	}
+	for _, check := range checks {
+		if !strings.Contains(output, check) {
+			t.Errorf("JSON output does not contain %q", check)
+		}
+	}
+}
+
+func TestIssueGet_OutputYAML(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "get", "ENG-42", "-o", "yaml"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue get -o yaml returned error: %v", err)
+	}
+
+	output := stdout.String()
+	checks := []string{
+		"identifier: ENG-42",
+		"state: In Progress",
+		"priority: High",
+	}
+	for _, check := range checks {
+		if !strings.Contains(output, check) {
+			t.Errorf("YAML output does not contain %q", check)
+		}
+	}
+}
+
+func TestIssueGet_OutputMarkdown(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "get", "ENG-42", "-o", "markdown"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue get -o markdown returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "| Field | Value |") {
+		t.Error("markdown output missing table header")
+	}
+	if !strings.Contains(output, "| Identifier | ENG-42 |") {
+		t.Error("markdown output missing Identifier row")
+	}
+}
+
 func TestIssueGet_NotFound(t *testing.T) {
 	t.Parallel()
 
