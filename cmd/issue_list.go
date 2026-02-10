@@ -126,6 +126,9 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	cmd.Flags().BoolVarP(&all, "all", "a", false, "Include completed and canceled issues")
 	cmd.Flags().IntVarP(&limit, "limit", "n", 50, "Maximum number of issues to return")
 	cmd.Flags().StringVarP(&sortBy, "sort", "s", "status", "Sort by column: status, priority, identifier, title")
+	_ = cmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"status", "priority", "identifier", "title"}, cobra.ShellCompDirectiveNoFileComp
+	})
 
 	return cmd
 }

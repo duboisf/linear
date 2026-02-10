@@ -198,11 +198,14 @@ func TestGet_ValidArgsFunction_Resources(t *testing.T) {
 	if directive != 4 {
 		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 	}
-	if len(completions) != 1 {
-		t.Fatalf("expected 1 completion, got %d: %v", len(completions), completions)
+	if len(completions) != 2 {
+		t.Fatalf("expected 2 completions, got %d: %v", len(completions), completions)
 	}
 	if !strings.Contains(completions[0], "issue") {
-		t.Errorf("completion should contain 'issue', got %q", completions[0])
+		t.Errorf("first completion should contain 'issue', got %q", completions[0])
+	}
+	if !strings.Contains(completions[1], "worktree") {
+		t.Errorf("second completion should contain 'worktree', got %q", completions[1])
 	}
 }
 
