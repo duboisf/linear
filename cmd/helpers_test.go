@@ -166,6 +166,39 @@ func testOptionsKeyringError(t *testing.T) (cmd.Options, *bytes.Buffer, *bytes.B
 	return opts, stdout, stderr
 }
 
+// --- Mock GitWorktreeCreator ---
+
+type fetchCall struct {
+	remote, branch string
+}
+
+type createCall struct {
+	path, branch, startPoint string
+}
+
+type mockGitWorktreeCreator struct {
+	repoRoot    string
+	repoRootErr error
+	fetchErr    error
+	createErr   error
+	fetchCalls  []fetchCall
+	createCalls []createCall
+}
+
+func (m *mockGitWorktreeCreator) RepoRootDir() (string, error) {
+	return m.repoRoot, m.repoRootErr
+}
+
+func (m *mockGitWorktreeCreator) FetchBranch(remote, branch string) error {
+	m.fetchCalls = append(m.fetchCalls, fetchCall{remote, branch})
+	return m.fetchErr
+}
+
+func (m *mockGitWorktreeCreator) CreateWorktree(path, branch, startPoint string) error {
+	m.createCalls = append(m.createCalls, createCall{path, branch, startPoint})
+	return m.createErr
+}
+
 // executeCommand executes the given cobra command with args and captures output.
 func executeCommand(root *cobra.Command, args ...string) (stdout, stderr string, err error) {
 	outBuf := new(bytes.Buffer)

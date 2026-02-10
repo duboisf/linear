@@ -14,7 +14,7 @@ func newGetCmd(opts Options) *cobra.Command {
 
 	cmd := &cobra.Command{
 		Use:   "get <user> <resource> <identifier>",
-		Short: "Get or create a resource (issue, worktree)",
+		Short: "Get a resource (issue)",
 		Args:  cobra.ExactArgs(3),
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			switch len(args) {
@@ -23,7 +23,6 @@ func newGetCmd(opts Options) *cobra.Command {
 			case 1: // completing resource
 				return []string{
 					"issue\tGet issue details",
-					"worktree\tCreate a git worktree for an issue",
 				}, cobra.ShellCompDirectiveNoFileComp
 			case 2: // completing identifier
 				if args[0] == "@my" {
@@ -70,11 +69,8 @@ func newGetCmd(opts Options) *cobra.Command {
 				}
 				fmt.Fprint(opts.Stdout, out)
 
-			case "worktree":
-				return runWorktreeCreate(cmd.Context(), client, identifier, opts.GitWorktreeCreator, opts.Stdout)
-
-				default:
-				return fmt.Errorf("unsupported resource %q; valid resources: issue, worktree", resource)
+			default:
+				return fmt.Errorf("unsupported resource %q; valid resources: issue", resource)
 			}
 
 			return nil

@@ -8,42 +8,7 @@ import (
 	"github.com/duboisf/linear/cmd"
 )
 
-// --- Mock GitWorktreeCreator ---
-
-type fetchCall struct {
-	remote, branch string
-}
-
-type createCall struct {
-	path, branch, startPoint string
-}
-
-type mockGitWorktreeCreator struct {
-	repoRoot    string
-	repoRootErr error
-	fetchErr    error
-	createErr   error
-	fetchCalls  []fetchCall
-	createCalls []createCall
-}
-
-func (m *mockGitWorktreeCreator) RepoRootDir() (string, error) {
-	return m.repoRoot, m.repoRootErr
-}
-
-func (m *mockGitWorktreeCreator) FetchBranch(remote, branch string) error {
-	m.fetchCalls = append(m.fetchCalls, fetchCall{remote, branch})
-	return m.fetchErr
-}
-
-func (m *mockGitWorktreeCreator) CreateWorktree(path, branch, startPoint string) error {
-	m.createCalls = append(m.createCalls, createCall{path, branch, startPoint})
-	return m.createErr
-}
-
-// --- Tests ---
-
-func TestGetWorktree_MyWorktree(t *testing.T) {
+func TestCreateWorktree_MyWorktree(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -55,11 +20,11 @@ func TestGetWorktree_MyWorktree(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("get @my worktree returned error: %v", err)
+		t.Fatalf("create @my worktree returned error: %v", err)
 	}
 
 	// Verify fetch was called correctly
@@ -92,7 +57,7 @@ func TestGetWorktree_MyWorktree(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_UserWorktree(t *testing.T) {
+func TestCreateWorktree_UserWorktree(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -104,11 +69,11 @@ func TestGetWorktree_UserWorktree(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "marc", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "marc", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("get marc worktree returned error: %v", err)
+		t.Fatalf("create marc worktree returned error: %v", err)
 	}
 
 	// Verify the same git operations happen regardless of user arg
@@ -130,7 +95,7 @@ func TestGetWorktree_UserWorktree(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_IssueNotFound(t *testing.T) {
+func TestCreateWorktree_IssueNotFound(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -142,7 +107,7 @@ func TestGetWorktree_IssueNotFound(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "NONEXIST-1"})
+	root.SetArgs([]string{"create", "@my", "worktree", "NONEXIST-1"})
 
 	err := root.Execute()
 	if err == nil {
@@ -153,7 +118,7 @@ func TestGetWorktree_IssueNotFound(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_APIError(t *testing.T) {
+func TestCreateWorktree_APIError(t *testing.T) {
 	t.Parallel()
 
 	server := newErrorGraphQLServer(t)
@@ -162,7 +127,7 @@ func TestGetWorktree_APIError(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-1"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-1"})
 
 	err := root.Execute()
 	if err == nil {
@@ -173,23 +138,7 @@ func TestGetWorktree_APIError(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_ResolveClientError(t *testing.T) {
-	t.Parallel()
-
-	opts, _, _ := testOptionsKeyringError(t)
-	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-1"})
-
-	err := root.Execute()
-	if err == nil {
-		t.Fatal("expected error when resolveClient fails")
-	}
-	if !strings.Contains(err.Error(), "resolving API key") {
-		t.Errorf("error %q should contain 'resolving API key'", err.Error())
-	}
-}
-
-func TestGetWorktree_FetchError(t *testing.T) {
+func TestCreateWorktree_FetchError(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -204,7 +153,7 @@ func TestGetWorktree_FetchError(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err == nil {
@@ -215,7 +164,7 @@ func TestGetWorktree_FetchError(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_CreateWorktreeError(t *testing.T) {
+func TestCreateWorktree_CreateWorktreeError(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -230,7 +179,7 @@ func TestGetWorktree_CreateWorktreeError(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err == nil {
@@ -241,7 +190,7 @@ func TestGetWorktree_CreateWorktreeError(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_RepoRootError(t *testing.T) {
+func TestCreateWorktree_RepoRootError(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
@@ -255,7 +204,7 @@ func TestGetWorktree_RepoRootError(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err == nil {
@@ -266,7 +215,7 @@ func TestGetWorktree_RepoRootError(t *testing.T) {
 	}
 }
 
-func TestGetWorktree_EmptyBranchName(t *testing.T) {
+func TestCreateWorktree_EmptyBranchName(t *testing.T) {
 	t.Parallel()
 
 	emptyBranchResponse := `{
@@ -302,7 +251,7 @@ func TestGetWorktree_EmptyBranchName(t *testing.T) {
 	opts.GitWorktreeCreator = mock
 
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"get", "@my", "worktree", "ENG-42"})
+	root.SetArgs([]string{"create", "@my", "worktree", "ENG-42"})
 
 	err := root.Execute()
 	if err == nil {
@@ -310,34 +259,5 @@ func TestGetWorktree_EmptyBranchName(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "no branch name") {
 		t.Errorf("error %q should contain 'no branch name'", err.Error())
-	}
-}
-
-func TestGet_ValidArgsFunction_ResourcesIncludeWorktree(t *testing.T) {
-	t.Parallel()
-
-	server := newMockGraphQLServer(t, nil)
-	opts := testOptions(t, server)
-	root := cmd.NewRootCmd(opts)
-
-	getCmd, _, _ := root.Find([]string{"get"})
-	if getCmd.ValidArgsFunction == nil {
-		t.Fatal("get command should have ValidArgsFunction")
-	}
-
-	completions, directive := getCmd.ValidArgsFunction(getCmd, []string{"@my"}, "")
-	if directive != 4 { // cobra.ShellCompDirectiveNoFileComp
-		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
-	}
-
-	foundWorktree := false
-	for _, comp := range completions {
-		if strings.Contains(comp, "worktree") {
-			foundWorktree = true
-			break
-		}
-	}
-	if !foundWorktree {
-		t.Errorf("resource completions %v should contain 'worktree'", completions)
 	}
 }

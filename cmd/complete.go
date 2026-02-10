@@ -135,7 +135,7 @@ func completeMyIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCo
 		}
 	}
 
-	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp
+	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 }
 
 // completeUserIssues fetches a specific user's active issues and returns
@@ -164,5 +164,5 @@ func completeUserIssues(cmd *cobra.Command, opts Options, userName string) ([]st
 		}
 	}
 
-	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp
+	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 }

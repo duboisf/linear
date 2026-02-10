@@ -46,12 +46,33 @@ func NewRootCmd(opts Options) *cobra.Command {
 	}
 	root.SetOut(opts.Stdout)
 	root.SetErr(opts.Stderr)
+
+	root.AddGroup(
+		&cobra.Group{ID: "core", Title: "Core Commands:"},
+		&cobra.Group{ID: "setup", Title: "Setup Commands:"},
+	)
+
+	listCmd := newListCmd(opts)
+	listCmd.GroupID = "core"
+	getCmd := newGetCmd(opts)
+	getCmd.GroupID = "core"
+	createCmd := newCreateCmd(opts)
+	createCmd.GroupID = "core"
+	issueCmd := newIssueCmd(opts)
+	issueCmd.GroupID = "core"
+	userCmd := newUserCmd(opts)
+	userCmd.GroupID = "core"
+
+	completionCmd := newCompletionCmd()
+	completionCmd.GroupID = "setup"
+
 	root.AddCommand(
-		newIssueCmd(opts),
-		newUserCmd(opts),
-		newCompletionCmd(),
-		newListCmd(opts),
-		newGetCmd(opts),
+		listCmd,
+		getCmd,
+		createCmd,
+		issueCmd,
+		userCmd,
+		completionCmd,
 	)
 	return root
 }

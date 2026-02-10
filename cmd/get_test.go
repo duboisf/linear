@@ -223,14 +223,11 @@ func TestGet_ValidArgsFunction_Resources(t *testing.T) {
 	if directive != 4 {
 		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 	}
-	if len(completions) != 2 {
-		t.Fatalf("expected 2 completions, got %d: %v", len(completions), completions)
+	if len(completions) != 1 {
+		t.Fatalf("expected 1 completion, got %d: %v", len(completions), completions)
 	}
 	if !strings.Contains(completions[0], "issue") {
-		t.Errorf("first completion should contain 'issue', got %q", completions[0])
-	}
-	if !strings.Contains(completions[1], "worktree") {
-		t.Errorf("second completion should contain 'worktree', got %q", completions[1])
+		t.Errorf("completion should contain 'issue', got %q", completions[0])
 	}
 }
 
@@ -263,8 +260,8 @@ func TestGet_ValidArgsFunction_MyIssueIds(t *testing.T) {
 	}
 
 	completions, directive := getCmd.ValidArgsFunction(getCmd, []string{"@my", "issue"}, "")
-	if directive != 4 {
-		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
+	if directive != 36 { // cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp|ShellCompDirectiveKeepOrder (36)", directive)
 	}
 	// 1 ActiveHelp header + 2 issue completions
 	if len(completions) != 3 {
@@ -305,8 +302,8 @@ func TestGet_ValidArgsFunction_UserIssueIds(t *testing.T) {
 	}
 
 	completions, directive := getCmd.ValidArgsFunction(getCmd, []string{"marc", "issue"}, "")
-	if directive != 4 {
-		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
+	if directive != 36 { // cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp|ShellCompDirectiveKeepOrder (36)", directive)
 	}
 	// 1 ActiveHelp header + 2 issue completions
 	if len(completions) != 3 {

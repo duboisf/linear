@@ -344,8 +344,8 @@ func TestIssueGet_ValidArgsFunction(t *testing.T) {
 			// Call ValidArgsFunction with no args (should return completions)
 			// Expect 3 entries: 1 ActiveHelp header + 2 issue completions
 			completions, directive := c.ValidArgsFunction(c, []string{}, "")
-			if directive != 4 { // cobra.ShellCompDirectiveNoFileComp == 4
-				t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
+			if directive != 36 { // cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder == 36
+				t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp|ShellCompDirectiveKeepOrder (36)", directive)
 			}
 			if len(completions) != 3 {
 				t.Fatalf("expected 3 completions (1 header + 2 issues), got %d: %v", len(completions), completions)
