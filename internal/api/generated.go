@@ -268,6 +268,71 @@ type GetIssueResponse struct {
 // GetIssue returns GetIssueResponse.Issue, and is useful for accessing the field via an interface.
 func (v *GetIssueResponse) GetIssue() *GetIssueIssue { return v.Issue }
 
+// GetUserByDisplayNameResponse is returned by GetUserByDisplayName on success.
+type GetUserByDisplayNameResponse struct {
+	// All users for the organization.
+	Users *GetUserByDisplayNameUsersUserConnection `json:"users"`
+}
+
+// GetUsers returns GetUserByDisplayNameResponse.Users, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameResponse) GetUsers() *GetUserByDisplayNameUsersUserConnection {
+	return v.Users
+}
+
+// GetUserByDisplayNameUsersUserConnection includes the requested fields of the GraphQL type UserConnection.
+type GetUserByDisplayNameUsersUserConnection struct {
+	Nodes []*GetUserByDisplayNameUsersUserConnectionNodesUser `json:"nodes"`
+}
+
+// GetNodes returns GetUserByDisplayNameUsersUserConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnection) GetNodes() []*GetUserByDisplayNameUsersUserConnectionNodesUser {
+	return v.Nodes
+}
+
+// GetUserByDisplayNameUsersUserConnectionNodesUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that has access to the the resources of an organization.
+type GetUserByDisplayNameUsersUserConnectionNodesUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The user's full name.
+	Name string `json:"name"`
+	// The user's display (nick) name. Unique within each organization.
+	DisplayName string `json:"displayName"`
+	// The user's email address.
+	Email string `json:"email"`
+	// Whether the user account is active or disabled (suspended).
+	Active bool `json:"active"`
+	// Whether the user is an organization administrator.
+	Admin bool `json:"admin"`
+	// Whether the user is the currently authenticated user.
+	IsMe bool `json:"isMe"`
+}
+
+// GetId returns GetUserByDisplayNameUsersUserConnectionNodesUser.Id, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetId() string { return v.Id }
+
+// GetName returns GetUserByDisplayNameUsersUserConnectionNodesUser.Name, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetName() string { return v.Name }
+
+// GetDisplayName returns GetUserByDisplayNameUsersUserConnectionNodesUser.DisplayName, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetDisplayName() string {
+	return v.DisplayName
+}
+
+// GetEmail returns GetUserByDisplayNameUsersUserConnectionNodesUser.Email, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetEmail() string { return v.Email }
+
+// GetActive returns GetUserByDisplayNameUsersUserConnectionNodesUser.Active, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetActive() bool { return v.Active }
+
+// GetAdmin returns GetUserByDisplayNameUsersUserConnectionNodesUser.Admin, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetAdmin() bool { return v.Admin }
+
+// GetIsMe returns GetUserByDisplayNameUsersUserConnectionNodesUser.IsMe, and is useful for accessing the field via an interface.
+func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetIsMe() bool { return v.IsMe }
+
 // ListAllUserIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
 type ListAllUserIssuesIssuesIssueConnection struct {
 	Nodes    []*ListAllUserIssuesIssuesIssueConnectionNodesIssue `json:"nodes"`
@@ -852,6 +917,87 @@ type ListUserIssuesResponse struct {
 // GetIssues returns ListUserIssuesResponse.Issues, and is useful for accessing the field via an interface.
 func (v *ListUserIssuesResponse) GetIssues() *ListUserIssuesIssuesIssueConnection { return v.Issues }
 
+// ListUsersResponse is returned by ListUsers on success.
+type ListUsersResponse struct {
+	// All users for the organization.
+	Users *ListUsersUsersUserConnection `json:"users"`
+}
+
+// GetUsers returns ListUsersResponse.Users, and is useful for accessing the field via an interface.
+func (v *ListUsersResponse) GetUsers() *ListUsersUsersUserConnection { return v.Users }
+
+// ListUsersUsersUserConnection includes the requested fields of the GraphQL type UserConnection.
+type ListUsersUsersUserConnection struct {
+	Nodes    []*ListUsersUsersUserConnectionNodesUser `json:"nodes"`
+	PageInfo *ListUsersUsersUserConnectionPageInfo    `json:"pageInfo"`
+}
+
+// GetNodes returns ListUsersUsersUserConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnection) GetNodes() []*ListUsersUsersUserConnectionNodesUser {
+	return v.Nodes
+}
+
+// GetPageInfo returns ListUsersUsersUserConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnection) GetPageInfo() *ListUsersUsersUserConnectionPageInfo {
+	return v.PageInfo
+}
+
+// ListUsersUsersUserConnectionNodesUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that has access to the the resources of an organization.
+type ListUsersUsersUserConnectionNodesUser struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The user's full name.
+	Name string `json:"name"`
+	// The user's display (nick) name. Unique within each organization.
+	DisplayName string `json:"displayName"`
+	// The user's email address.
+	Email string `json:"email"`
+	// Whether the user account is active or disabled (suspended).
+	Active bool `json:"active"`
+	// Whether the user is an organization administrator.
+	Admin bool `json:"admin"`
+	// Whether the user is the currently authenticated user.
+	IsMe bool `json:"isMe"`
+}
+
+// GetId returns ListUsersUsersUserConnectionNodesUser.Id, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetId() string { return v.Id }
+
+// GetName returns ListUsersUsersUserConnectionNodesUser.Name, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetName() string { return v.Name }
+
+// GetDisplayName returns ListUsersUsersUserConnectionNodesUser.DisplayName, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetDisplayName() string { return v.DisplayName }
+
+// GetEmail returns ListUsersUsersUserConnectionNodesUser.Email, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetEmail() string { return v.Email }
+
+// GetActive returns ListUsersUsersUserConnectionNodesUser.Active, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetActive() bool { return v.Active }
+
+// GetAdmin returns ListUsersUsersUserConnectionNodesUser.Admin, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetAdmin() bool { return v.Admin }
+
+// GetIsMe returns ListUsersUsersUserConnectionNodesUser.IsMe, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionNodesUser) GetIsMe() bool { return v.IsMe }
+
+// ListUsersUsersUserConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListUsersUsersUserConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns ListUsersUsersUserConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionPageInfo) GetHasNextPage() bool { return v.HasNextPage }
+
+// GetEndCursor returns ListUsersUsersUserConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListUsersUsersUserConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
+
 // UserIssuesForCompletionIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
 type UserIssuesForCompletionIssuesIssueConnection struct {
 	Nodes []*UserIssuesForCompletionIssuesIssueConnectionNodesIssue `json:"nodes"`
@@ -984,6 +1130,14 @@ type __GetIssueInput struct {
 // GetId returns __GetIssueInput.Id, and is useful for accessing the field via an interface.
 func (v *__GetIssueInput) GetId() string { return v.Id }
 
+// __GetUserByDisplayNameInput is used internally by genqlient
+type __GetUserByDisplayNameInput struct {
+	DisplayName string `json:"displayName"`
+}
+
+// GetDisplayName returns __GetUserByDisplayNameInput.DisplayName, and is useful for accessing the field via an interface.
+func (v *__GetUserByDisplayNameInput) GetDisplayName() string { return v.DisplayName }
+
 // __ListAllUserIssuesInput is used internally by genqlient
 type __ListAllUserIssuesInput struct {
 	First        int     `json:"first"`
@@ -1039,6 +1193,18 @@ func (v *__ListUserIssuesInput) GetAfter() *string { return v.After }
 
 // GetAssigneeName returns __ListUserIssuesInput.AssigneeName, and is useful for accessing the field via an interface.
 func (v *__ListUserIssuesInput) GetAssigneeName() string { return v.AssigneeName }
+
+// __ListUsersInput is used internally by genqlient
+type __ListUsersInput struct {
+	First int     `json:"first"`
+	After *string `json:"after"`
+}
+
+// GetFirst returns __ListUsersInput.First, and is useful for accessing the field via an interface.
+func (v *__ListUsersInput) GetFirst() int { return v.First }
+
+// GetAfter returns __ListUsersInput.After, and is useful for accessing the field via an interface.
+func (v *__ListUsersInput) GetAfter() *string { return v.After }
 
 // __UserIssuesForCompletionInput is used internally by genqlient
 type __UserIssuesForCompletionInput struct {
@@ -1156,6 +1322,48 @@ func GetIssue(
 	}
 
 	data_ = &GetIssueResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by GetUserByDisplayName.
+const GetUserByDisplayName_Operation = `
+query GetUserByDisplayName ($displayName: String!) {
+	users(first: 1, filter: {displayName:{eqIgnoreCase:$displayName}}) {
+		nodes {
+			id
+			name
+			displayName
+			email
+			active
+			admin
+			isMe
+		}
+	}
+}
+`
+
+func GetUserByDisplayName(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	displayName string,
+) (data_ *GetUserByDisplayNameResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "GetUserByDisplayName",
+		Query:  GetUserByDisplayName_Operation,
+		Variables: &__GetUserByDisplayNameInput{
+			DisplayName: displayName,
+		},
+	}
+
+	data_ = &GetUserByDisplayNameResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
@@ -1384,6 +1592,54 @@ func ListUserIssues(
 	}
 
 	data_ = &ListUserIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by ListUsers.
+const ListUsers_Operation = `
+query ListUsers ($first: Int!, $after: String) {
+	users(first: $first, after: $after) {
+		nodes {
+			id
+			name
+			displayName
+			email
+			active
+			admin
+			isMe
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+`
+
+func ListUsers(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	after *string,
+) (data_ *ListUsersResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListUsers",
+		Query:  ListUsers_Operation,
+		Variables: &__ListUsersInput{
+			First: first,
+			After: after,
+		},
+	}
+
+	data_ = &ListUsersResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

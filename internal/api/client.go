@@ -1,6 +1,6 @@
 package api
 
-//go:generate go run github.com/Khan/genqlient genqlient.yaml
+//go:generate go tool genqlient genqlient.yaml
 
 import (
 	"net/http"

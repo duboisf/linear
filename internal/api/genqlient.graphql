@@ -205,3 +205,38 @@ query UsersForCompletion($first: Int!) {
     }
   }
 }
+
+query ListUsers($first: Int!, $after: String) {
+  users(first: $first, after: $after) {
+    nodes {
+      id
+      name
+      displayName
+      email
+      active
+      admin
+      isMe
+    }
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+  }
+}
+
+query GetUserByDisplayName($displayName: String!) {
+  users(
+    first: 1
+    filter: { displayName: { eqIgnoreCase: $displayName } }
+  ) {
+    nodes {
+      id
+      name
+      displayName
+      email
+      active
+      admin
+      isMe
+    }
+  }
+}
