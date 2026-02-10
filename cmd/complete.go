@@ -23,8 +23,17 @@ func completeUsers(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompD
 	comps := make([]string, 0, len(resp.Users.Nodes)+1)
 	comps = append(comps, "@my\tYour own issues")
 	for _, u := range resp.Users.Nodes {
-		firstName := strings.ToLower(strings.Fields(u.DisplayName)[0])
-		comps = append(comps, fmt.Sprintf("%s\t%s", firstName, u.Name))
+		comps = append(comps, userCompletionEntry(u.DisplayName, u.Name))
 	}
 	return comps, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+}
+
+// userCompletionEntry formats a user as a shell completion entry:
+// "lowercase_first_name\tFull Name".
+func userCompletionEntry(displayName, fullName string) string {
+	parts := strings.Fields(displayName)
+	if len(parts) == 0 {
+		return fmt.Sprintf("%s\t%s", strings.ToLower(displayName), fullName)
+	}
+	return fmt.Sprintf("%s\t%s", strings.ToLower(parts[0]), fullName)
 }

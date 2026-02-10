@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -57,8 +56,7 @@ func newUserGetCmd(opts Options) *cobra.Command {
 
 			var completions []string
 			for _, u := range resp.Users.Nodes {
-				firstName := strings.ToLower(strings.Fields(u.DisplayName)[0])
-				completions = append(completions, fmt.Sprintf("%s\t%s", firstName, u.Name))
+				completions = append(completions, userCompletionEntry(u.DisplayName, u.Name))
 			}
 
 			return completions, cobra.ShellCompDirectiveNoFileComp
