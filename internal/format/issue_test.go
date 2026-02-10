@@ -520,28 +520,43 @@ func TestFormatIssueDetailMarkdown(t *testing.T) {
 
 	got := format.FormatIssueDetailMarkdown(issue)
 
+	// Should start with a heading
+	if !strings.HasPrefix(got, "# ENG-42\n") {
+		t.Errorf("expected heading '# ENG-42', got first line %q", strings.SplitN(got, "\n", 2)[0])
+	}
+
 	// Should have markdown table header
 	if !strings.Contains(got, "| Field") || !strings.Contains(got, "Value") {
 		t.Error("expected markdown table header")
 	}
 
 	lines := strings.Split(got, "\n")
-	if len(lines) < 2 {
-		t.Fatal("expected at least header and separator lines")
+
+	// Find the table header line (first line starting with "|")
+	tableStart := -1
+	for i, line := range lines {
+		if strings.HasPrefix(line, "|") {
+			tableStart = i
+			break
+		}
 	}
+	if tableStart < 0 {
+		t.Fatal("no table found in output")
+	}
+
 	// Separator line should be all dashes between pipes
-	if !strings.Contains(lines[1], "|--") {
-		t.Errorf("expected separator line, got %q", lines[1])
+	if !strings.Contains(lines[tableStart+1], "|--") {
+		t.Errorf("expected separator line, got %q", lines[tableStart+1])
 	}
 
 	// Check that columns are aligned: all pipes at same positions
 	var pipePositions []int
-	for i, ch := range lines[0] {
+	for i, ch := range lines[tableStart] {
 		if ch == '|' {
 			pipePositions = append(pipePositions, i)
 		}
 	}
-	for lineNum, line := range lines[2:] {
+	for lineNum, line := range lines[tableStart+2:] {
 		if line == "" {
 			break // description separator
 		}
@@ -552,12 +567,12 @@ func TestFormatIssueDetailMarkdown(t *testing.T) {
 			}
 		}
 		if len(pos) != len(pipePositions) {
-			t.Errorf("line %d has %d pipes, header has %d", lineNum+2, len(pos), len(pipePositions))
+			t.Errorf("line %d has %d pipes, header has %d", lineNum+tableStart+2, len(pos), len(pipePositions))
 			continue
 		}
 		for j := range pos {
 			if pos[j] != pipePositions[j] {
-				t.Errorf("line %d pipe %d at col %d, want %d", lineNum+2, j, pos[j], pipePositions[j])
+				t.Errorf("line %d pipe %d at col %d, want %d", lineNum+tableStart+2, j, pos[j], pipePositions[j])
 			}
 		}
 	}

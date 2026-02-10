@@ -248,6 +248,7 @@ func FormatIssueDetailMarkdown(issue *api.GetIssueIssue) string {
 	}
 
 	var buf strings.Builder
+	fmt.Fprintf(&buf, "# %s\n\n", issue.Identifier)
 	fmt.Fprintf(&buf, "| %-*s | %-*s |\n", maxLabel, "Field", maxValue, "Value")
 	fmt.Fprintf(&buf, "|-%s-|-%s-|\n", strings.Repeat("-", maxLabel), strings.Repeat("-", maxValue))
 	for _, f := range escaped {
