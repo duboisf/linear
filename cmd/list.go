@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/spf13/cobra"
 
@@ -23,20 +22,7 @@ func newListCmd(opts Options) *cobra.Command {
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			switch len(args) {
 			case 0: // completing user
-				client, err := resolveClient(cmd, opts)
-				if err != nil {
-					return nil, cobra.ShellCompDirectiveNoFileComp
-				}
-				resp, err := api.UsersForCompletion(cmd.Context(), client, 100)
-				if err != nil || resp.Users == nil {
-					return nil, cobra.ShellCompDirectiveNoFileComp
-				}
-				comps := []string{"@my\tYour own issues"}
-				for _, u := range resp.Users.Nodes {
-					firstName := strings.ToLower(strings.Fields(u.DisplayName)[0])
-					comps = append(comps, fmt.Sprintf("%s\t%s", firstName, u.DisplayName))
-				}
-				return comps, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+				return completeUsers(cmd, opts)
 			case 1: // completing resource
 				return []string{"issues\tList issues"}, cobra.ShellCompDirectiveNoFileComp
 			default:
