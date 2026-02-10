@@ -10,6 +10,8 @@ import (
 )
 
 func newGetCmd(opts Options) *cobra.Command {
+	var outputFormat string
+
 	cmd := &cobra.Command{
 		Use:   "get <user> issue <identifier>",
 		Short: "Get details for a resource",
@@ -71,12 +73,30 @@ func newGetCmd(opts Options) *cobra.Command {
 				return fmt.Errorf("issue %s not found", identifier)
 			}
 
-			out := format.FormatIssueDetail(resp.Issue, format.ColorEnabled(cmd.OutOrStdout()))
+			var out string
+			switch outputFormat {
+			case "json":
+				out, err = format.FormatIssueDetailJSON(resp.Issue)
+				if err != nil {
+					return err
+				}
+			case "yaml":
+				out = format.FormatIssueDetailYAML(resp.Issue)
+			case "markdown", "md":
+				out = format.FormatIssueDetailMarkdown(resp.Issue)
+			default:
+				out = format.FormatIssueDetail(resp.Issue, format.ColorEnabled(cmd.OutOrStdout()))
+			}
 			fmt.Fprint(opts.Stdout, out)
 
 			return nil
 		},
 	}
+
+	cmd.Flags().StringVarP(&outputFormat, "output", "o", "plain", "Output format: plain, markdown, json, yaml")
+	cmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return validOutputFormats, cobra.ShellCompDirectiveNoFileComp
+	})
 
 	return cmd
 }

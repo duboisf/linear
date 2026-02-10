@@ -62,6 +62,31 @@ func TestGet_UserIssue(t *testing.T) {
 	}
 }
 
+func TestGet_OutputMarkdown(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"get", "@my", "issue", "ENG-42", "-o", "markdown"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("get @my issue -o markdown returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "| Field | Value |") {
+		t.Error("markdown output missing table header")
+	}
+	if !strings.Contains(output, "| Identifier | ENG-42 |") {
+		t.Error("markdown output missing Identifier row")
+	}
+}
+
 func TestGet_UnsupportedResource(t *testing.T) {
 	t.Parallel()
 
