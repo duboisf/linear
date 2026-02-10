@@ -117,22 +117,9 @@ func completeMyIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCo
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	resp, err := api.ActiveIssuesForCompletion(cmd.Context(), client, 100)
-	if err != nil || resp.Viewer == nil || resp.Viewer.AssignedIssues == nil {
+	issues, err := fetchMyIssues(cmd.Context(), client)
+	if err != nil || len(issues) == 0 {
 		return nil, cobra.ShellCompDirectiveNoFileComp
-	}
-
-	issues := make([]issueForCompletion, len(resp.Viewer.AssignedIssues.Nodes))
-	for i, n := range resp.Viewer.AssignedIssues.Nodes {
-		issues[i] = issueForCompletion{
-			Identifier: n.Identifier,
-			Title:      n.Title,
-			Priority:   n.Priority,
-		}
-		if n.State != nil {
-			issues[i].StateName = n.State.Name
-			issues[i].StateType = n.State.Type
-		}
 	}
 
 	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
@@ -146,22 +133,9 @@ func completeUserIssues(cmd *cobra.Command, opts Options, userName string) ([]st
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	resp, err := api.UserIssuesForCompletion(cmd.Context(), client, 100, userName)
-	if err != nil || resp.Issues == nil {
+	issues, err := fetchUserIssues(cmd.Context(), client, userName)
+	if err != nil || len(issues) == 0 {
 		return nil, cobra.ShellCompDirectiveNoFileComp
-	}
-
-	issues := make([]issueForCompletion, len(resp.Issues.Nodes))
-	for i, n := range resp.Issues.Nodes {
-		issues[i] = issueForCompletion{
-			Identifier: n.Identifier,
-			Title:      n.Title,
-			Priority:   n.Priority,
-		}
-		if n.State != nil {
-			issues[i].StateName = n.State.Name
-			issues[i].StateType = n.State.Type
-		}
 	}
 
 	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder

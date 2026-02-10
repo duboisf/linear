@@ -8,9 +8,9 @@ import (
 
 func newCreateCmd(opts Options) *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "create <user> <resource> <identifier>",
+		Use:   "create <user> <resource> [identifier]",
 		Short: "Create a resource (worktree)",
-		Args:  cobra.ExactArgs(3),
+		Args:  cobra.RangeArgs(2, 3),
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			switch len(args) {
 			case 0: // completing user
@@ -30,11 +30,27 @@ func newCreateCmd(opts Options) *cobra.Command {
 		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			resource := args[1]
-			identifier := args[2]
 
 			client, err := resolveClient(cmd, opts)
 			if err != nil {
 				return err
+			}
+
+			var identifier string
+			if len(args) == 3 {
+				identifier = args[2]
+			} else {
+				issues, err := fetchIssuesForUser(cmd.Context(), client, args[0])
+				if err != nil {
+					return err
+				}
+				identifier, err = fzfPickIssue(issues)
+				if err != nil {
+					return err
+				}
+				if identifier == "" {
+					return nil // user cancelled
+				}
 			}
 
 			switch resource {

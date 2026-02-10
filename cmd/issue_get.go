@@ -2,14 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/term"
 
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/format"
-	"github.com/duboisf/linear/internal/tui"
 )
 
 // validOutputFormats lists the accepted values for --output.
@@ -35,28 +32,13 @@ func newIssueGetCmd(opts Options) *cobra.Command {
 			if len(args) > 0 {
 				identifier = args[0]
 			} else {
-				// Interactive mode: select from list
-				f, ok := opts.Stdin.(*os.File)
-				if !ok || !term.IsTerminal(int(f.Fd())) {
-					return fmt.Errorf("no issue identifier provided; run interactively or pass an identifier")
-				}
-
-				resp, err := api.ListMyActiveIssues(cmd.Context(), client, 50, nil)
+				issues, err := fetchMyIssues(cmd.Context(), client)
 				if err != nil {
 					return fmt.Errorf("listing issues: %w", err)
 				}
-				if resp.Viewer == nil || resp.Viewer.AssignedIssues == nil {
-					return fmt.Errorf("no assigned issues data returned from API")
-				}
-
-				wrapped := tui.WrapIssues[
-					*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState,
-					*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue,
-				](resp.Viewer.AssignedIssues.Nodes)
-
-				identifier, err = tui.RunSelector(wrapped, opts.Stdin, opts.Stdout)
+				identifier, err = fzfPickIssue(issues)
 				if err != nil {
-					return fmt.Errorf("selecting issue: %w", err)
+					return err
 				}
 				if identifier == "" {
 					return nil // user cancelled

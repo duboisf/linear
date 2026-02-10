@@ -30,14 +30,44 @@ func TestCreate_MissingArgs(t *testing.T) {
 	server := newMockGraphQLServer(t, nil)
 	opts, _, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"create", "@my"})
+	root.SetArgs([]string{"create"})
 
 	err := root.Execute()
 	if err == nil {
-		t.Fatal("expected error when only 2 args provided")
+		t.Fatal("expected error when only 1 arg provided")
 	}
-	if !strings.Contains(err.Error(), "accepts 3 arg(s)") {
-		t.Errorf("error %q should contain 'accepts 3 arg(s)'", err.Error())
+	if !strings.Contains(err.Error(), "accepts between 2 and 3 arg(s)") {
+		t.Errorf("error %q should contain 'accepts between 2 and 3 arg(s)'", err.Error())
+	}
+}
+
+func TestCreate_NoIdentifier_LaunchesFzf(t *testing.T) {
+	t.Parallel()
+
+	completionResponse := `{
+		"data": {
+			"viewer": {
+				"assignedIssues": {
+					"nodes": [
+						{"identifier": "ENG-1", "title": "First issue", "state": {"name": "In Progress", "type": "started"}, "priority": 2}
+					]
+				}
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ActiveIssuesForCompletion": completionResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"create", "@my", "worktree"})
+
+	err := root.Execute()
+	// fzf is not available in test environment
+	if err == nil {
+		t.Fatal("expected error when fzf is not available in test")
 	}
 }
 
