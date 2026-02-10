@@ -242,8 +242,8 @@ func TestGet_ValidArgsFunction_MyIssueIds(t *testing.T) {
 			"viewer": {
 				"assignedIssues": {
 					"nodes": [
-						{"identifier": "ENG-1", "title": "First issue"},
-						{"identifier": "ENG-2", "title": "Second issue"}
+						{"identifier": "ENG-1", "title": "First issue", "state": {"name": "In Progress", "type": "started"}, "priority": 2},
+						{"identifier": "ENG-2", "title": "Second issue", "state": {"name": "Todo", "type": "unstarted"}, "priority": 3}
 					]
 				}
 			}
@@ -266,14 +266,15 @@ func TestGet_ValidArgsFunction_MyIssueIds(t *testing.T) {
 	if directive != 4 {
 		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 	}
-	if len(completions) != 2 {
-		t.Fatalf("expected 2 completions, got %d: %v", len(completions), completions)
+	// 1 ActiveHelp header + 2 issue completions
+	if len(completions) != 3 {
+		t.Fatalf("expected 3 completions (1 header + 2 issues), got %d: %v", len(completions), completions)
 	}
-	if !strings.Contains(completions[0], "ENG-1") {
-		t.Errorf("first completion should contain 'ENG-1', got %q", completions[0])
+	if !strings.Contains(completions[1], "ENG-1") || !strings.Contains(completions[1], "In Progress") {
+		t.Errorf("completion should contain 'ENG-1' and status, got %q", completions[1])
 	}
-	if !strings.Contains(completions[1], "ENG-2") {
-		t.Errorf("second completion should contain 'ENG-2', got %q", completions[1])
+	if !strings.Contains(completions[2], "ENG-2") || !strings.Contains(completions[2], "Todo") {
+		t.Errorf("completion should contain 'ENG-2' and status, got %q", completions[2])
 	}
 }
 
@@ -284,8 +285,8 @@ func TestGet_ValidArgsFunction_UserIssueIds(t *testing.T) {
 		"data": {
 			"issues": {
 				"nodes": [
-					{"identifier": "ENG-201", "title": "Marc's task"},
-					{"identifier": "ENG-202", "title": "Marc's other task"}
+					{"identifier": "ENG-201", "title": "Marc's task", "state": {"name": "In Review", "type": "started"}, "priority": 1},
+					{"identifier": "ENG-202", "title": "Marc's other task", "state": {"name": "Backlog", "type": "backlog"}, "priority": 4}
 				]
 			}
 		}
@@ -307,13 +308,14 @@ func TestGet_ValidArgsFunction_UserIssueIds(t *testing.T) {
 	if directive != 4 {
 		t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 	}
-	if len(completions) != 2 {
-		t.Fatalf("expected 2 completions, got %d: %v", len(completions), completions)
+	// 1 ActiveHelp header + 2 issue completions
+	if len(completions) != 3 {
+		t.Fatalf("expected 3 completions (1 header + 2 issues), got %d: %v", len(completions), completions)
 	}
-	if !strings.Contains(completions[0], "ENG-201") {
-		t.Errorf("first completion should contain 'ENG-201', got %q", completions[0])
+	if !strings.Contains(completions[1], "ENG-201") || !strings.Contains(completions[1], "Urgent") {
+		t.Errorf("completion should contain 'ENG-201' and priority, got %q", completions[1])
 	}
-	if !strings.Contains(completions[1], "ENG-202") {
-		t.Errorf("second completion should contain 'ENG-202', got %q", completions[1])
+	if !strings.Contains(completions[2], "ENG-202") || !strings.Contains(completions[2], "Backlog") {
+		t.Errorf("completion should contain 'ENG-202' and status, got %q", completions[2])
 	}
 }

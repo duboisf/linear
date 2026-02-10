@@ -26,30 +26,10 @@ func newGetCmd(opts Options) *cobra.Command {
 					"worktree\tCreate a git worktree for an issue",
 				}, cobra.ShellCompDirectiveNoFileComp
 			case 2: // completing identifier
-				client, err := resolveClient(cmd, opts)
-				if err != nil {
-					return nil, cobra.ShellCompDirectiveNoFileComp
-				}
 				if args[0] == "@my" {
-					resp, err := api.ActiveIssuesForCompletion(cmd.Context(), client, 100)
-					if err != nil || resp.Viewer == nil || resp.Viewer.AssignedIssues == nil {
-						return nil, cobra.ShellCompDirectiveNoFileComp
-					}
-					var comps []string
-					for _, issue := range resp.Viewer.AssignedIssues.Nodes {
-						comps = append(comps, fmt.Sprintf("%s\t%s", issue.Identifier, issue.Title))
-					}
-					return comps, cobra.ShellCompDirectiveNoFileComp
+					return completeMyIssues(cmd, opts)
 				}
-				resp, err := api.UserIssuesForCompletion(cmd.Context(), client, 100, args[0])
-				if err != nil || resp.Issues == nil {
-					return nil, cobra.ShellCompDirectiveNoFileComp
-				}
-				var comps []string
-				for _, issue := range resp.Issues.Nodes {
-					comps = append(comps, fmt.Sprintf("%s\t%s", issue.Identifier, issue.Title))
-				}
-				return comps, cobra.ShellCompDirectiveNoFileComp
+				return completeUserIssues(cmd, opts, args[0])
 			default:
 				return nil, cobra.ShellCompDirectiveNoFileComp
 			}

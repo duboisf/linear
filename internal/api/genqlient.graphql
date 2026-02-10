@@ -113,6 +113,11 @@ query ActiveIssuesForCompletion($first: Int!) {
       nodes {
         identifier
         title
+        state {
+          name
+          type
+        }
+        priority
       }
     }
   }
@@ -192,6 +197,11 @@ query UserIssuesForCompletion($first: Int!, $assigneeName: String!) {
     nodes {
       identifier
       title
+      state {
+        name
+        type
+      }
+      priority
     }
   }
 }

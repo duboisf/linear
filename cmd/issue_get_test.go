@@ -317,8 +317,8 @@ func TestIssueGet_ValidArgsFunction(t *testing.T) {
 			"viewer": {
 				"assignedIssues": {
 					"nodes": [
-						{"identifier": "ENG-1", "title": "First issue"},
-						{"identifier": "ENG-2", "title": "Second issue"}
+						{"identifier": "ENG-1", "title": "First issue", "state": {"name": "In Progress", "type": "started"}, "priority": 2},
+						{"identifier": "ENG-2", "title": "Second issue", "state": {"name": "Todo", "type": "unstarted"}, "priority": 3}
 					]
 				}
 			}
@@ -342,12 +342,26 @@ func TestIssueGet_ValidArgsFunction(t *testing.T) {
 			}
 
 			// Call ValidArgsFunction with no args (should return completions)
+			// Expect 3 entries: 1 ActiveHelp header + 2 issue completions
 			completions, directive := c.ValidArgsFunction(c, []string{}, "")
 			if directive != 4 { // cobra.ShellCompDirectiveNoFileComp == 4
 				t.Errorf("directive = %d, want ShellCompDirectiveNoFileComp (4)", directive)
 			}
-			if len(completions) != 2 {
-				t.Errorf("expected 2 completions, got %d", len(completions))
+			if len(completions) != 3 {
+				t.Fatalf("expected 3 completions (1 header + 2 issues), got %d: %v", len(completions), completions)
+			}
+
+			// First entry is ActiveHelp header with column titles
+			if !strings.Contains(completions[0], "IDENTIFIER") || !strings.Contains(completions[0], "STATUS") || !strings.Contains(completions[0], "PRIORITY") {
+				t.Errorf("first completion should be ActiveHelp header with column titles, got %q", completions[0])
+			}
+
+			// Issue completions include status and priority in description
+			if !strings.Contains(completions[1], "ENG-1") || !strings.Contains(completions[1], "In Progress") || !strings.Contains(completions[1], "High") {
+				t.Errorf("completion should contain identifier, status, and priority, got %q", completions[1])
+			}
+			if !strings.Contains(completions[2], "ENG-2") || !strings.Contains(completions[2], "Todo") || !strings.Contains(completions[2], "Normal") {
+				t.Errorf("completion should contain identifier, status, and priority, got %q", completions[2])
 			}
 
 			// Call with args already present (should return nil)

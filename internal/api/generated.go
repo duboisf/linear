@@ -52,6 +52,10 @@ type ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue 
 	Identifier string `json:"identifier"`
 	// The issue's title.
 	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
 }
 
 // GetIdentifier returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
@@ -62,6 +66,37 @@ func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIs
 // GetTitle returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
 func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
 	return v.Title
+}
+
+// GetState returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
 }
 
 // GetIssueIssue includes the requested fields of the GraphQL type Issue.
@@ -1017,6 +1052,10 @@ type UserIssuesForCompletionIssuesIssueConnectionNodesIssue struct {
 	Identifier string `json:"identifier"`
 	// The issue's title.
 	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
 }
 
 // GetIdentifier returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
@@ -1026,6 +1065,37 @@ func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetIdentifier()
 
 // GetTitle returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
 func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+
+// GetState returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetState() *UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns UserIssuesForCompletionIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *UserIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
 
 // UserIssuesForCompletionResponse is returned by UserIssuesForCompletion on success.
 type UserIssuesForCompletionResponse struct {
@@ -1234,6 +1304,11 @@ query ActiveIssuesForCompletion ($first: Int!) {
 			nodes {
 				identifier
 				title
+				state {
+					name
+					type
+				}
+				priority
 			}
 		}
 	}
@@ -1658,6 +1733,11 @@ query UserIssuesForCompletion ($first: Int!, $assigneeName: String!) {
 		nodes {
 			identifier
 			title
+			state {
+				name
+				type
+			}
+			priority
 		}
 	}
 }

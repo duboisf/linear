@@ -94,27 +94,7 @@ func newIssueGetCmd(opts Options) *cobra.Command {
 			if len(args) > 0 {
 				return nil, cobra.ShellCompDirectiveNoFileComp
 			}
-
-			client, err := resolveClient(cmd, opts)
-			if err != nil {
-				return nil, cobra.ShellCompDirectiveNoFileComp
-			}
-
-			resp, err := api.ActiveIssuesForCompletion(cmd.Context(), client, 100)
-			if err != nil {
-				return nil, cobra.ShellCompDirectiveNoFileComp
-			}
-
-			if resp.Viewer == nil || resp.Viewer.AssignedIssues == nil {
-				return nil, cobra.ShellCompDirectiveNoFileComp
-			}
-
-			var completions []string
-			for _, issue := range resp.Viewer.AssignedIssues.Nodes {
-				completions = append(completions, fmt.Sprintf("%s\t%s", issue.Identifier, issue.Title))
-			}
-
-			return completions, cobra.ShellCompDirectiveNoFileComp
+			return completeMyIssues(cmd, opts)
 		},
 	}
 
