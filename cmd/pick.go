@@ -67,14 +67,6 @@ func fetchUserIssues(ctx context.Context, client graphql.Client, userName string
 	return issues, nil
 }
 
-// fetchIssuesForUser fetches issues for the given user arg ("@my" or a user name).
-func fetchIssuesForUser(ctx context.Context, client graphql.Client, userArg string) ([]issueForCompletion, error) {
-	if userArg == "@my" {
-		return fetchMyIssues(ctx, client)
-	}
-	return fetchUserIssues(ctx, client, userArg)
-}
-
 // formatFzfLines formats issues into aligned, ANSI-colored lines for fzf,
 // including a header line. Returns the header and the data lines separately.
 func formatFzfLines(issues []issueForCompletion) (header string, lines []string) {

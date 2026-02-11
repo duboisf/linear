@@ -34,7 +34,7 @@ func TestRootCommand_SubcommandsExist(t *testing.T) {
 		subcommands[c.Name()] = true
 	}
 
-	expected := []string{"issue", "user", "completion", "create", "version"}
+	expected := []string{"issue", "user", "completion", "version"}
 	for _, name := range expected {
 		if !subcommands[name] {
 			t.Errorf("expected subcommand %q not found", name)
@@ -59,7 +59,6 @@ func TestRootCommand_HelpOutput(t *testing.T) {
 		"issue",
 		"user",
 		"completion",
-		"create",
 		"version",
 		"Core Commands:",
 		"Setup Commands:",

@@ -60,8 +60,6 @@ func NewRootCmd(opts Options) *cobra.Command {
 		&cobra.Group{ID: "setup", Title: "Setup Commands:"},
 	)
 
-	createCmd := newCreateCmd(opts)
-	createCmd.GroupID = "core"
 	issueCmd := newIssueCmd(opts)
 	issueCmd.GroupID = "core"
 	userCmd := newUserCmd(opts)
@@ -77,7 +75,6 @@ func NewRootCmd(opts Options) *cobra.Command {
 	root.SetHelpCommand(&cobra.Command{Hidden: true})
 
 	root.AddCommand(
-		createCmd,
 		issueCmd,
 		userCmd,
 		cacheCmd,

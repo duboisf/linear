@@ -184,66 +184,6 @@ func TestFetchUserIssues_NilIssues(t *testing.T) {
 	}
 }
 
-func TestFetchIssuesForUser_AtMy(t *testing.T) {
-	t.Parallel()
-
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var req graphqlRequest
-		json.NewDecoder(r.Body).Decode(&req)
-
-		w.Header().Set("Content-Type", "application/json")
-		if req.OperationName == "ActiveIssuesForCompletion" {
-			w.Write([]byte(`{"data":{"viewer":{"assignedIssues":{"nodes":[{"identifier":"MY-1","title":"My issue","state":{"name":"In Progress","type":"started"},"priority":1}]}}}}`))
-		} else {
-			t.Errorf("expected ActiveIssuesForCompletion operation, got %q", req.OperationName)
-			w.Write([]byte(`{"data":{}}`))
-		}
-	}))
-	defer server.Close()
-
-	client := graphql.NewClient(server.URL, server.Client())
-	issues, err := fetchIssuesForUser(context.Background(), client, "@my")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(issues) != 1 {
-		t.Fatalf("expected 1 issue, got %d", len(issues))
-	}
-	if issues[0].Identifier != "MY-1" {
-		t.Errorf("expected identifier MY-1, got %q", issues[0].Identifier)
-	}
-}
-
-func TestFetchIssuesForUser_UserName(t *testing.T) {
-	t.Parallel()
-
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		var req graphqlRequest
-		json.NewDecoder(r.Body).Decode(&req)
-
-		w.Header().Set("Content-Type", "application/json")
-		if req.OperationName == "UserIssuesForCompletion" {
-			w.Write([]byte(`{"data":{"issues":{"nodes":[{"identifier":"ENG-5","title":"User issue","state":{"name":"Backlog","type":"backlog"},"priority":3}]}}}`))
-		} else {
-			t.Errorf("expected UserIssuesForCompletion operation, got %q", req.OperationName)
-			w.Write([]byte(`{"data":{}}`))
-		}
-	}))
-	defer server.Close()
-
-	client := graphql.NewClient(server.URL, server.Client())
-	issues, err := fetchIssuesForUser(context.Background(), client, "marc")
-	if err != nil {
-		t.Fatalf("unexpected error: %v", err)
-	}
-	if len(issues) != 1 {
-		t.Fatalf("expected 1 issue, got %d", len(issues))
-	}
-	if issues[0].Identifier != "ENG-5" {
-		t.Errorf("expected identifier ENG-5, got %q", issues[0].Identifier)
-	}
-}
-
 func TestIssuesToCompletions(t *testing.T) {
 	t.Parallel()
 
