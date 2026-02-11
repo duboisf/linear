@@ -366,3 +366,29 @@ func TestPrefetchIssueDetails_MultipleMixed(t *testing.T) {
 		t.Errorf("ENG-2 cache should contain identifier, got %q", got2)
 	}
 }
+
+func TestSortCompletionIssues(t *testing.T) {
+	t.Parallel()
+
+	issues := []issueForCompletion{
+		{Identifier: "ENG-1", StateType: "unstarted", Priority: 3}, // Todo, Normal
+		{Identifier: "ENG-2", StateType: "started", Priority: 4},   // In Progress, Low
+		{Identifier: "ENG-3", StateType: "backlog", Priority: 1},   // Backlog, Urgent
+		{Identifier: "ENG-4", StateType: "started", Priority: 1},   // In Progress, Urgent
+		{Identifier: "ENG-5", StateType: "unstarted", Priority: 2}, // Todo, High
+		{Identifier: "ENG-6", StateType: "", Priority: 0},          // Unknown state, None priority
+	}
+
+	sortCompletionIssues(issues)
+
+	want := []string{"ENG-4", "ENG-2", "ENG-5", "ENG-1", "ENG-3", "ENG-6"}
+	for i, id := range want {
+		if issues[i].Identifier != id {
+			got := make([]string, len(issues))
+			for j := range issues {
+				got[j] = issues[j].Identifier
+			}
+			t.Fatalf("sort order mismatch at index %d:\nwant: %v\ngot:  %v", i, want, got)
+		}
+	}
+}

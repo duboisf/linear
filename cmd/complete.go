@@ -222,6 +222,7 @@ func completeMyIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCo
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
 
+	sortCompletionIssues(issues)
 	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 }
 
@@ -238,5 +239,6 @@ func completeUserIssues(cmd *cobra.Command, opts Options, userName string) ([]st
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
 
+	sortCompletionIssues(issues)
 	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 }

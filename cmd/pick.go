@@ -5,6 +5,7 @@ import (
 	"context"
 	"fmt"
 	"os/exec"
+	"slices"
 	"strings"
 	"sync"
 
@@ -65,6 +66,33 @@ func fetchUserIssues(ctx context.Context, client graphql.Client, userName string
 		}
 	}
 	return issues, nil
+}
+
+// sortCompletionIssues sorts issues by state type (In Progress first, then
+// Todo, triage, backlog) with priority as tiebreaker within each state group.
+func sortCompletionIssues(issues []issueForCompletion) {
+	slices.SortFunc(issues, func(a, b issueForCompletion) int {
+		ra, rb := completionStateRank(a.StateType), completionStateRank(b.StateType)
+		if d := ra - rb; d != 0 {
+			return d
+		}
+		da, db := issuePriorityRank(a.Priority), issuePriorityRank(b.Priority)
+		if da < db {
+			return -1
+		}
+		if da > db {
+			return 1
+		}
+		return 0
+	})
+}
+
+// completionStateRank returns a sort rank for a state type string.
+func completionStateRank(stateType string) int {
+	if r, ok := stateTypeOrder[stateType]; ok {
+		return r
+	}
+	return 99
 }
 
 // formatFzfLines formats issues into aligned, ANSI-colored lines for fzf,
@@ -145,6 +173,7 @@ func fzfPickIssue(issues []issueForCompletion) (string, error) {
 		return "", fmt.Errorf("no issues to select from")
 	}
 
+	sortCompletionIssues(issues)
 	header, lines := formatFzfLines(issues)
 
 	// Pass header as the first input line with --header-lines=1 so fzf
@@ -265,6 +294,8 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 	if len(issues) == 0 {
 		return "", fmt.Errorf("no issues to browse")
 	}
+
+	sortCompletionIssues(issues)
 
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
