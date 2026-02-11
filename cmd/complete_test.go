@@ -187,3 +187,23 @@ func TestFormatIssueCompletions_NilState(t *testing.T) {
 		t.Errorf("should contain priority label 'None', got %q", comps[1])
 	}
 }
+
+func TestUserCompletionEntry_Normal(t *testing.T) {
+	t.Parallel()
+
+	got := userCompletionEntry("Marc Dupont", "Marc Dupont")
+	want := "marc\tMarc Dupont"
+	if got != want {
+		t.Errorf("userCompletionEntry(\"Marc Dupont\", \"Marc Dupont\") = %q, want %q", got, want)
+	}
+}
+
+func TestUserCompletionEntry_EmptyDisplayName(t *testing.T) {
+	t.Parallel()
+
+	got := userCompletionEntry("", "Full Name")
+	want := "\tFull Name"
+	if got != want {
+		t.Errorf("userCompletionEntry(\"\", \"Full Name\") = %q, want %q", got, want)
+	}
+}

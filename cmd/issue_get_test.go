@@ -473,3 +473,110 @@ func TestIssueGet_ValidArgsFunction_NilAssignedIssues(t *testing.T) {
 	}
 	t.Fatal("get command not found")
 }
+
+func TestIssueGet_UserFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "get", "--user", "marc", "ENG-42"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue get --user returned error: %v", err)
+	}
+
+	output := stdout.String()
+	checks := []string{
+		"ENG-42",
+		"Implement feature X",
+		"In Progress",
+		"Jane Doe",
+	}
+	for _, check := range checks {
+		if !strings.Contains(output, check) {
+			t.Errorf("output does not contain %q", check)
+		}
+	}
+}
+
+func TestIssueGet_UserFlag_Completions(t *testing.T) {
+	t.Parallel()
+
+	userIssuesResponse := `{
+		"data": {
+			"issues": {
+				"nodes": [
+					{"identifier": "ENG-10", "title": "User issue one", "state": {"name": "In Progress", "type": "started"}, "priority": 2},
+					{"identifier": "ENG-11", "title": "User issue two", "state": {"name": "Todo", "type": "unstarted"}, "priority": 1}
+				]
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"UserIssuesForCompletion": userIssuesResponse,
+	})
+
+	opts := testOptions(t, server)
+	root := cmd.NewRootCmd(opts)
+
+	issueCmd, _, _ := root.Find([]string{"issue"})
+	for _, c := range issueCmd.Commands() {
+		if c.Name() == "get" {
+			// Set the --user flag so ValidArgsFunction uses completeUserIssues
+			if err := c.Flags().Set("user", "marc"); err != nil {
+				t.Fatalf("setting --user flag: %v", err)
+			}
+
+			completions, directive := c.ValidArgsFunction(c, []string{}, "")
+			if directive != 36 { // cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+				t.Errorf("directive = %d, want 36", directive)
+			}
+			// Expect 3 entries: 1 ActiveHelp header + 2 issue completions
+			if len(completions) != 3 {
+				t.Fatalf("expected 3 completions (1 header + 2 issues), got %d: %v", len(completions), completions)
+			}
+
+			if !strings.Contains(completions[0], "IDENTIFIER") || !strings.Contains(completions[0], "STATUS") {
+				t.Errorf("first completion should be ActiveHelp header, got %q", completions[0])
+			}
+			if !strings.Contains(completions[1], "ENG-10") || !strings.Contains(completions[1], "In Progress") {
+				t.Errorf("completion should contain ENG-10 and In Progress, got %q", completions[1])
+			}
+			if !strings.Contains(completions[2], "ENG-11") || !strings.Contains(completions[2], "Todo") {
+				t.Errorf("completion should contain ENG-11 and Todo, got %q", completions[2])
+			}
+			return
+		}
+	}
+	t.Fatal("get command not found")
+}
+
+func TestIssueGet_UserFlag_Completion(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"UsersForCompletion": usersForCompletionResponse,
+	})
+
+	opts := testOptions(t, server)
+	root := cmd.NewRootCmd(opts)
+
+	// Use cobra's __complete mechanism to test --user flag completion
+	stdout, _, err := executeCommand(root, "__complete", "issue", "get", "--user", "")
+	if err != nil {
+		t.Fatalf("completion returned error: %v", err)
+	}
+
+	if !strings.Contains(stdout, "marc") {
+		t.Errorf("--user completion should contain 'marc', got %q", stdout)
+	}
+	if !strings.Contains(stdout, "jane") {
+		t.Errorf("--user completion should contain 'jane', got %q", stdout)
+	}
+}

@@ -463,3 +463,177 @@ func TestIssueList_NilAssignedIssues(t *testing.T) {
 		t.Errorf("error %q should contain 'no assigned issues data'", err.Error())
 	}
 }
+
+// --- --user flag tests ---
+
+const listUserIssuesResponse = `{
+	"data": {
+		"issues": {
+			"nodes": [
+				{
+					"id": "u-id-1",
+					"identifier": "TEAM-201",
+					"title": "Refactor auth module",
+					"state": {"name": "In Progress", "type": "started"},
+					"priority": 2,
+					"updatedAt": "2025-02-01T00:00:00Z",
+					"labels": {"nodes": [{"name": "backend"}]}
+				},
+				{
+					"id": "u-id-2",
+					"identifier": "TEAM-202",
+					"title": "Update API docs",
+					"state": {"name": "Todo", "type": "unstarted"},
+					"priority": 3,
+					"updatedAt": "2025-02-02T00:00:00Z",
+					"labels": {"nodes": []}
+				}
+			],
+			"pageInfo": {"hasNextPage": false, "endCursor": null}
+		}
+	}
+}`
+
+func TestIssueList_UserFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListUserIssues": listUserIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "alice"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --user returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "TEAM-201") {
+		t.Error("expected output to contain TEAM-201")
+	}
+	if !strings.Contains(output, "TEAM-202") {
+		t.Error("expected output to contain TEAM-202")
+	}
+	if !strings.Contains(output, "Refactor auth module") {
+		t.Error("expected output to contain issue title 'Refactor auth module'")
+	}
+}
+
+func TestIssueList_UserFlag_AllFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListAllUserIssues": listUserIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "bob", "--all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --user --all returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "TEAM-201") {
+		t.Error("expected output to contain TEAM-201")
+	}
+	if !strings.Contains(output, "TEAM-202") {
+		t.Error("expected output to contain TEAM-202")
+	}
+}
+
+func TestIssueList_UserFlag_NilIssues(t *testing.T) {
+	t.Parallel()
+
+	nullIssuesResponse := `{
+		"data": {
+			"issues": null
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListUserIssues": nullIssuesResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "alice"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error for nil issues with --user")
+	}
+	if !strings.Contains(err.Error(), "no issues data") {
+		t.Errorf("error %q should contain 'no issues data'", err.Error())
+	}
+}
+
+func TestIssueList_UserFlag_AllFlag_NilIssues(t *testing.T) {
+	t.Parallel()
+
+	nullIssuesResponse := `{
+		"data": {
+			"issues": null
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListAllUserIssues": nullIssuesResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "alice", "--all"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error for nil issues with --user --all")
+	}
+	if !strings.Contains(err.Error(), "no issues data") {
+		t.Errorf("error %q should contain 'no issues data'", err.Error())
+	}
+}
+
+func TestIssueList_SortByIdentifier(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": sortableIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--sort", "identifier"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --sort identifier returned error: %v", err)
+	}
+
+	output := stdout.String()
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) < 6 {
+		t.Fatalf("expected 6 lines (header + 5 issues), got %d", len(lines))
+	}
+	// Alphabetical by identifier: AIS-147, AIS-215, AIS-265, AIS-271, AIS-273
+	if !strings.Contains(lines[1], "AIS-147") {
+		t.Errorf("line 1 should be AIS-147, got %q", lines[1])
+	}
+	if !strings.Contains(lines[2], "AIS-215") {
+		t.Errorf("line 2 should be AIS-215, got %q", lines[2])
+	}
+	if !strings.Contains(lines[3], "AIS-265") {
+		t.Errorf("line 3 should be AIS-265, got %q", lines[3])
+	}
+	if !strings.Contains(lines[4], "AIS-271") {
+		t.Errorf("line 4 should be AIS-271, got %q", lines[4])
+	}
+	if !strings.Contains(lines[5], "AIS-273") {
+		t.Errorf("line 5 should be AIS-273, got %q", lines[5])
+	}
+}

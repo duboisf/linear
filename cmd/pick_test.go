@@ -1,8 +1,14 @@
 package cmd
 
 import (
+	"context"
+	"encoding/json"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
+
+	"github.com/Khan/genqlient/graphql"
 )
 
 func TestFormatFzfLines_Empty(t *testing.T) {
@@ -121,5 +127,127 @@ func TestFormatFzfLines_NilState(t *testing.T) {
 	}
 	if !strings.Contains(lines[0], "None") {
 		t.Errorf("line should contain priority 'None', got %q", lines[0])
+	}
+}
+
+// graphqlRequest is used to parse the incoming GraphQL request body.
+type graphqlRequest struct {
+	OperationName string `json:"operationName"`
+}
+
+func TestFetchUserIssues(t *testing.T) {
+	t.Parallel()
+
+	response := `{"data":{"issues":{"nodes":[{"identifier":"ENG-1","title":"Test issue","state":{"name":"Todo","type":"unstarted"},"priority":2}]}}}`
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(response))
+	}))
+	defer server.Close()
+
+	client := graphql.NewClient(server.URL, server.Client())
+	issues, err := fetchUserIssues(context.Background(), client, "marc")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(issues) != 1 {
+		t.Fatalf("expected 1 issue, got %d", len(issues))
+	}
+	if issues[0].Identifier != "ENG-1" {
+		t.Errorf("expected identifier ENG-1, got %q", issues[0].Identifier)
+	}
+	if issues[0].Title != "Test issue" {
+		t.Errorf("expected title 'Test issue', got %q", issues[0].Title)
+	}
+	if issues[0].StateName != "Todo" {
+		t.Errorf("expected state name 'Todo', got %q", issues[0].StateName)
+	}
+	if issues[0].StateType != "unstarted" {
+		t.Errorf("expected state type 'unstarted', got %q", issues[0].StateType)
+	}
+	if issues[0].Priority != 2 {
+		t.Errorf("expected priority 2, got %f", issues[0].Priority)
+	}
+}
+
+func TestFetchUserIssues_NilIssues(t *testing.T) {
+	t.Parallel()
+
+	response := `{"data":{"issues":null}}`
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		w.Write([]byte(response))
+	}))
+	defer server.Close()
+
+	client := graphql.NewClient(server.URL, server.Client())
+	issues, err := fetchUserIssues(context.Background(), client, "marc")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if issues != nil {
+		t.Errorf("expected nil issues, got %v", issues)
+	}
+}
+
+func TestFetchIssuesForUser_AtMy(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req graphqlRequest
+		json.NewDecoder(r.Body).Decode(&req)
+
+		w.Header().Set("Content-Type", "application/json")
+		if req.OperationName == "ActiveIssuesForCompletion" {
+			w.Write([]byte(`{"data":{"viewer":{"assignedIssues":{"nodes":[{"identifier":"MY-1","title":"My issue","state":{"name":"In Progress","type":"started"},"priority":1}]}}}}`))
+		} else {
+			t.Errorf("expected ActiveIssuesForCompletion operation, got %q", req.OperationName)
+			w.Write([]byte(`{"data":{}}`))
+		}
+	}))
+	defer server.Close()
+
+	client := graphql.NewClient(server.URL, server.Client())
+	issues, err := fetchIssuesForUser(context.Background(), client, "@my")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(issues) != 1 {
+		t.Fatalf("expected 1 issue, got %d", len(issues))
+	}
+	if issues[0].Identifier != "MY-1" {
+		t.Errorf("expected identifier MY-1, got %q", issues[0].Identifier)
+	}
+}
+
+func TestFetchIssuesForUser_UserName(t *testing.T) {
+	t.Parallel()
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var req graphqlRequest
+		json.NewDecoder(r.Body).Decode(&req)
+
+		w.Header().Set("Content-Type", "application/json")
+		if req.OperationName == "UserIssuesForCompletion" {
+			w.Write([]byte(`{"data":{"issues":{"nodes":[{"identifier":"ENG-5","title":"User issue","state":{"name":"Backlog","type":"backlog"},"priority":3}]}}}`))
+		} else {
+			t.Errorf("expected UserIssuesForCompletion operation, got %q", req.OperationName)
+			w.Write([]byte(`{"data":{}}`))
+		}
+	}))
+	defer server.Close()
+
+	client := graphql.NewClient(server.URL, server.Client())
+	issues, err := fetchIssuesForUser(context.Background(), client, "marc")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if len(issues) != 1 {
+		t.Fatalf("expected 1 issue, got %d", len(issues))
+	}
+	if issues[0].Identifier != "ENG-5" {
+		t.Errorf("expected identifier ENG-5, got %q", issues[0].Identifier)
 	}
 }
