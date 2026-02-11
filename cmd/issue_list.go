@@ -279,13 +279,14 @@ func (c cycleInfo) formatHeader(color bool) string {
 	return header
 }
 
-// formatCycleDate extracts "Jan 2" from an ISO timestamp.
+// formatCycleDate extracts "Jan _2" from an ISO timestamp.
+// The _2 format pads single-digit days with a leading space for alignment.
 func formatCycleDate(ts string) string {
 	t, err := time.Parse(time.RFC3339, ts)
 	if err != nil {
 		return ""
 	}
-	return t.Format("Jan 2")
+	return t.Format("Jan _2")
 }
 
 const (
