@@ -8,6 +8,9 @@ func newUserCmd(opts Options) *cobra.Command {
 		Use:     "user",
 		Aliases: []string{"u"},
 		Short:   "Manage Linear users",
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		},
 	}
 	cmd.AddCommand(
 		newUserListCmd(opts),

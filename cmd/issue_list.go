@@ -62,6 +62,9 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		Use:     "list",
 		Aliases: []string{"ls"},
 		Short:   "List issues assigned to you",
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if limit <= 0 {
 				return fmt.Errorf("--limit must be greater than 0, got %d", limit)

@@ -8,6 +8,9 @@ func newIssueCmd(opts Options) *cobra.Command {
 		Use:     "issue",
 		Aliases: []string{"i"},
 		Short:   "Manage Linear issues",
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		},
 	}
 	cmd.AddCommand(
 		newIssueListCmd(opts),

@@ -48,6 +48,9 @@ func NewRootCmd(opts Options) *cobra.Command {
 		Short:         "CLI for the Linear issue tracker",
 		SilenceUsage:  true,
 		SilenceErrors: true,
+		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		},
 	}
 	root.SetOut(opts.Stdout)
 	root.SetErr(opts.Stderr)
