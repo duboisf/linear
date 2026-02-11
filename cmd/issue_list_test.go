@@ -637,3 +637,266 @@ func TestIssueList_SortByIdentifier(t *testing.T) {
 		t.Errorf("line 5 should be AIS-273, got %q", lines[5])
 	}
 }
+
+// --- --cycle flag tests ---
+
+const listCyclesResponse = `{
+	"data": {
+		"cycles": {
+			"nodes": [
+				{
+					"id": "cycle-1",
+					"number": 10,
+					"name": "Sprint 10",
+					"startsAt": "2025-01-01T00:00:00Z",
+					"endsAt": "2025-01-14T00:00:00Z",
+					"isActive": false,
+					"isNext": false,
+					"isPast": true,
+					"isPrevious": true
+				},
+				{
+					"id": "cycle-2",
+					"number": 11,
+					"name": "Sprint 11",
+					"startsAt": "2025-01-15T00:00:00Z",
+					"endsAt": "2025-01-28T00:00:00Z",
+					"isActive": true,
+					"isNext": false,
+					"isPast": false,
+					"isPrevious": false
+				},
+				{
+					"id": "cycle-3",
+					"number": 12,
+					"name": "Sprint 12",
+					"startsAt": "2025-01-29T00:00:00Z",
+					"endsAt": "2025-02-11T00:00:00Z",
+					"isActive": false,
+					"isNext": true,
+					"isPast": false,
+					"isPrevious": false
+				}
+			]
+		}
+	}
+}`
+
+const cycleIssuesResponse = `{
+	"data": {
+		"viewer": {
+			"assignedIssues": {
+				"nodes": [
+					{
+						"id": "c-id-1",
+						"identifier": "ENG-301",
+						"title": "Cycle task one",
+						"state": {"name": "In Progress", "type": "started"},
+						"priority": 2,
+						"updatedAt": "2025-01-20T00:00:00Z",
+						"labels": {"nodes": []}
+					},
+					{
+						"id": "c-id-2",
+						"identifier": "ENG-302",
+						"title": "Cycle task two",
+						"state": {"name": "Todo", "type": "unstarted"},
+						"priority": 3,
+						"updatedAt": "2025-01-21T00:00:00Z",
+						"labels": {"nodes": []}
+					}
+				],
+				"pageInfo": {"hasNextPage": false, "endCursor": null}
+			}
+		}
+	}
+}`
+
+const cycleUserIssuesResponse = `{
+	"data": {
+		"issues": {
+			"nodes": [
+				{
+					"id": "cu-id-1",
+					"identifier": "TEAM-401",
+					"title": "User cycle task",
+					"state": {"name": "In Progress", "type": "started"},
+					"priority": 1,
+					"updatedAt": "2025-01-22T00:00:00Z",
+					"labels": {"nodes": []}
+				}
+			],
+			"pageInfo": {"hasNextPage": false, "endCursor": null}
+		}
+	}
+}`
+
+func TestIssueList_CycleCurrentFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":                listCyclesResponse,
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--cycle", "current"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --cycle current returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "Cycle 11") {
+		t.Error("expected output to contain cycle header 'Cycle 11'")
+	}
+	if !strings.Contains(output, "Sprint 11") {
+		t.Error("expected output to contain cycle name 'Sprint 11'")
+	}
+	if !strings.Contains(output, "ENG-301") {
+		t.Error("expected output to contain ENG-301")
+	}
+	if !strings.Contains(output, "ENG-302") {
+		t.Error("expected output to contain ENG-302")
+	}
+}
+
+func TestIssueList_CycleNumberFlag(t *testing.T) {
+	t.Parallel()
+
+	listCyclesWithNumber42 := `{
+		"data": {
+			"cycles": {
+				"nodes": [
+					{
+						"id": "cycle-42",
+						"number": 42,
+						"name": "Sprint 42",
+						"startsAt": "2025-06-01T00:00:00Z",
+						"endsAt": "2025-06-14T00:00:00Z",
+						"isActive": false,
+						"isNext": false,
+						"isPast": true,
+						"isPrevious": false
+					}
+				]
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":                listCyclesWithNumber42,
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "42"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -c 42 returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "Cycle 42") {
+		t.Error("expected output to contain cycle header 'Cycle 42'")
+	}
+	if !strings.Contains(output, "ENG-301") {
+		t.Error("expected output to contain ENG-301")
+	}
+}
+
+func TestIssueList_CycleWithUserFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":            listCyclesResponse,
+		"ListUserIssuesByCycle": cycleUserIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "current", "--user", "alice"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -c current --user alice returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "TEAM-401") {
+		t.Error("expected output to contain TEAM-401")
+	}
+}
+
+func TestIssueList_CycleWithAllFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":             listCyclesResponse,
+		"ListMyAllIssuesByCycle": cycleIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "current", "--all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -c current --all returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-301") {
+		t.Error("expected output to contain ENG-301")
+	}
+}
+
+func TestIssueList_CycleInvalidValue(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "banana"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error for invalid --cycle value")
+	}
+	if !strings.Contains(err.Error(), "invalid --cycle value") {
+		t.Errorf("error %q should contain 'invalid --cycle value'", err.Error())
+	}
+}
+
+func TestIssueList_CycleNoCycleFound(t *testing.T) {
+	t.Parallel()
+
+	noCyclesResponse := `{
+		"data": {
+			"cycles": {
+				"nodes": []
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles": noCyclesResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "current"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error when no current cycle exists")
+	}
+	if !strings.Contains(err.Error(), "no current cycle found") {
+		t.Errorf("error %q should contain 'no current cycle found'", err.Error())
+	}
+}

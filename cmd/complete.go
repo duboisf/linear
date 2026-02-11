@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"slices"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -107,6 +108,103 @@ func formatIssueCompletions(issues []issueForCompletion) []string {
 	}
 
 	return comps
+}
+
+// completeCycleValues returns shell completions for the --cycle flag.
+// It fetches cycles from the API to show cycle numbers, dates, and names.
+// Upcoming future cycles are included as numbered entries so users can pick
+// them directly.
+func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {
+	dir := cobra.ShellCompDirectiveNoFileComp
+
+	client, err := resolveClient(cmd, opts)
+	if err != nil {
+		return staticCycleCompletions(), dir
+	}
+	resp, err := api.ListCycles(cmd.Context(), client, 50)
+	if err != nil || resp.Cycles == nil {
+		return staticCycleCompletions(), dir
+	}
+
+	currentDesc := "Current active cycle"
+	nextDesc := "Next upcoming cycle"
+	previousDesc := "Previous completed cycle"
+
+	// Collect future cycles (not active, not next) for extra entries.
+	var futureCycles []api.ListCyclesCyclesCycleConnectionNodesCycle
+
+	for _, c := range resp.Cycles.Nodes {
+		dates := formatCycleDateRange(c.StartsAt, c.EndsAt)
+		label := fmt.Sprintf("#%.0f", c.Number)
+		if c.Name != nil && *c.Name != "" {
+			label += " " + *c.Name
+		}
+		if dates != "" {
+			label += ", " + dates
+		}
+		if c.IsActive {
+			currentDesc = fmt.Sprintf("Active cycle (%s)", label)
+		}
+		if c.IsNext {
+			nextDesc = fmt.Sprintf("Next cycle (%s)", label)
+		}
+		if c.IsPrevious {
+			previousDesc = fmt.Sprintf("Previous cycle (%s)", label)
+		}
+		if c.IsFuture && !c.IsNext {
+			futureCycles = append(futureCycles, *c)
+		}
+	}
+
+	comps := cobra.AppendActiveHelp(nil, "Or use any cycle number directly")
+	comps = append(comps,
+		"current\t"+currentDesc,
+		"next\t"+nextDesc,
+		"previous\t"+previousDesc,
+	)
+
+	slices.SortFunc(futureCycles, func(a, b api.ListCyclesCyclesCycleConnectionNodesCycle) int {
+		if a.Number < b.Number {
+			return -1
+		}
+		if a.Number > b.Number {
+			return 1
+		}
+		return 0
+	})
+
+	for _, c := range futureCycles {
+		num := fmt.Sprintf("%.0f", c.Number)
+		desc := fmt.Sprintf("Upcoming cycle #%s", num)
+		if c.Name != nil && *c.Name != "" {
+			desc += " " + *c.Name
+		}
+		dates := formatCycleDateRange(c.StartsAt, c.EndsAt)
+		if dates != "" {
+			desc += ", " + dates
+		}
+		comps = append(comps, num+"\t"+desc)
+	}
+
+	return comps, dir | cobra.ShellCompDirectiveKeepOrder
+}
+
+// formatCycleDateRange returns "Jan 2 – Jan 15" from two ISO timestamps.
+func formatCycleDateRange(startsAt, endsAt string) string {
+	start := formatCycleDate(startsAt)
+	end := formatCycleDate(endsAt)
+	if start != "" && end != "" {
+		return start + " – " + end
+	}
+	return ""
+}
+
+func staticCycleCompletions() []string {
+	return []string{
+		"current\tCurrent active cycle",
+		"next\tNext upcoming cycle",
+		"previous\tPrevious completed cycle",
+	}
 }
 
 // completeUserNames returns shell completions for the --user flag: team member

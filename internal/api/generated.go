@@ -368,6 +368,149 @@ func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetAdmin() bool { ret
 // GetIsMe returns GetUserByDisplayNameUsersUserConnectionNodesUser.IsMe, and is useful for accessing the field via an interface.
 func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetIsMe() bool { return v.IsMe }
 
+// ListAllUserIssuesByCycleIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListAllUserIssuesByCycleIssuesIssueConnection struct {
+	Nodes    []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+}
+
+// GetNodes returns ListAllUserIssuesByCycleIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnection) GetNodes() []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// GetPageInfo returns ListAllUserIssuesByCycleIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnection) GetPageInfo() *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo {
+	return v.PageInfo
+}
+
+// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
+	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
+	// been updated after creation.
+	UpdatedAt string `json:"updatedAt"`
+	// Labels associated with this issue.
+	Labels *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+}
+
+// GetId returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
+
+// GetIdentifier returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+
+// GetState returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetState() *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// GetUpdatedAt returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
+	return v.UpdatedAt
+}
+
+// GetLabels returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetLabels() *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+	return v.Labels
+}
+
+// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+}
+
+// GetNodes returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+	return v.Nodes
+}
+
+// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// The GraphQL type's documentation follows.
+//
+// Labels that can be associated with issues.
+type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+	// The label's name.
+	Name string `json:"name"`
+}
+
+// GetName returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+	return v.Name
+}
+
+// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
+
+// ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
+
+// ListAllUserIssuesByCycleResponse is returned by ListAllUserIssuesByCycle on success.
+type ListAllUserIssuesByCycleResponse struct {
+	// All issues.
+	Issues *ListAllUserIssuesByCycleIssuesIssueConnection `json:"issues"`
+}
+
+// GetIssues returns ListAllUserIssuesByCycleResponse.Issues, and is useful for accessing the field via an interface.
+func (v *ListAllUserIssuesByCycleResponse) GetIssues() *ListAllUserIssuesByCycleIssuesIssueConnection {
+	return v.Issues
+}
+
 // ListAllUserIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
 type ListAllUserIssuesIssuesIssueConnection struct {
 	Nodes    []*ListAllUserIssuesIssuesIssueConnectionNodesIssue `json:"nodes"`
@@ -501,6 +644,243 @@ type ListAllUserIssuesResponse struct {
 // GetIssues returns ListAllUserIssuesResponse.Issues, and is useful for accessing the field via an interface.
 func (v *ListAllUserIssuesResponse) GetIssues() *ListAllUserIssuesIssuesIssueConnection {
 	return v.Issues
+}
+
+// ListCyclesCyclesCycleConnection includes the requested fields of the GraphQL type CycleConnection.
+type ListCyclesCyclesCycleConnection struct {
+	Nodes []*ListCyclesCyclesCycleConnectionNodesCycle `json:"nodes"`
+}
+
+// GetNodes returns ListCyclesCyclesCycleConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnection) GetNodes() []*ListCyclesCyclesCycleConnectionNodesCycle {
+	return v.Nodes
+}
+
+// ListCyclesCyclesCycleConnectionNodesCycle includes the requested fields of the GraphQL type Cycle.
+// The GraphQL type's documentation follows.
+//
+// A set of issues to be resolved in a specified amount of time.
+type ListCyclesCyclesCycleConnectionNodesCycle struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The number of the cycle.
+	Number float64 `json:"number"`
+	// The custom name of the cycle.
+	Name *string `json:"name"`
+	// The start time of the cycle.
+	StartsAt string `json:"startsAt"`
+	// The end time of the cycle.
+	EndsAt string `json:"endsAt"`
+	// Whether the cycle is currently active.
+	IsActive bool `json:"isActive"`
+	// Whether the cycle is in the future.
+	IsFuture bool `json:"isFuture"`
+	// Whether the cycle is the next cycle for the team.
+	IsNext bool `json:"isNext"`
+	// Whether the cycle is in the past.
+	IsPast bool `json:"isPast"`
+	// Whether the cycle is the previous cycle for the team.
+	IsPrevious bool `json:"isPrevious"`
+}
+
+// GetId returns ListCyclesCyclesCycleConnectionNodesCycle.Id, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetId() string { return v.Id }
+
+// GetNumber returns ListCyclesCyclesCycleConnectionNodesCycle.Number, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetNumber() float64 { return v.Number }
+
+// GetName returns ListCyclesCyclesCycleConnectionNodesCycle.Name, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetName() *string { return v.Name }
+
+// GetStartsAt returns ListCyclesCyclesCycleConnectionNodesCycle.StartsAt, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetStartsAt() string { return v.StartsAt }
+
+// GetEndsAt returns ListCyclesCyclesCycleConnectionNodesCycle.EndsAt, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetEndsAt() string { return v.EndsAt }
+
+// GetIsActive returns ListCyclesCyclesCycleConnectionNodesCycle.IsActive, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetIsActive() bool { return v.IsActive }
+
+// GetIsFuture returns ListCyclesCyclesCycleConnectionNodesCycle.IsFuture, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetIsFuture() bool { return v.IsFuture }
+
+// GetIsNext returns ListCyclesCyclesCycleConnectionNodesCycle.IsNext, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetIsNext() bool { return v.IsNext }
+
+// GetIsPast returns ListCyclesCyclesCycleConnectionNodesCycle.IsPast, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetIsPast() bool { return v.IsPast }
+
+// GetIsPrevious returns ListCyclesCyclesCycleConnectionNodesCycle.IsPrevious, and is useful for accessing the field via an interface.
+func (v *ListCyclesCyclesCycleConnectionNodesCycle) GetIsPrevious() bool { return v.IsPrevious }
+
+// ListCyclesResponse is returned by ListCycles on success.
+type ListCyclesResponse struct {
+	// All cycles.
+	Cycles *ListCyclesCyclesCycleConnection `json:"cycles"`
+}
+
+// GetCycles returns ListCyclesResponse.Cycles, and is useful for accessing the field via an interface.
+func (v *ListCyclesResponse) GetCycles() *ListCyclesCyclesCycleConnection { return v.Cycles }
+
+// ListMyActiveIssuesByCycleResponse is returned by ListMyActiveIssuesByCycle on success.
+type ListMyActiveIssuesByCycleResponse struct {
+	// The currently authenticated user.
+	Viewer *ListMyActiveIssuesByCycleViewerUser `json:"viewer"`
+}
+
+// GetViewer returns ListMyActiveIssuesByCycleResponse.Viewer, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleResponse) GetViewer() *ListMyActiveIssuesByCycleViewerUser {
+	return v.Viewer
+}
+
+// ListMyActiveIssuesByCycleViewerUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that has access to the the resources of an organization.
+type ListMyActiveIssuesByCycleViewerUser struct {
+	// Issues assigned to the user.
+	AssignedIssues *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
+}
+
+// GetAssignedIssues returns ListMyActiveIssuesByCycleViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUser) GetAssignedIssues() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection {
+	return v.AssignedIssues
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection struct {
+	Nodes    []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+}
+
+// GetNodes returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// GetPageInfo returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo {
+	return v.PageInfo
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
+	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
+	// been updated after creation.
+	UpdatedAt string `json:"updatedAt"`
+	// Labels associated with this issue.
+	Labels *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+}
+
+// GetId returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
+	return v.Id
+}
+
+// GetIdentifier returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
+	return v.Title
+}
+
+// GetState returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// GetUpdatedAt returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
+	return v.UpdatedAt
+}
+
+// GetLabels returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+	return v.Labels
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+}
+
+// GetNodes returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+	return v.Nodes
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// The GraphQL type's documentation follows.
+//
+// Labels that can be associated with issues.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+	// The label's name.
+	Name string `json:"name"`
+}
+
+// GetName returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+	return v.Name
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
+
+// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
 }
 
 // ListMyActiveIssuesResponse is returned by ListMyActiveIssues on success.
@@ -662,6 +1042,167 @@ func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetE
 	return v.EndCursor
 }
 
+// ListMyAllIssuesByCycleResponse is returned by ListMyAllIssuesByCycle on success.
+type ListMyAllIssuesByCycleResponse struct {
+	// The currently authenticated user.
+	Viewer *ListMyAllIssuesByCycleViewerUser `json:"viewer"`
+}
+
+// GetViewer returns ListMyAllIssuesByCycleResponse.Viewer, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleResponse) GetViewer() *ListMyAllIssuesByCycleViewerUser {
+	return v.Viewer
+}
+
+// ListMyAllIssuesByCycleViewerUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that has access to the the resources of an organization.
+type ListMyAllIssuesByCycleViewerUser struct {
+	// Issues assigned to the user.
+	AssignedIssues *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
+}
+
+// GetAssignedIssues returns ListMyAllIssuesByCycleViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUser) GetAssignedIssues() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection {
+	return v.AssignedIssues
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection struct {
+	Nodes    []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+}
+
+// GetNodes returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// GetPageInfo returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo {
+	return v.PageInfo
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
+	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
+	// been updated after creation.
+	UpdatedAt string `json:"updatedAt"`
+	// Labels associated with this issue.
+	Labels *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+}
+
+// GetId returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
+	return v.Id
+}
+
+// GetIdentifier returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
+	return v.Title
+}
+
+// GetState returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// GetUpdatedAt returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
+	return v.UpdatedAt
+}
+
+// GetLabels returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+	return v.Labels
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+}
+
+// GetNodes returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+	return v.Nodes
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// The GraphQL type's documentation follows.
+//
+// Labels that can be associated with issues.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+	// The label's name.
+	Name string `json:"name"`
+}
+
+// GetName returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+	return v.Name
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
+
+// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
+
 // ListMyAllIssuesResponse is returned by ListMyAllIssues on success.
 type ListMyAllIssuesResponse struct {
 	// The currently authenticated user.
@@ -819,6 +1360,149 @@ func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasN
 // GetEndCursor returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
 func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
 	return v.EndCursor
+}
+
+// ListUserIssuesByCycleIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListUserIssuesByCycleIssuesIssueConnection struct {
+	Nodes    []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListUserIssuesByCycleIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+}
+
+// GetNodes returns ListUserIssuesByCycleIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnection) GetNodes() []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// GetPageInfo returns ListUserIssuesByCycleIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnection) GetPageInfo() *ListUserIssuesByCycleIssuesIssueConnectionPageInfo {
+	return v.PageInfo
+}
+
+// ListUserIssuesByCycleIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type ListUserIssuesByCycleIssuesIssueConnectionNodesIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
+	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
+	// been updated after creation.
+	UpdatedAt string `json:"updatedAt"`
+	// Labels associated with this issue.
+	Labels *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+}
+
+// GetId returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
+
+// GetIdentifier returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+
+// GetState returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetState() *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// GetUpdatedAt returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
+	return v.UpdatedAt
+}
+
+// GetLabels returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetLabels() *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+	return v.Labels
+}
+
+// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+}
+
+// GetNodes returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+	return v.Nodes
+}
+
+// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// The GraphQL type's documentation follows.
+//
+// Labels that can be associated with issues.
+type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+	// The label's name.
+	Name string `json:"name"`
+}
+
+// GetName returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+	return v.Name
+}
+
+// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
+
+// ListUserIssuesByCycleIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListUserIssuesByCycleIssuesIssueConnectionPageInfo struct {
+	// Indicates if there are more results when paginating forward.
+	HasNextPage bool `json:"hasNextPage"`
+	// Cursor representing the last result in the paginated results.
+	EndCursor *string `json:"endCursor"`
+}
+
+// GetHasNextPage returns ListUserIssuesByCycleIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
+}
+
+// GetEndCursor returns ListUserIssuesByCycleIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleIssuesIssueConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
+
+// ListUserIssuesByCycleResponse is returned by ListUserIssuesByCycle on success.
+type ListUserIssuesByCycleResponse struct {
+	// All issues.
+	Issues *ListUserIssuesByCycleIssuesIssueConnection `json:"issues"`
+}
+
+// GetIssues returns ListUserIssuesByCycleResponse.Issues, and is useful for accessing the field via an interface.
+func (v *ListUserIssuesByCycleResponse) GetIssues() *ListUserIssuesByCycleIssuesIssueConnection {
+	return v.Issues
 }
 
 // ListUserIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
@@ -1208,6 +1892,26 @@ type __GetUserByDisplayNameInput struct {
 // GetDisplayName returns __GetUserByDisplayNameInput.DisplayName, and is useful for accessing the field via an interface.
 func (v *__GetUserByDisplayNameInput) GetDisplayName() string { return v.DisplayName }
 
+// __ListAllUserIssuesByCycleInput is used internally by genqlient
+type __ListAllUserIssuesByCycleInput struct {
+	First        int     `json:"first"`
+	After        *string `json:"after"`
+	AssigneeName string  `json:"assigneeName"`
+	CycleNumber  float64 `json:"cycleNumber"`
+}
+
+// GetFirst returns __ListAllUserIssuesByCycleInput.First, and is useful for accessing the field via an interface.
+func (v *__ListAllUserIssuesByCycleInput) GetFirst() int { return v.First }
+
+// GetAfter returns __ListAllUserIssuesByCycleInput.After, and is useful for accessing the field via an interface.
+func (v *__ListAllUserIssuesByCycleInput) GetAfter() *string { return v.After }
+
+// GetAssigneeName returns __ListAllUserIssuesByCycleInput.AssigneeName, and is useful for accessing the field via an interface.
+func (v *__ListAllUserIssuesByCycleInput) GetAssigneeName() string { return v.AssigneeName }
+
+// GetCycleNumber returns __ListAllUserIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
+func (v *__ListAllUserIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
+
 // __ListAllUserIssuesInput is used internally by genqlient
 type __ListAllUserIssuesInput struct {
 	First        int     `json:"first"`
@@ -1224,6 +1928,30 @@ func (v *__ListAllUserIssuesInput) GetAfter() *string { return v.After }
 // GetAssigneeName returns __ListAllUserIssuesInput.AssigneeName, and is useful for accessing the field via an interface.
 func (v *__ListAllUserIssuesInput) GetAssigneeName() string { return v.AssigneeName }
 
+// __ListCyclesInput is used internally by genqlient
+type __ListCyclesInput struct {
+	First int `json:"first"`
+}
+
+// GetFirst returns __ListCyclesInput.First, and is useful for accessing the field via an interface.
+func (v *__ListCyclesInput) GetFirst() int { return v.First }
+
+// __ListMyActiveIssuesByCycleInput is used internally by genqlient
+type __ListMyActiveIssuesByCycleInput struct {
+	First       int     `json:"first"`
+	After       *string `json:"after"`
+	CycleNumber float64 `json:"cycleNumber"`
+}
+
+// GetFirst returns __ListMyActiveIssuesByCycleInput.First, and is useful for accessing the field via an interface.
+func (v *__ListMyActiveIssuesByCycleInput) GetFirst() int { return v.First }
+
+// GetAfter returns __ListMyActiveIssuesByCycleInput.After, and is useful for accessing the field via an interface.
+func (v *__ListMyActiveIssuesByCycleInput) GetAfter() *string { return v.After }
+
+// GetCycleNumber returns __ListMyActiveIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
+func (v *__ListMyActiveIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
+
 // __ListMyActiveIssuesInput is used internally by genqlient
 type __ListMyActiveIssuesInput struct {
 	First int     `json:"first"`
@@ -1236,6 +1964,22 @@ func (v *__ListMyActiveIssuesInput) GetFirst() int { return v.First }
 // GetAfter returns __ListMyActiveIssuesInput.After, and is useful for accessing the field via an interface.
 func (v *__ListMyActiveIssuesInput) GetAfter() *string { return v.After }
 
+// __ListMyAllIssuesByCycleInput is used internally by genqlient
+type __ListMyAllIssuesByCycleInput struct {
+	First       int     `json:"first"`
+	After       *string `json:"after"`
+	CycleNumber float64 `json:"cycleNumber"`
+}
+
+// GetFirst returns __ListMyAllIssuesByCycleInput.First, and is useful for accessing the field via an interface.
+func (v *__ListMyAllIssuesByCycleInput) GetFirst() int { return v.First }
+
+// GetAfter returns __ListMyAllIssuesByCycleInput.After, and is useful for accessing the field via an interface.
+func (v *__ListMyAllIssuesByCycleInput) GetAfter() *string { return v.After }
+
+// GetCycleNumber returns __ListMyAllIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
+func (v *__ListMyAllIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
+
 // __ListMyAllIssuesInput is used internally by genqlient
 type __ListMyAllIssuesInput struct {
 	First int     `json:"first"`
@@ -1247,6 +1991,26 @@ func (v *__ListMyAllIssuesInput) GetFirst() int { return v.First }
 
 // GetAfter returns __ListMyAllIssuesInput.After, and is useful for accessing the field via an interface.
 func (v *__ListMyAllIssuesInput) GetAfter() *string { return v.After }
+
+// __ListUserIssuesByCycleInput is used internally by genqlient
+type __ListUserIssuesByCycleInput struct {
+	First        int     `json:"first"`
+	After        *string `json:"after"`
+	AssigneeName string  `json:"assigneeName"`
+	CycleNumber  float64 `json:"cycleNumber"`
+}
+
+// GetFirst returns __ListUserIssuesByCycleInput.First, and is useful for accessing the field via an interface.
+func (v *__ListUserIssuesByCycleInput) GetFirst() int { return v.First }
+
+// GetAfter returns __ListUserIssuesByCycleInput.After, and is useful for accessing the field via an interface.
+func (v *__ListUserIssuesByCycleInput) GetAfter() *string { return v.After }
+
+// GetAssigneeName returns __ListUserIssuesByCycleInput.AssigneeName, and is useful for accessing the field via an interface.
+func (v *__ListUserIssuesByCycleInput) GetAssigneeName() string { return v.AssigneeName }
+
+// GetCycleNumber returns __ListUserIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
+func (v *__ListUserIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
 
 // __ListUserIssuesInput is used internally by genqlient
 type __ListUserIssuesInput struct {
@@ -1507,6 +2271,110 @@ func ListAllUserIssues(
 	return data_, err_
 }
 
+// The query executed by ListAllUserIssuesByCycle.
+const ListAllUserIssuesByCycle_Operation = `
+query ListAllUserIssuesByCycle ($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
+	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},cycle:{number:{eq:$cycleNumber}}}) {
+		nodes {
+			id
+			identifier
+			title
+			state {
+				name
+				type
+			}
+			priority
+			updatedAt
+			labels {
+				nodes {
+					name
+				}
+			}
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+`
+
+func ListAllUserIssuesByCycle(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	after *string,
+	assigneeName string,
+	cycleNumber float64,
+) (data_ *ListAllUserIssuesByCycleResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListAllUserIssuesByCycle",
+		Query:  ListAllUserIssuesByCycle_Operation,
+		Variables: &__ListAllUserIssuesByCycleInput{
+			First:        first,
+			After:        after,
+			AssigneeName: assigneeName,
+			CycleNumber:  cycleNumber,
+		},
+	}
+
+	data_ = &ListAllUserIssuesByCycleResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by ListCycles.
+const ListCycles_Operation = `
+query ListCycles ($first: Int!) {
+	cycles(first: $first, orderBy: createdAt) {
+		nodes {
+			id
+			number
+			name
+			startsAt
+			endsAt
+			isActive
+			isFuture
+			isNext
+			isPast
+			isPrevious
+		}
+	}
+}
+`
+
+func ListCycles(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+) (data_ *ListCyclesResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListCycles",
+		Query:  ListCycles_Operation,
+		Variables: &__ListCyclesInput{
+			First: first,
+		},
+	}
+
+	data_ = &ListCyclesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
 // The query executed by ListMyActiveIssues.
 const ListMyActiveIssues_Operation = `
 query ListMyActiveIssues ($first: Int!, $after: String) {
@@ -1553,6 +2421,65 @@ func ListMyActiveIssues(
 	}
 
 	data_ = &ListMyActiveIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by ListMyActiveIssuesByCycle.
+const ListMyActiveIssuesByCycle_Operation = `
+query ListMyActiveIssuesByCycle ($first: Int!, $after: String, $cycleNumber: Float!) {
+	viewer {
+		assignedIssues(first: $first, after: $after, filter: {state:{type:{nin:["completed","canceled"]}},cycle:{number:{eq:$cycleNumber}}}) {
+			nodes {
+				id
+				identifier
+				title
+				state {
+					name
+					type
+				}
+				priority
+				updatedAt
+				labels {
+					nodes {
+						name
+					}
+				}
+			}
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
+		}
+	}
+}
+`
+
+func ListMyActiveIssuesByCycle(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	after *string,
+	cycleNumber float64,
+) (data_ *ListMyActiveIssuesByCycleResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListMyActiveIssuesByCycle",
+		Query:  ListMyActiveIssuesByCycle_Operation,
+		Variables: &__ListMyActiveIssuesByCycleInput{
+			First:       first,
+			After:       after,
+			CycleNumber: cycleNumber,
+		},
+	}
+
+	data_ = &ListMyActiveIssuesByCycleResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
@@ -1621,6 +2548,65 @@ func ListMyAllIssues(
 	return data_, err_
 }
 
+// The query executed by ListMyAllIssuesByCycle.
+const ListMyAllIssuesByCycle_Operation = `
+query ListMyAllIssuesByCycle ($first: Int!, $after: String, $cycleNumber: Float!) {
+	viewer {
+		assignedIssues(first: $first, after: $after, filter: {cycle:{number:{eq:$cycleNumber}}}) {
+			nodes {
+				id
+				identifier
+				title
+				state {
+					name
+					type
+				}
+				priority
+				updatedAt
+				labels {
+					nodes {
+						name
+					}
+				}
+			}
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
+		}
+	}
+}
+`
+
+func ListMyAllIssuesByCycle(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	after *string,
+	cycleNumber float64,
+) (data_ *ListMyAllIssuesByCycleResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListMyAllIssuesByCycle",
+		Query:  ListMyAllIssuesByCycle_Operation,
+		Variables: &__ListMyAllIssuesByCycleInput{
+			First:       first,
+			After:       after,
+			CycleNumber: cycleNumber,
+		},
+	}
+
+	data_ = &ListMyAllIssuesByCycleResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
 // The query executed by ListUserIssues.
 const ListUserIssues_Operation = `
 query ListUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
@@ -1667,6 +2653,65 @@ func ListUserIssues(
 	}
 
 	data_ = &ListUserIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by ListUserIssuesByCycle.
+const ListUserIssuesByCycle_Operation = `
+query ListUserIssuesByCycle ($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
+	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},state:{type:{nin:["completed","canceled"]}},cycle:{number:{eq:$cycleNumber}}}) {
+		nodes {
+			id
+			identifier
+			title
+			state {
+				name
+				type
+			}
+			priority
+			updatedAt
+			labels {
+				nodes {
+					name
+				}
+			}
+		}
+		pageInfo {
+			hasNextPage
+			endCursor
+		}
+	}
+}
+`
+
+func ListUserIssuesByCycle(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+	after *string,
+	assigneeName string,
+	cycleNumber float64,
+) (data_ *ListUserIssuesByCycleResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListUserIssuesByCycle",
+		Query:  ListUserIssuesByCycle_Operation,
+		Variables: &__ListUserIssuesByCycleInput{
+			First:        first,
+			After:        after,
+			AssigneeName: assigneeName,
+			CycleNumber:  cycleNumber,
+		},
+	}
+
+	data_ = &ListUserIssuesByCycleResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
