@@ -49,7 +49,7 @@ func newUserGetCmd(opts Options) *cobra.Command {
 				return nil, cobra.ShellCompDirectiveNoFileComp
 			}
 
-			resp, err := api.UsersForCompletion(cmd.Context(), client, 100)
+			resp, err := usersForCompletionCached(cmd.Context(), client, opts.Cache)
 			if err != nil || resp.Users == nil {
 				return nil, cobra.ShellCompDirectiveNoFileComp
 			}
