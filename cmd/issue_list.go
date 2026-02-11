@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"slices"
 	"strconv"
@@ -12,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/duboisf/linear/internal/api"
+	"github.com/duboisf/linear/internal/cache"
 	"github.com/duboisf/linear/internal/format"
 )
 
@@ -78,7 +80,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 			var nodes []*issueNode
 
 			if cycle != "" {
-				ci, err := resolveCycle(cmd.Context(), client, cycle)
+				ci, err := resolveCycle(cmd.Context(), client, opts.Cache, cycle)
 				if err != nil {
 					return err
 				}
@@ -286,10 +288,41 @@ func formatCycleDate(ts string) string {
 	return t.Format("Jan 2")
 }
 
+const (
+	_cycleCacheKey = "cycles/list"
+	_cycleCacheTTL = 24 * time.Hour
+)
+
+// listCyclesCached returns cycle data, serving from cache when available.
+// The cycle list is cached for 24 hours since cycles rarely change.
+func listCyclesCached(ctx context.Context, client graphql.Client, c *cache.Cache) (*api.ListCyclesResponse, error) {
+	if c != nil {
+		if data, ok := c.GetWithTTL(_cycleCacheKey, _cycleCacheTTL); ok {
+			var resp api.ListCyclesResponse
+			if err := json.Unmarshal([]byte(data), &resp); err == nil {
+				return &resp, nil
+			}
+		}
+	}
+
+	resp, err := api.ListCycles(ctx, client, 50)
+	if err != nil {
+		return nil, err
+	}
+
+	if c != nil {
+		if data, err := json.Marshal(resp); err == nil {
+			_ = c.Set(_cycleCacheKey, string(data))
+		}
+	}
+
+	return resp, nil
+}
+
 // resolveCycle converts a cycle flag value to cycle info.
 // Named values (current, next, previous) are resolved via the ListCycles API;
 // numeric strings also query ListCycles to get the full metadata.
-func resolveCycle(ctx context.Context, client graphql.Client, value string) (cycleInfo, error) {
+func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, value string) (cycleInfo, error) {
 	isNumeric := false
 	var numericVal float64
 	if n, err := strconv.ParseFloat(value, 64); err == nil {
@@ -303,7 +336,7 @@ func resolveCycle(ctx context.Context, client graphql.Client, value string) (cyc
 		}
 	}
 
-	resp, err := api.ListCycles(ctx, client, 50)
+	resp, err := listCyclesCached(ctx, client, c)
 	if err != nil {
 		return cycleInfo{}, fmt.Errorf("fetching cycles: %w", err)
 	}

@@ -79,6 +79,58 @@ func TestSet_CreatesSubdirectories(t *testing.T) {
 	}
 }
 
+func TestGetWithTTL_LongerThanDefault(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	c := cache.New(dir, 1*time.Millisecond)
+
+	if err := c.Set("key", "value"); err != nil {
+		t.Fatalf("Set: %v", err)
+	}
+
+	// Wait for the default TTL to expire.
+	time.Sleep(5 * time.Millisecond)
+
+	// Default Get should miss.
+	if _, ok := c.Get("key"); ok {
+		t.Error("expected cache miss with default TTL")
+	}
+
+	// GetWithTTL with a longer TTL should still hit.
+	got, ok := c.GetWithTTL("key", 1*time.Hour)
+	if !ok {
+		t.Fatal("expected cache hit with longer TTL")
+	}
+	if got != "value" {
+		t.Errorf("got %q, want %q", got, "value")
+	}
+}
+
+func TestGetWithTTL_ShorterThanDefault(t *testing.T) {
+	t.Parallel()
+
+	dir := t.TempDir()
+	c := cache.New(dir, 1*time.Hour)
+
+	if err := c.Set("key", "value"); err != nil {
+		t.Fatalf("Set: %v", err)
+	}
+
+	// Wait for the short TTL to expire.
+	time.Sleep(5 * time.Millisecond)
+
+	// Default Get should hit (1h TTL).
+	if _, ok := c.Get("key"); !ok {
+		t.Error("expected cache hit with default TTL")
+	}
+
+	// GetWithTTL with a shorter TTL should miss.
+	if _, ok := c.GetWithTTL("key", 1*time.Millisecond); ok {
+		t.Error("expected cache miss with shorter TTL")
+	}
+}
+
 func TestSet_Overwrites(t *testing.T) {
 	t.Parallel()
 

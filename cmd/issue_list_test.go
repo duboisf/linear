@@ -903,6 +903,45 @@ func TestIssueList_CycleNoCycleFound(t *testing.T) {
 	}
 }
 
+func TestIssueList_CycleCacheHit(t *testing.T) {
+	t.Parallel()
+
+	// First call: server has both ListCycles and issue responses.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":                listCyclesResponse,
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	opts.Cache = cache.New(t.TempDir(), 5*time.Minute)
+
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-c", "current"})
+	if err := root.Execute(); err != nil {
+		t.Fatalf("first call: %v", err)
+	}
+	if !strings.Contains(stdout.String(), "Cycle 11") {
+		t.Fatal("first call should contain Cycle 11")
+	}
+
+	// Second call: server does NOT handle ListCycles.
+	// If cycles come from cache, the command still succeeds.
+	server2 := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+	opts2, stdout2, _ := testOptionsWithBuffers(t, server2)
+	opts2.Cache = opts.Cache // reuse the same cache
+
+	root2 := cmd.NewRootCmd(opts2)
+	root2.SetArgs([]string{"issue", "list", "-c", "current"})
+	if err := root2.Execute(); err != nil {
+		t.Fatalf("second call should succeed from cache: %v", err)
+	}
+	if !strings.Contains(stdout2.String(), "Cycle 11") {
+		t.Error("second call should contain Cycle 11 from cache")
+	}
+}
+
 func TestIssueList_InteractiveFlag_FzfNotAvailable(t *testing.T) {
 	getIssueResponse := `{
 		"data": {

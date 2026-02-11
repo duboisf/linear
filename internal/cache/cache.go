@@ -21,12 +21,18 @@ func New(dir string, ttl time.Duration) *Cache {
 // file exists and its mtime is within the TTL window. Otherwise it returns
 // empty string and false.
 func (c *Cache) Get(key string) (string, bool) {
+	return c.GetWithTTL(key, c.TTL)
+}
+
+// GetWithTTL is like Get but uses the provided TTL instead of the cache default.
+// This allows callers to use longer or shorter TTLs for specific keys.
+func (c *Cache) GetWithTTL(key string, ttl time.Duration) (string, bool) {
 	path := filepath.Join(c.Dir, key)
 	info, err := os.Stat(path)
 	if err != nil {
 		return "", false
 	}
-	if time.Since(info.ModTime()) > c.TTL {
+	if time.Since(info.ModTime()) > ttl {
 		return "", false
 	}
 	data, err := os.ReadFile(path)

@@ -1,15 +1,50 @@
 package cmd
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"slices"
 	"strings"
+	"time"
 
+	"github.com/Khan/genqlient/graphql"
 	"github.com/spf13/cobra"
 
 	"github.com/duboisf/linear/internal/api"
+	"github.com/duboisf/linear/internal/cache"
 	"github.com/duboisf/linear/internal/format"
 )
+
+const (
+	_usersCacheKey = "users/completion"
+	_usersCacheTTL = 24 * time.Hour
+)
+
+// usersForCompletionCached returns user completion data, serving from cache when available.
+func usersForCompletionCached(ctx context.Context, client graphql.Client, c *cache.Cache) (*api.UsersForCompletionResponse, error) {
+	if c != nil {
+		if data, ok := c.GetWithTTL(_usersCacheKey, _usersCacheTTL); ok {
+			var resp api.UsersForCompletionResponse
+			if err := json.Unmarshal([]byte(data), &resp); err == nil {
+				return &resp, nil
+			}
+		}
+	}
+
+	resp, err := api.UsersForCompletion(ctx, client, 100)
+	if err != nil {
+		return nil, err
+	}
+
+	if c != nil {
+		if data, err := json.Marshal(resp); err == nil {
+			_ = c.Set(_usersCacheKey, string(data))
+		}
+	}
+
+	return resp, nil
+}
 
 // completeUsers returns shell completions for user selection: @my first, then
 // team member first names from the API.
@@ -18,7 +53,7 @@ func completeUsers(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompD
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
-	resp, err := api.UsersForCompletion(cmd.Context(), client, 100)
+	resp, err := usersForCompletionCached(cmd.Context(), client, opts.Cache)
 	if err != nil || resp.Users == nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
@@ -121,7 +156,7 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 	if err != nil {
 		return staticCycleCompletions(), dir
 	}
-	resp, err := api.ListCycles(cmd.Context(), client, 50)
+	resp, err := listCyclesCached(cmd.Context(), client, opts.Cache)
 	if err != nil || resp.Cycles == nil {
 		return staticCycleCompletions(), dir
 	}
@@ -217,7 +252,7 @@ func completeUserNames(cmd *cobra.Command, opts Options) ([]string, cobra.ShellC
 	if err != nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
-	resp, err := api.UsersForCompletion(cmd.Context(), client, 100)
+	resp, err := usersForCompletionCached(cmd.Context(), client, opts.Cache)
 	if err != nil || resp.Users == nil {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}
