@@ -242,9 +242,7 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 		if _, ok := c.Get("issues/" + id); ok {
 			continue
 		}
-		wg.Add(1)
-		go func(id string) {
-			defer wg.Done()
+		wg.Go(func() {
 			sem <- struct{}{}
 			defer func() { <-sem }()
 			resp, err := api.GetIssue(ctx, client, id)
@@ -253,7 +251,7 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 			}
 			content := formatIssueCache(resp.Issue)
 			_ = c.Set("issues/"+id, content)
-		}(id)
+		})
 	}
 	wg.Wait()
 }

@@ -210,7 +210,7 @@ func TestViewer_Integration(t *testing.T) {
 		}
 
 		bodyBytes, _ := io.ReadAll(r.Body)
-		var reqBody map[string]interface{}
+		var reqBody map[string]any
 		if err := json.Unmarshal(bodyBytes, &reqBody); err != nil {
 			t.Errorf("unmarshal request body: %v", err)
 		}
