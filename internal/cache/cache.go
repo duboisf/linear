@@ -50,7 +50,7 @@ func (c *Cache) Clear() (int, error) {
 	if err := os.RemoveAll(c.Dir); err != nil {
 		return 0, err
 	}
-	return count, os.MkdirAll(c.Dir, 0o755)
+	return count, os.MkdirAll(c.Dir, 0o700)
 }
 
 // countFiles recursively counts regular files under dir.
@@ -75,7 +75,7 @@ func countFiles(entries []os.DirEntry, dir string) int {
 func (c *Cache) Set(key, content string) error {
 	path := filepath.Join(c.Dir, key)
 	dir := filepath.Dir(path)
-	if err := os.MkdirAll(dir, 0o755); err != nil {
+	if err := os.MkdirAll(dir, 0o700); err != nil {
 		return err
 	}
 	tmp, err := os.CreateTemp(dir, ".tmp-*")

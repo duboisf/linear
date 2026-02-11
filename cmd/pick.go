@@ -122,6 +122,30 @@ func formatFzfLines(issues []issueForCompletion) (header string, lines []string)
 	return header, lines
 }
 
+// fzfExitOK returns true if the error is an fzf exit that should be treated
+// as a non-error (ESC/Ctrl-C = 130, no match = 1).
+func fzfExitOK(err error) bool {
+	if exitErr, ok := err.(*exec.ExitError); ok {
+		code := exitErr.ExitCode()
+		return code == 130 || code == 1
+	}
+	return false
+}
+
+// fzfSelectedID extracts the first whitespace-delimited field (the identifier)
+// from fzf's output. Returns empty string if output is blank.
+func fzfSelectedID(raw string) string {
+	selected := strings.TrimSpace(raw)
+	if selected == "" {
+		return ""
+	}
+	fields := strings.Fields(selected)
+	if len(fields) == 0 {
+		return ""
+	}
+	return fields[0]
+}
+
 // fzfPickIssue presents issues in fzf with aligned columns and returns the
 // selected identifier. Returns empty string if the user cancelled (ESC/Ctrl-C).
 func fzfPickIssue(issues []issueForCompletion) (string, error) {
@@ -143,30 +167,14 @@ func fzfPickIssue(issues []issueForCompletion) (string, error) {
 	// Let fzf use /dev/tty for interactive input.
 	cmd.Stderr = nil
 
-	err := cmd.Run()
-	if err != nil {
-		// fzf exits 130 on ESC/Ctrl-C.
-		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 130 {
-			return "", nil
-		}
-		// fzf exits 1 when no match.
-		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
+	if err := cmd.Run(); err != nil {
+		if fzfExitOK(err) {
 			return "", nil
 		}
 		return "", fmt.Errorf("running fzf: %w", err)
 	}
 
-	selected := strings.TrimSpace(out.String())
-	if selected == "" {
-		return "", nil
-	}
-
-	// First field is the identifier.
-	fields := strings.Fields(selected)
-	if len(fields) == 0 {
-		return "", nil
-	}
-	return fields[0], nil
+	return fzfSelectedID(out.String()), nil
 }
 
 // issuesToCompletions converts issueNode slice to issueForCompletion slice.
@@ -282,7 +290,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 	header, lines := formatFzfLines(issues)
 	input := header + "\n" + strings.Join(lines, "\n") + "\n"
 
-	// Cache already contains pre-rendered ANSI (either from glow or the
+	// Cache already contains pre-rendered ANSI (either from glamour or the
 	// built-in formatter), so plain cat is sufficient.
 	cacheFile := fmt.Sprintf("%s/issues/{1}", c.Dir)
 	previewCmd := fmt.Sprintf("cat '%s'", cacheFile)
@@ -305,25 +313,12 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 	cmd.Stdout = &out
 	cmd.Stderr = nil
 
-	err := cmd.Run()
-	if err != nil {
-		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 130 {
-			return "", nil
-		}
-		if exitErr, ok := err.(*exec.ExitError); ok && exitErr.ExitCode() == 1 {
+	if err := cmd.Run(); err != nil {
+		if fzfExitOK(err) {
 			return "", nil
 		}
 		return "", fmt.Errorf("running fzf: %w", err)
 	}
 
-	selected := strings.TrimSpace(out.String())
-	if selected == "" {
-		return "", nil
-	}
-
-	fields := strings.Fields(selected)
-	if len(fields) == 0 {
-		return "", nil
-	}
-	return fields[0], nil
+	return fzfSelectedID(out.String()), nil
 }

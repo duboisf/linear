@@ -183,7 +183,9 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	}
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
+	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
 	cmd.Flags().BoolVarP(&refresh, "refresh", "r", false, "Clear cached issue details before browsing (use with -i)")
+	_ = cmd.RegisterFlagCompletionFunc("refresh", cobra.NoFileCompletions)
 	cmd.Flags().BoolVarP(&all, "all", "a", false, "Include completed and canceled issues")
 	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: current, next, previous, or a cycle number")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
