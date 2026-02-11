@@ -78,7 +78,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 
 // Execute creates the root command with default options and runs it.
 func Execute() error {
-	opts := defaultOptions()
+	opts := DefaultOptions()
 	return NewRootCmd(opts).ExecuteContext(context.Background())
 }
 
@@ -92,7 +92,9 @@ func nativeKeyringProvider() keyring.Provider {
 	}
 }
 
-func defaultOptions() Options {
+// DefaultOptions returns production-ready Options with platform-appropriate
+// keyring, standard I/O, and the default API client.
+func DefaultOptions() Options {
 	native := nativeKeyringProvider()
 	file := &keyring.FileProvider{}
 	return Options{
