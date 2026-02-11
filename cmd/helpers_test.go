@@ -183,6 +183,8 @@ type postCreateCall struct {
 type mockGitWorktreeCreator struct {
 	repoRoot        string
 	repoRootErr     error
+	branchExists    bool
+	branchExistsErr error
 	fetchErr        error
 	createErr       error
 	postCreateErr   error
@@ -193,6 +195,10 @@ type mockGitWorktreeCreator struct {
 
 func (m *mockGitWorktreeCreator) RepoRootDir() (string, error) {
 	return m.repoRoot, m.repoRootErr
+}
+
+func (m *mockGitWorktreeCreator) BranchExists(_ string) (bool, error) {
+	return m.branchExists, m.branchExistsErr
 }
 
 func (m *mockGitWorktreeCreator) FetchBranch(remote, branch string) error {

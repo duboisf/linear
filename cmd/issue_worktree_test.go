@@ -59,6 +59,81 @@ func TestIssueWorktree_Success(t *testing.T) {
 	if !strings.Contains(output, wantPath) {
 		t.Errorf("output %q does not contain worktree path %q", output, wantPath)
 	}
+	if !strings.Contains(output, "Created new branch") {
+		t.Errorf("output %q should indicate new branch was created", output)
+	}
+}
+
+func TestIssueWorktree_ExistingBranch(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	mock := &mockGitWorktreeCreator{repoRoot: "/tmp/test-repo", branchExists: true}
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	opts.GitWorktreeCreator = mock
+
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "worktree", "ENG-42"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue worktree returned error: %v", err)
+	}
+
+	if len(mock.fetchCalls) != 0 {
+		t.Fatalf("expected no fetch calls for existing branch, got %d", len(mock.fetchCalls))
+	}
+
+	if len(mock.createCalls) != 1 {
+		t.Fatalf("expected 1 create call, got %d", len(mock.createCalls))
+	}
+	wantPath := "/tmp/test-repo--eng-42"
+	if mock.createCalls[0].path != wantPath {
+		t.Errorf("create path = %q, want %q", mock.createCalls[0].path, wantPath)
+	}
+	if mock.createCalls[0].branch != "feat/implement-feature-x" {
+		t.Errorf("create branch = %q, want %q", mock.createCalls[0].branch, "feat/implement-feature-x")
+	}
+	if mock.createCalls[0].startPoint != "" {
+		t.Errorf("create startPoint = %q, want empty (existing branch)", mock.createCalls[0].startPoint)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, wantPath) {
+		t.Errorf("output %q does not contain worktree path %q", output, wantPath)
+	}
+	if !strings.Contains(output, "Reusing existing branch") {
+		t.Errorf("output %q should indicate existing branch was reused", output)
+	}
+}
+
+func TestIssueWorktree_BranchExistsError(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	mock := &mockGitWorktreeCreator{
+		repoRoot:        "/tmp/test-repo",
+		branchExistsErr: fmt.Errorf("checking branch: git not found"),
+	}
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	opts.GitWorktreeCreator = mock
+
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "worktree", "ENG-42"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error when BranchExists fails")
+	}
+	if !strings.Contains(err.Error(), "git not found") {
+		t.Errorf("error %q should contain 'git not found'", err.Error())
+	}
 }
 
 func TestIssueWorktree_Alias(t *testing.T) {

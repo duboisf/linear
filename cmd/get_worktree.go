@@ -16,6 +16,7 @@ import (
 // GitWorktreeCreator abstracts git operations for creating worktrees.
 type GitWorktreeCreator interface {
 	RepoRootDir() (string, error)
+	BranchExists(branch string) (bool, error)
 	FetchBranch(remote, branch string) error
 	CreateWorktree(path, branch, startPoint string) error
 	PostCreate(dir string) error
@@ -34,6 +35,17 @@ func (g *execGitWorktreeCreator) RepoRootDir() (string, error) {
 	return strings.TrimSpace(string(out)), nil
 }
 
+func (g *execGitWorktreeCreator) BranchExists(branch string) (bool, error) {
+	err := exec.CommandContext(g.ctx, "git", "rev-parse", "--verify", "refs/heads/"+branch).Run()
+	if err == nil {
+		return true, nil
+	}
+	if _, ok := err.(*exec.ExitError); ok {
+		return false, nil
+	}
+	return false, fmt.Errorf("checking branch %q: %w", branch, err)
+}
+
 func (g *execGitWorktreeCreator) FetchBranch(remote, branch string) error {
 	if err := exec.CommandContext(g.ctx, "git", "fetch", remote, branch).Run(); err != nil {
 		return fmt.Errorf("fetching %s/%s: %w", remote, branch, err)
@@ -42,7 +54,13 @@ func (g *execGitWorktreeCreator) FetchBranch(remote, branch string) error {
 }
 
 func (g *execGitWorktreeCreator) CreateWorktree(path, branch, startPoint string) error {
-	if err := exec.CommandContext(g.ctx, "git", "worktree", "add", "-b", branch, path, startPoint).Run(); err != nil {
+	var args []string
+	if startPoint == "" {
+		args = []string{"worktree", "add", path, branch}
+	} else {
+		args = []string{"worktree", "add", "-b", branch, path, startPoint}
+	}
+	if err := exec.CommandContext(g.ctx, "git", args...).Run(); err != nil {
 		return fmt.Errorf("creating worktree: %w", err)
 	}
 	return nil
@@ -83,12 +101,24 @@ func runWorktreeCreate(ctx context.Context, client graphql.Client, identifier st
 
 	worktreePath := filepath.Join(filepath.Dir(repoRoot), filepath.Base(repoRoot)+"--"+strings.ToLower(identifier))
 
-	if err := git.FetchBranch("origin", "main"); err != nil {
+	exists, err := git.BranchExists(branchName)
+	if err != nil {
 		return err
 	}
 
-	if err := git.CreateWorktree(worktreePath, branchName, "origin/main"); err != nil {
-		return err
+	if exists {
+		if err := git.CreateWorktree(worktreePath, branchName, ""); err != nil {
+			return err
+		}
+		fmt.Fprintf(w, "Reusing existing branch %q\n", branchName)
+	} else {
+		if err := git.FetchBranch("origin", "main"); err != nil {
+			return err
+		}
+		if err := git.CreateWorktree(worktreePath, branchName, "origin/main"); err != nil {
+			return err
+		}
+		fmt.Fprintf(w, "Created new branch %q from origin/main\n", branchName)
 	}
 
 	if err := git.PostCreate(worktreePath); err != nil {
