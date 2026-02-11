@@ -290,10 +290,14 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 	cmd := exec.Command("fzf",
 		"--ansi",
 		"--header-lines=1",
+		"--header", "ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel",
+		"--header-first",
 		"--no-sort",
 		"--layout=reverse",
 		"--preview", previewCmd,
 		"--preview-window", "right:60%:wrap",
+		"--bind", "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
+		"--bind", "shift-down:preview-down,shift-up:preview-up",
 	)
 	cmd.Stdin = strings.NewReader(input)
 
