@@ -133,6 +133,9 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 	// Collect future cycles (not active, not next) for extra entries.
 	var futureCycles []api.ListCyclesCyclesCycleConnectionNodesCycle
 
+	// statusWidth is the visible width to pad all status labels to (len("Upcoming") == len("Previous")).
+	const statusWidth = 8
+
 	for _, c := range resp.Cycles.Nodes {
 		dates := formatCycleDateRange(c.StartsAt, c.EndsAt)
 		label := fmt.Sprintf("#%.0f", c.Number)
@@ -140,16 +143,16 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 			label += " " + *c.Name
 		}
 		if dates != "" {
-			label += ", " + dates
+			label += "  " + format.Colorize(true, format.Gray, dates)
 		}
 		if c.IsActive {
-			currentDesc = fmt.Sprintf("Active cycle (%s)", label)
+			currentDesc = format.PadColor(true, format.Green, "Active", statusWidth) + " " + label
 		}
 		if c.IsNext {
-			nextDesc = fmt.Sprintf("Next cycle (%s)", label)
+			nextDesc = format.PadColor(true, format.Yellow, "Next", statusWidth) + " " + label
 		}
 		if c.IsPrevious {
-			previousDesc = fmt.Sprintf("Previous cycle (%s)", label)
+			previousDesc = format.PadColor(true, format.Gray, "Previous", statusWidth) + " " + label
 		}
 		if c.IsFuture && !c.IsNext {
 			futureCycles = append(futureCycles, *c)
@@ -175,13 +178,13 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 
 	for _, c := range futureCycles {
 		num := fmt.Sprintf("%.0f", c.Number)
-		desc := fmt.Sprintf("Upcoming cycle #%s", num)
+		desc := format.PadColor(true, format.Cyan, "Upcoming", statusWidth) + fmt.Sprintf(" #%s", num)
 		if c.Name != nil && *c.Name != "" {
 			desc += " " + *c.Name
 		}
 		dates := formatCycleDateRange(c.StartsAt, c.EndsAt)
 		if dates != "" {
-			desc += ", " + dates
+			desc += "  " + format.Colorize(true, format.Gray, dates)
 		}
 		comps = append(comps, num+"\t"+desc)
 	}
