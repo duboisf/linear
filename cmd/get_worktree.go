@@ -18,6 +18,7 @@ type GitWorktreeCreator interface {
 	RepoRootDir() (string, error)
 	FetchBranch(remote, branch string) error
 	CreateWorktree(path, branch, startPoint string) error
+	PostCreate(dir string) error
 }
 
 // execGitWorktreeCreator implements GitWorktreeCreator using os/exec.
@@ -43,6 +44,18 @@ func (g *execGitWorktreeCreator) FetchBranch(remote, branch string) error {
 func (g *execGitWorktreeCreator) CreateWorktree(path, branch, startPoint string) error {
 	if err := exec.CommandContext(g.ctx, "git", "worktree", "add", "-b", branch, path, startPoint).Run(); err != nil {
 		return fmt.Errorf("creating worktree: %w", err)
+	}
+	return nil
+}
+
+func (g *execGitWorktreeCreator) PostCreate(dir string) error {
+	if _, err := exec.LookPath("mise"); err != nil {
+		return nil
+	}
+	cmd := exec.CommandContext(g.ctx, "mise", "trust")
+	cmd.Dir = dir
+	if err := cmd.Run(); err != nil {
+		return fmt.Errorf("running mise trust: %w", err)
 	}
 	return nil
 }
@@ -75,6 +88,10 @@ func runWorktreeCreate(ctx context.Context, client graphql.Client, identifier st
 	}
 
 	if err := git.CreateWorktree(worktreePath, branchName, "origin/main"); err != nil {
+		return err
+	}
+
+	if err := git.PostCreate(worktreePath); err != nil {
 		return err
 	}
 

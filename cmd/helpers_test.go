@@ -176,13 +176,19 @@ type createCall struct {
 	path, branch, startPoint string
 }
 
+type postCreateCall struct {
+	dir string
+}
+
 type mockGitWorktreeCreator struct {
-	repoRoot    string
-	repoRootErr error
-	fetchErr    error
-	createErr   error
-	fetchCalls  []fetchCall
-	createCalls []createCall
+	repoRoot        string
+	repoRootErr     error
+	fetchErr        error
+	createErr       error
+	postCreateErr   error
+	fetchCalls      []fetchCall
+	createCalls     []createCall
+	postCreateCalls []postCreateCall
 }
 
 func (m *mockGitWorktreeCreator) RepoRootDir() (string, error) {
@@ -197,6 +203,11 @@ func (m *mockGitWorktreeCreator) FetchBranch(remote, branch string) error {
 func (m *mockGitWorktreeCreator) CreateWorktree(path, branch, startPoint string) error {
 	m.createCalls = append(m.createCalls, createCall{path, branch, startPoint})
 	return m.createErr
+}
+
+func (m *mockGitWorktreeCreator) PostCreate(dir string) error {
+	m.postCreateCalls = append(m.postCreateCalls, postCreateCall{dir})
+	return m.postCreateErr
 }
 
 // --- Shared test fixtures ---

@@ -48,6 +48,13 @@ func TestIssueWorktree_Success(t *testing.T) {
 		t.Errorf("create startPoint = %q, want %q", mock.createCalls[0].startPoint, "origin/main")
 	}
 
+	if len(mock.postCreateCalls) != 1 {
+		t.Fatalf("expected 1 postCreate call, got %d", len(mock.postCreateCalls))
+	}
+	if mock.postCreateCalls[0].dir != wantPath {
+		t.Errorf("postCreate dir = %q, want %q", mock.postCreateCalls[0].dir, wantPath)
+	}
+
 	output := stdout.String()
 	if !strings.Contains(output, wantPath) {
 		t.Errorf("output %q does not contain worktree path %q", output, wantPath)
@@ -198,6 +205,32 @@ func TestIssueWorktree_CreateWorktreeError(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "already exists") {
 		t.Errorf("error %q should contain 'already exists'", err.Error())
+	}
+}
+
+func TestIssueWorktree_PostCreateError(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"GetIssue": getIssueResponse,
+	})
+
+	mock := &mockGitWorktreeCreator{
+		repoRoot:      "/tmp/test-repo",
+		postCreateErr: fmt.Errorf("running mise trust: permission denied"),
+	}
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	opts.GitWorktreeCreator = mock
+
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "worktree", "ENG-42"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error when post-create hook fails")
+	}
+	if !strings.Contains(err.Error(), "permission denied") {
+		t.Errorf("error %q should contain 'permission denied'", err.Error())
 	}
 }
 
