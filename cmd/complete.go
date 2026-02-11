@@ -109,6 +109,24 @@ func formatIssueCompletions(issues []issueForCompletion) []string {
 	return comps
 }
 
+// completeUserNames returns shell completions for the --user flag: team member
+// first names from the API (without the @my entry).
+func completeUserNames(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {
+	client, err := resolveClient(cmd, opts)
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	resp, err := api.UsersForCompletion(cmd.Context(), client, 100)
+	if err != nil || resp.Users == nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+	comps := make([]string, 0, len(resp.Users.Nodes))
+	for _, u := range resp.Users.Nodes {
+		comps = append(comps, userCompletionEntry(u.DisplayName, u.Name))
+	}
+	return comps, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+}
+
 // completeMyIssues fetches the current user's active issues and returns
 // formatted completion entries with status, priority, and title.
 func completeMyIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {

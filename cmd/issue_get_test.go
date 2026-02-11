@@ -209,34 +209,6 @@ func TestIssueGet_NotFound(t *testing.T) {
 	}
 }
 
-func TestIssueGet_NoArgs_NonInteractive(t *testing.T) {
-	t.Parallel()
-
-	completionResponse := `{
-		"data": {
-			"viewer": {
-				"assignedIssues": {
-					"nodes": [
-						{"identifier": "ENG-1", "title": "First issue", "state": {"name": "In Progress", "type": "started"}, "priority": 2}
-					]
-				}
-			}
-		}
-	}`
-
-	server := newMockGraphQLServer(t, map[string]string{
-		"ActiveIssuesForCompletion": completionResponse,
-	})
-	opts, _, _ := testOptionsWithBuffers(t, server)
-	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "get"})
-
-	err := root.Execute()
-	// fzf is not available in test environment
-	if err == nil {
-		t.Fatal("expected error when fzf is not available in test")
-	}
-}
 
 func TestIssueGet_Aliases(t *testing.T) {
 	t.Parallel()

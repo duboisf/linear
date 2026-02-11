@@ -52,10 +52,6 @@ func NewRootCmd(opts Options) *cobra.Command {
 		&cobra.Group{ID: "setup", Title: "Setup Commands:"},
 	)
 
-	listCmd := newListCmd(opts)
-	listCmd.GroupID = "core"
-	getCmd := newGetCmd(opts)
-	getCmd.GroupID = "core"
 	createCmd := newCreateCmd(opts)
 	createCmd.GroupID = "core"
 	issueCmd := newIssueCmd(opts)
@@ -65,14 +61,17 @@ func NewRootCmd(opts Options) *cobra.Command {
 
 	completionCmd := newCompletionCmd()
 	completionCmd.GroupID = "setup"
+	versionCmd := newVersionCmd()
+	versionCmd.GroupID = "setup"
+
+	root.SetHelpCommand(&cobra.Command{Hidden: true})
 
 	root.AddCommand(
-		listCmd,
-		getCmd,
 		createCmd,
 		issueCmd,
 		userCmd,
 		completionCmd,
+		versionCmd,
 	)
 	return root
 }

@@ -48,6 +48,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		all    bool
 		limit  int
 		sortBy string
+		user   string
 	)
 
 	cmd := &cobra.Command{
@@ -65,7 +66,32 @@ func newIssueListCmd(opts Options) *cobra.Command {
 			}
 
 			var nodes []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
-			if all {
+
+			if user != "" {
+				if all {
+					resp, err := api.ListAllUserIssues(cmd.Context(), client, limit, nil, user)
+					if err != nil {
+						return fmt.Errorf("listing issues: %w", err)
+					}
+					if resp.Issues == nil {
+						return fmt.Errorf("no issues data returned from API")
+					}
+					for _, n := range resp.Issues.Nodes {
+						nodes = append(nodes, convertAllUserIssueNode(n))
+					}
+				} else {
+					resp, err := api.ListUserIssues(cmd.Context(), client, limit, nil, user)
+					if err != nil {
+						return fmt.Errorf("listing issues: %w", err)
+					}
+					if resp.Issues == nil {
+						return fmt.Errorf("no issues data returned from API")
+					}
+					for _, n := range resp.Issues.Nodes {
+						nodes = append(nodes, convertUserIssueNode(n))
+					}
+				}
+			} else if all {
 				resp, err := api.ListMyAllIssues(cmd.Context(), client, limit, nil)
 				if err != nil {
 					return fmt.Errorf("listing issues: %w", err)
@@ -76,7 +102,6 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				if resp.Viewer.AssignedIssues == nil {
 					return fmt.Errorf("no assigned issues data returned from API")
 				}
-				// Convert to the active type for formatting
 				for _, n := range resp.Viewer.AssignedIssues.Nodes {
 					var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
 					if n.Labels != nil {
@@ -129,8 +154,60 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"status", "priority", "identifier", "title"}, cobra.ShellCompDirectiveNoFileComp
 	})
+	cmd.Flags().StringVarP(&user, "user", "u", "", "User whose issues to list")
+	_ = cmd.RegisterFlagCompletionFunc("user", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return completeUserNames(cmd, opts)
+	})
 
 	return cmd
+}
+
+func convertUserIssueNode(n *api.ListUserIssuesIssuesIssueConnectionNodesIssue) *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
+	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
+	if n.Labels != nil {
+		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
+		for i, l := range n.Labels.Nodes {
+			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				Name: l.Name,
+			}
+		}
+		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
+			Nodes: convertedNodes,
+		}
+	}
+	return &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		Id:         n.Id,
+		Identifier: n.Identifier,
+		Title:      n.Title,
+		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
+		Priority:   n.Priority,
+		UpdatedAt:  n.UpdatedAt,
+		Labels:     labels,
+	}
+}
+
+func convertAllUserIssueNode(n *api.ListAllUserIssuesIssuesIssueConnectionNodesIssue) *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
+	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
+	if n.Labels != nil {
+		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
+		for i, l := range n.Labels.Nodes {
+			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
+				Name: l.Name,
+			}
+		}
+		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
+			Nodes: convertedNodes,
+		}
+	}
+	return &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		Id:         n.Id,
+		Identifier: n.Identifier,
+		Title:      n.Title,
+		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
+		Priority:   n.Priority,
+		UpdatedAt:  n.UpdatedAt,
+		Labels:     labels,
+	}
 }
 
 type issueNode = api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue

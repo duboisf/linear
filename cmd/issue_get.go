@@ -15,7 +15,10 @@ var validOutputFormats = []string{"plain", "markdown", "json", "yaml"}
 // newIssueGetCmd creates the "issue get" subcommand that displays detailed
 // information for a specific issue.
 func newIssueGetCmd(opts Options) *cobra.Command {
-	var outputFormat string
+	var (
+		outputFormat string
+		user         string
+	)
 
 	cmd := &cobra.Command{
 		Use:     "get [IDENTIFIER]",
@@ -32,7 +35,12 @@ func newIssueGetCmd(opts Options) *cobra.Command {
 			if len(args) > 0 {
 				identifier = args[0]
 			} else {
-				issues, err := fetchMyIssues(cmd.Context(), client)
+				var issues []issueForCompletion
+				if user != "" {
+					issues, err = fetchUserIssues(cmd.Context(), client, user)
+				} else {
+					issues, err = fetchMyIssues(cmd.Context(), client)
+				}
 				if err != nil {
 					return fmt.Errorf("listing issues: %w", err)
 				}
@@ -76,6 +84,9 @@ func newIssueGetCmd(opts Options) *cobra.Command {
 			if len(args) > 0 {
 				return nil, cobra.ShellCompDirectiveNoFileComp
 			}
+			if user != "" {
+				return completeUserIssues(cmd, opts, user)
+			}
 			return completeMyIssues(cmd, opts)
 		},
 	}
@@ -83,6 +94,11 @@ func newIssueGetCmd(opts Options) *cobra.Command {
 	cmd.Flags().StringVarP(&outputFormat, "output", "o", "plain", "Output format: plain, markdown, json, yaml")
 	cmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return validOutputFormats, cobra.ShellCompDirectiveNoFileComp
+	})
+
+	cmd.Flags().StringVarP(&user, "user", "u", "", "User whose issues to browse")
+	cmd.RegisterFlagCompletionFunc("user", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return completeUserNames(cmd, opts)
 	})
 
 	return cmd

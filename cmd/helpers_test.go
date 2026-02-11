@@ -199,6 +199,19 @@ func (m *mockGitWorktreeCreator) CreateWorktree(path, branch, startPoint string)
 	return m.createErr
 }
 
+// --- Shared test fixtures ---
+
+const usersForCompletionResponse = `{
+	"data": {
+		"users": {
+			"nodes": [
+				{"id": "u1", "name": "Marc Dupont", "displayName": "Marc Dupont"},
+				{"id": "u2", "name": "Jane Smith", "displayName": "Jane Smith"}
+			]
+		}
+	}
+}`
+
 // executeCommand executes the given cobra command with args and captures output.
 func executeCommand(root *cobra.Command, args ...string) (stdout, stderr string, err error) {
 	outBuf := new(bytes.Buffer)
