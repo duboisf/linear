@@ -5,12 +5,15 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/spf13/cobra"
 
 	"github.com/duboisf/linear/internal/api"
+	"github.com/duboisf/linear/internal/cache"
 	"github.com/duboisf/linear/internal/keyring"
 )
 
@@ -28,6 +31,8 @@ type Options struct {
 	FileStore keyring.Provider
 	// GitWorktreeCreator abstracts git worktree operations.
 	GitWorktreeCreator GitWorktreeCreator
+	// Cache provides file-based caching for issue details.
+	Cache *cache.Cache
 	// Stdin for interactive input.
 	Stdin io.Reader
 	// Stdout for command output.
@@ -59,6 +64,8 @@ func NewRootCmd(opts Options) *cobra.Command {
 	userCmd := newUserCmd(opts)
 	userCmd.GroupID = "core"
 
+	cacheCmd := newCacheCmd(opts)
+	cacheCmd.GroupID = "setup"
 	completionCmd := newCompletionCmd()
 	completionCmd.GroupID = "setup"
 	versionCmd := newVersionCmd()
@@ -70,6 +77,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 		createCmd,
 		issueCmd,
 		userCmd,
+		cacheCmd,
 		completionCmd,
 		versionCmd,
 	)
@@ -97,6 +105,10 @@ func nativeKeyringProvider() keyring.Provider {
 func DefaultOptions() Options {
 	native := nativeKeyringProvider()
 	file := &keyring.FileProvider{}
+	cacheDir := filepath.Join(os.TempDir(), "linear-cache")
+	if d, err := os.UserCacheDir(); err == nil {
+		cacheDir = filepath.Join(d, "linear")
+	}
 	return Options{
 		NewAPIClient: func(apiKey string) graphql.Client {
 			return api.NewClient(apiKey, "")
@@ -112,6 +124,7 @@ func DefaultOptions() Options {
 		NativeStore:        native,
 		FileStore:          file,
 		GitWorktreeCreator: &execGitWorktreeCreator{ctx: context.Background()},
+		Cache:              cache.New(cacheDir, 5*time.Minute),
 		Stdin:              os.Stdin,
 		Stdout:             os.Stdout,
 		Stderr:             os.Stderr,

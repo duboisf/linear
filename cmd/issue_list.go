@@ -49,11 +49,13 @@ func issuePriorityRank(p float64) float64 {
 // assigned to the authenticated user.
 func newIssueListCmd(opts Options) *cobra.Command {
 	var (
-		all    bool
-		cycle  string
-		limit  int
-		sortBy string
-		user   string
+		all         bool
+		cycle       string
+		interactive bool
+		limit       int
+		refresh     bool
+		sortBy      string
+		user        string
 	)
 
 	cmd := &cobra.Command{
@@ -156,6 +158,23 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 			sortIssues(nodes, sortBy)
 
+			if interactive {
+				if refresh {
+					if _, err := opts.Cache.Clear(); err != nil {
+						return fmt.Errorf("clearing cache: %w", err)
+					}
+				}
+				issues := issuesToCompletions(nodes)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, issues, opts.Cache)
+				if err != nil {
+					return err
+				}
+				if selected != "" {
+					fmt.Fprintln(opts.Stdout, selected)
+				}
+				return nil
+			}
+
 			out := format.FormatIssueList(nodes, format.ColorEnabled(cmd.OutOrStdout()))
 			fmt.Fprint(opts.Stdout, out)
 
@@ -163,6 +182,8 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		},
 	}
 
+	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
+	cmd.Flags().BoolVarP(&refresh, "refresh", "r", false, "Clear cached issue details before browsing (use with -i)")
 	cmd.Flags().BoolVarP(&all, "all", "a", false, "Include completed and canceled issues")
 	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: current, next, previous, or a cycle number")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

@@ -1,2 +1,3 @@
 [tools]
+glow = "latest"
 go = "1.25"

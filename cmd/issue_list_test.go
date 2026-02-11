@@ -3,8 +3,10 @@ package cmd_test
 import (
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/duboisf/linear/cmd"
+	"github.com/duboisf/linear/internal/cache"
 )
 
 const listMyIssuesResponse = `{
@@ -898,5 +900,65 @@ func TestIssueList_CycleNoCycleFound(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "no current cycle found") {
 		t.Errorf("error %q should contain 'no current cycle found'", err.Error())
+	}
+}
+
+func TestIssueList_InteractiveFlag_FzfNotAvailable(t *testing.T) {
+	getIssueResponse := `{
+		"data": {
+			"issue": {
+				"id": "id-1",
+				"identifier": "ENG-101",
+				"title": "Fix login bug",
+				"state": {"name": "In Progress", "type": "started"},
+				"priority": 1,
+				"url": "https://linear.app/team/ENG-101",
+				"branchName": "eng-101-fix-login-bug"
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": listMyIssuesResponse,
+		"GetIssue":           getIssueResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	opts.Cache = cache.New(t.TempDir(), 5*time.Minute)
+
+	root := cmd.NewRootCmd(opts)
+	// Use PATH override to ensure fzf is not found.
+	t.Setenv("PATH", t.TempDir())
+	root.SetArgs([]string{"issue", "list", "--interactive"})
+
+	err := root.Execute()
+	// Should fail because fzf is not available.
+	if err == nil {
+		t.Fatal("expected error when fzf is not available")
+	}
+	if !strings.Contains(err.Error(), "fzf") {
+		t.Errorf("error %q should mention fzf", err.Error())
+	}
+}
+
+func TestIssueList_InteractiveFlag_EmptyResult(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssues": emptyListResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	opts.Cache = cache.New(t.TempDir(), 5*time.Minute)
+
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-i"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error for interactive mode with empty list")
+	}
+	if !strings.Contains(err.Error(), "no issues to browse") {
+		t.Errorf("error %q should contain 'no issues to browse'", err.Error())
 	}
 }
