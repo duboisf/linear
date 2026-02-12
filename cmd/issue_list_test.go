@@ -942,6 +942,43 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 	}
 }
 
+func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
+	t.Parallel()
+
+	// First call: populate the cycle cache.
+	server1 := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":                listCyclesResponse,
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+
+	opts1, _, _ := testOptionsWithBuffers(t, server1)
+	c := cache.New(t.TempDir(), 24*time.Hour)
+	opts1.Cache = c
+
+	root1 := cmd.NewRootCmd(opts1)
+	root1.SetArgs([]string{"issue", "list", "-c", "current"})
+	if err := root1.Execute(); err != nil {
+		t.Fatalf("first call: %v", err)
+	}
+
+	// Second call with --refresh: server does NOT handle ListCycles.
+	// Without --refresh this would succeed from cache (see TestIssueList_CycleCacheHit).
+	// With --refresh the cache is cleared, forcing a ListCycles API call that
+	// the server can't handle, so the command must fail.
+	server2 := newMockGraphQLServer(t, map[string]string{
+		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+	})
+	opts2, _, _ := testOptionsWithBuffers(t, server2)
+	opts2.Cache = c // reuse same cache
+
+	root2 := cmd.NewRootCmd(opts2)
+	root2.SetArgs([]string{"issue", "list", "--refresh", "-c", "current"})
+	err := root2.Execute()
+	if err == nil {
+		t.Fatal("expected error: --refresh should have cleared cache, forcing an API call")
+	}
+}
+
 func TestIssueList_InteractiveFlag_FzfNotAvailable(t *testing.T) {
 	getIssueResponse := `{
 		"data": {

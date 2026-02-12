@@ -55,7 +55,6 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		cycle       string
 		interactive bool
 		limit       int
-		refresh     bool
 		sortBy      string
 		user        string
 	)
@@ -164,11 +163,6 @@ func newIssueListCmd(opts Options) *cobra.Command {
 			sortIssues(nodes, sortBy)
 
 			if interactive {
-				if refresh {
-					if _, err := opts.Cache.Clear(); err != nil {
-						return fmt.Errorf("clearing cache: %w", err)
-					}
-				}
 				issues := issuesToCompletions(nodes)
 				selected, err := fzfBrowseIssues(cmd.Context(), client, issues, opts.Cache)
 				if err != nil {
@@ -189,8 +183,6 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
-	cmd.Flags().BoolVarP(&refresh, "refresh", "r", false, "Clear cached issue details before browsing (use with -i)")
-	_ = cmd.RegisterFlagCompletionFunc("refresh", cobra.NoFileCompletions)
 	cmd.Flags().BoolVarP(&all, "all", "a", false, "Include completed and canceled issues")
 	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: current, next, previous, or a cycle number")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

@@ -43,17 +43,30 @@ type Options struct {
 
 // NewRootCmd creates the root cobra command with all subcommands wired up.
 func NewRootCmd(opts Options) *cobra.Command {
+	var refresh bool
+
 	root := &cobra.Command{
 		Use:           "linear",
 		Short:         "CLI for the Linear issue tracker",
 		SilenceUsage:  true,
 		SilenceErrors: true,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			if refresh && opts.Cache != nil {
+				if _, err := opts.Cache.Clear(); err != nil {
+					return fmt.Errorf("clearing cache: %w", err)
+				}
+			}
+			return nil
+		},
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			return nil, cobra.ShellCompDirectiveNoFileComp
 		},
 	}
 	root.SetOut(opts.Stdout)
 	root.SetErr(opts.Stderr)
+
+	root.PersistentFlags().BoolVarP(&refresh, "refresh", "r", false, "Clear cached data before running")
+	_ = root.RegisterFlagCompletionFunc("refresh", cobra.NoFileCompletions)
 
 	root.AddGroup(
 		&cobra.Group{ID: "core", Title: "Core Commands:"},
