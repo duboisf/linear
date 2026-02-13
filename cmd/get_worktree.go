@@ -99,7 +99,7 @@ func runWorktreeCreate(ctx context.Context, client graphql.Client, identifier st
 		return err
 	}
 
-	worktreePath := filepath.Join(filepath.Dir(repoRoot), filepath.Base(repoRoot)+"--"+strings.ToLower(identifier))
+	worktreePath := filepath.Join(filepath.Dir(repoRoot), strings.ToLower(identifier), filepath.Base(repoRoot))
 
 	exists, err := git.BranchExists(branchName)
 	if err != nil {

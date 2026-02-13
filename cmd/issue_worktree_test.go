@@ -37,7 +37,7 @@ func TestIssueWorktree_Success(t *testing.T) {
 	if len(mock.createCalls) != 1 {
 		t.Fatalf("expected 1 create call, got %d", len(mock.createCalls))
 	}
-	wantPath := "/tmp/test-repo--eng-42"
+	wantPath := "/tmp/eng-42/test-repo"
 	if mock.createCalls[0].path != wantPath {
 		t.Errorf("create path = %q, want %q", mock.createCalls[0].path, wantPath)
 	}
@@ -90,7 +90,7 @@ func TestIssueWorktree_ExistingBranch(t *testing.T) {
 	if len(mock.createCalls) != 1 {
 		t.Fatalf("expected 1 create call, got %d", len(mock.createCalls))
 	}
-	wantPath := "/tmp/test-repo--eng-42"
+	wantPath := "/tmp/eng-42/test-repo"
 	if mock.createCalls[0].path != wantPath {
 		t.Errorf("create path = %q, want %q", mock.createCalls[0].path, wantPath)
 	}
@@ -155,7 +155,7 @@ func TestIssueWorktree_Alias(t *testing.T) {
 		t.Fatalf("issue wt returned error: %v", err)
 	}
 
-	wantPath := "/tmp/test-repo--eng-42"
+	wantPath := "/tmp/eng-42/test-repo"
 	output := stdout.String()
 	if !strings.Contains(output, wantPath) {
 		t.Errorf("output %q does not contain worktree path %q", output, wantPath)
@@ -181,7 +181,7 @@ func TestIssueWorktree_UserFlag(t *testing.T) {
 		t.Fatalf("issue worktree --user returned error: %v", err)
 	}
 
-	wantPath := "/tmp/test-repo--eng-42"
+	wantPath := "/tmp/eng-42/test-repo"
 	output := stdout.String()
 	if !strings.Contains(output, wantPath) {
 		t.Errorf("output %q does not contain worktree path %q", output, wantPath)
