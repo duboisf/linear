@@ -66,7 +66,7 @@ func TestIssueList_DefaultFilter(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -90,20 +90,20 @@ func TestIssueList_DefaultFilter(t *testing.T) {
 	}
 }
 
-func TestIssueList_AllFlag(t *testing.T) {
+func TestIssueList_StatusAll(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyAllIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "--all"})
+	root.SetArgs([]string{"issue", "list", "--status", "all"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("issue list --all returned error: %v", err)
+		t.Fatalf("issue list --status all returned error: %v", err)
 	}
 
 	output := stdout.String()
@@ -116,7 +116,7 @@ func TestIssueList_LimitFlag(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -138,7 +138,7 @@ func TestIssueList_EmptyResult(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": emptyListResponse,
+		"ListMyIssues": emptyListResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -178,7 +178,7 @@ func TestIssueList_Alias(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -200,7 +200,7 @@ func TestIssueList_LimitZero(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -220,7 +220,7 @@ func TestIssueList_LimitNegative(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
+		"ListMyIssues": listMyIssuesResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -297,7 +297,7 @@ func TestIssueList_SortByStatus(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": sortableIssuesResponse,
+		"ListMyIssues": sortableIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -337,7 +337,7 @@ func TestIssueList_SortByPriority(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": sortableIssuesResponse,
+		"ListMyIssues": sortableIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -369,7 +369,7 @@ func TestIssueList_SortByTitle(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": sortableIssuesResponse,
+		"ListMyIssues": sortableIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -421,7 +421,7 @@ func TestIssueList_NilViewer(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": nullViewerResponse,
+		"ListMyIssues": nullViewerResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -450,7 +450,7 @@ func TestIssueList_NilAssignedIssues(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": nullAssignedIssuesResponse,
+		"ListMyIssues": nullAssignedIssuesResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -500,7 +500,7 @@ func TestIssueList_UserFlag(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListUserIssues": listUserIssuesResponse,
+		"ListIssues": listUserIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -524,20 +524,20 @@ func TestIssueList_UserFlag(t *testing.T) {
 	}
 }
 
-func TestIssueList_UserFlag_AllFlag(t *testing.T) {
+func TestIssueList_UserFlag_StatusAll(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListAllUserIssues": listUserIssuesResponse,
+		"ListIssues": listUserIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "--user", "bob", "--all"})
+	root.SetArgs([]string{"issue", "list", "--user", "bob", "--status", "all"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("issue list --user --all returned error: %v", err)
+		t.Fatalf("issue list --user --status all returned error: %v", err)
 	}
 
 	output := stdout.String()
@@ -559,7 +559,7 @@ func TestIssueList_UserFlag_NilIssues(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListUserIssues": nullIssuesResponse,
+		"ListIssues": nullIssuesResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -575,7 +575,7 @@ func TestIssueList_UserFlag_NilIssues(t *testing.T) {
 	}
 }
 
-func TestIssueList_UserFlag_AllFlag_NilIssues(t *testing.T) {
+func TestIssueList_UserFlag_StatusAll_NilIssues(t *testing.T) {
 	t.Parallel()
 
 	nullIssuesResponse := `{
@@ -585,16 +585,16 @@ func TestIssueList_UserFlag_AllFlag_NilIssues(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListAllUserIssues": nullIssuesResponse,
+		"ListIssues": nullIssuesResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "--user", "alice", "--all"})
+	root.SetArgs([]string{"issue", "list", "--user", "alice", "--status", "all"})
 
 	err := root.Execute()
 	if err == nil {
-		t.Fatal("expected error for nil issues with --user --all")
+		t.Fatal("expected error for nil issues with --user --status all")
 	}
 	if !strings.Contains(err.Error(), "no issues data") {
 		t.Errorf("error %q should contain 'no issues data'", err.Error())
@@ -605,7 +605,7 @@ func TestIssueList_SortByIdentifier(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": sortableIssuesResponse,
+		"ListMyIssues": sortableIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -737,8 +737,8 @@ func TestIssueList_CycleCurrentFlag(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":                listCyclesResponse,
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -789,8 +789,8 @@ func TestIssueList_CycleNumberFlag(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":                listCyclesWithNumber42,
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListCycles":   listCyclesWithNumber42,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -815,8 +815,8 @@ func TestIssueList_CycleWithUserFlag(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":            listCyclesResponse,
-		"ListUserIssuesByCycle": cycleUserIssuesResponse,
+		"ListCycles": listCyclesResponse,
+		"ListIssues": cycleUserIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -834,21 +834,21 @@ func TestIssueList_CycleWithUserFlag(t *testing.T) {
 	}
 }
 
-func TestIssueList_CycleWithAllFlag(t *testing.T) {
+func TestIssueList_CycleWithStatusAll(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":             listCyclesResponse,
-		"ListMyAllIssuesByCycle": cycleIssuesResponse,
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "-c", "current", "--all"})
+	root.SetArgs([]string{"issue", "list", "-c", "current", "--status", "all"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("issue list -c current --all returned error: %v", err)
+		t.Fatalf("issue list -c current --status all returned error: %v", err)
 	}
 
 	output := stdout.String()
@@ -908,8 +908,8 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 
 	// First call: server has both ListCycles and issue responses.
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":                listCyclesResponse,
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -927,7 +927,7 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 	// Second call: server does NOT handle ListCycles.
 	// If cycles come from cache, the command still succeeds.
 	server2 := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 	opts2, stdout2, _ := testOptionsWithBuffers(t, server2)
 	opts2.Cache = opts.Cache // reuse the same cache
@@ -947,8 +947,8 @@ func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 
 	// First call: populate the cycle cache.
 	server1 := newMockGraphQLServer(t, map[string]string{
-		"ListCycles":                listCyclesResponse,
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 
 	opts1, _, _ := testOptionsWithBuffers(t, server1)
@@ -966,7 +966,7 @@ func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 	// With --refresh the cache is cleared, forcing a ListCycles API call that
 	// the server can't handle, so the command must fail.
 	server2 := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssuesByCycle": cycleIssuesResponse,
+		"ListMyIssues": cycleIssuesResponse,
 	})
 	opts2, _, _ := testOptionsWithBuffers(t, server2)
 	opts2.Cache = c // reuse same cache
@@ -976,6 +976,161 @@ func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 	err := root2.Execute()
 	if err == nil {
 		t.Fatal("expected error: --refresh should have cleared cache, forcing an API call")
+	}
+}
+
+// --- --status flag tests ---
+
+func TestIssueList_StatusFilter(t *testing.T) {
+	t.Parallel()
+
+	// Use sortableIssuesResponse which has started, unstarted, and backlog issues.
+	// With --status started, server-side filtering means the mock returns only
+	// what we give it. We simulate the server returning only started issues.
+	startedOnlyResponse := `{
+		"data": {
+			"viewer": {
+				"assignedIssues": {
+					"nodes": [
+						{
+							"id": "id-1",
+							"identifier": "AIS-273",
+							"title": "Replace polling",
+							"state": {"name": "In Progress", "type": "started"},
+							"priority": 3,
+							"updatedAt": "2025-01-01T00:00:00Z",
+							"labels": {"nodes": []}
+						},
+						{
+							"id": "id-2",
+							"identifier": "AIS-265",
+							"title": "Add middleware",
+							"state": {"name": "In Progress", "type": "started"},
+							"priority": 2,
+							"updatedAt": "2025-01-02T00:00:00Z",
+							"labels": {"nodes": []}
+						}
+					],
+					"pageInfo": {"hasNextPage": false, "endCursor": null}
+				}
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": startedOnlyResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "started"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status started returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "AIS-273") {
+		t.Error("expected output to contain AIS-273 (started)")
+	}
+	if !strings.Contains(output, "AIS-265") {
+		t.Error("expected output to contain AIS-265 (started)")
+	}
+}
+
+func TestIssueList_StatusFilterMultiple(t *testing.T) {
+	t.Parallel()
+
+	startedAndBacklogResponse := `{
+		"data": {
+			"viewer": {
+				"assignedIssues": {
+					"nodes": [
+						{
+							"id": "id-1",
+							"identifier": "AIS-273",
+							"title": "Replace polling",
+							"state": {"name": "In Progress", "type": "started"},
+							"priority": 3,
+							"updatedAt": "2025-01-01T00:00:00Z",
+							"labels": {"nodes": []}
+						},
+						{
+							"id": "id-2",
+							"identifier": "AIS-265",
+							"title": "Add middleware",
+							"state": {"name": "In Progress", "type": "started"},
+							"priority": 2,
+							"updatedAt": "2025-01-02T00:00:00Z",
+							"labels": {"nodes": []}
+						},
+						{
+							"id": "id-5",
+							"identifier": "AIS-147",
+							"title": "Security review",
+							"state": {"name": "Backlog", "type": "backlog"},
+							"priority": 3,
+							"updatedAt": "2025-01-05T00:00:00Z",
+							"labels": {"nodes": []}
+						}
+					],
+					"pageInfo": {"hasNextPage": false, "endCursor": null}
+				}
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": startedAndBacklogResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-S", "started,backlog"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -S started,backlog returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "AIS-273") {
+		t.Error("expected output to contain AIS-273 (started)")
+	}
+	if !strings.Contains(output, "AIS-265") {
+		t.Error("expected output to contain AIS-265 (started)")
+	}
+	if !strings.Contains(output, "AIS-147") {
+		t.Error("expected output to contain AIS-147 (backlog)")
+	}
+}
+
+func TestIssueList_StatusFilterNoMatch(t *testing.T) {
+	t.Parallel()
+
+	// Server returns empty when filtering for completed (no completed issues exist).
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": emptyListResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "completed"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status completed returned error: %v", err)
+	}
+
+	output := stdout.String()
+	// No completed issues, should have header only
+	if !strings.Contains(output, "IDENTIFIER") {
+		t.Error("expected header in output")
+	}
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) != 1 {
+		t.Errorf("expected only header line, got %d lines", len(lines))
 	}
 }
 
@@ -995,8 +1150,8 @@ func TestIssueList_InteractiveFlag_FzfNotAvailable(t *testing.T) {
 	}`
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": listMyIssuesResponse,
-		"GetIssue":           getIssueResponse,
+		"ListMyIssues": listMyIssuesResponse,
+		"GetIssue":     getIssueResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)
@@ -1021,7 +1176,7 @@ func TestIssueList_InteractiveFlag_EmptyResult(t *testing.T) {
 	t.Parallel()
 
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyActiveIssues": emptyListResponse,
+		"ListMyIssues": emptyListResponse,
 	})
 
 	opts, _, _ := testOptionsWithBuffers(t, server)

@@ -6,40 +6,9 @@ query Viewer {
   }
 }
 
-query ListMyActiveIssues($first: Int!, $after: String) {
+query ListMyIssues($first: Int!, $after: String, $filter: IssueFilter) {
   viewer {
-    assignedIssues(
-      first: $first
-      after: $after
-      filter: { state: { type: { nin: ["completed", "canceled"] } } }
-    ) {
-      nodes {
-        id
-        identifier
-        title
-        state {
-          name
-          type
-        }
-        priority
-        updatedAt
-        labels {
-          nodes {
-            name
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-}
-
-query ListMyAllIssues($first: Int!, $after: String) {
-  viewer {
-    assignedIssues(first: $first, after: $after) {
+    assignedIssues(first: $first, after: $after, filter: $filter) {
       nodes {
         id
         identifier
@@ -123,46 +92,8 @@ query ActiveIssuesForCompletion($first: Int!) {
   }
 }
 
-query ListUserIssues($first: Int!, $after: String, $assigneeName: String!) {
-  issues(
-    first: $first
-    after: $after
-    filter: {
-      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
-      state: { type: { nin: ["completed", "canceled"] } }
-    }
-  ) {
-    nodes {
-      id
-      identifier
-      title
-      state {
-        name
-        type
-      }
-      priority
-      updatedAt
-      labels {
-        nodes {
-          name
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-  }
-}
-
-query ListAllUserIssues($first: Int!, $after: String, $assigneeName: String!) {
-  issues(
-    first: $first
-    after: $after
-    filter: {
-      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
-    }
-  ) {
+query ListIssues($first: Int!, $after: String, $filter: IssueFilter) {
+  issues(first: $first, after: $after, filter: $filter) {
     nodes {
       id
       identifier
@@ -223,135 +154,6 @@ query ListCycles($first: Int!) {
   }
 }
 
-query ListMyActiveIssuesByCycle($first: Int!, $after: String, $cycleNumber: Float!) {
-  viewer {
-    assignedIssues(
-      first: $first
-      after: $after
-      filter: {
-        state: { type: { nin: ["completed", "canceled"] } }
-        cycle: { number: { eq: $cycleNumber } }
-      }
-    ) {
-      nodes {
-        id
-        identifier
-        title
-        state {
-          name
-          type
-        }
-        priority
-        updatedAt
-        labels {
-          nodes {
-            name
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-}
-
-query ListMyAllIssuesByCycle($first: Int!, $after: String, $cycleNumber: Float!) {
-  viewer {
-    assignedIssues(
-      first: $first
-      after: $after
-      filter: { cycle: { number: { eq: $cycleNumber } } }
-    ) {
-      nodes {
-        id
-        identifier
-        title
-        state {
-          name
-          type
-        }
-        priority
-        updatedAt
-        labels {
-          nodes {
-            name
-          }
-        }
-      }
-      pageInfo {
-        hasNextPage
-        endCursor
-      }
-    }
-  }
-}
-
-query ListUserIssuesByCycle($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
-  issues(
-    first: $first
-    after: $after
-    filter: {
-      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
-      state: { type: { nin: ["completed", "canceled"] } }
-      cycle: { number: { eq: $cycleNumber } }
-    }
-  ) {
-    nodes {
-      id
-      identifier
-      title
-      state {
-        name
-        type
-      }
-      priority
-      updatedAt
-      labels {
-        nodes {
-          name
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-  }
-}
-
-query ListAllUserIssuesByCycle($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
-  issues(
-    first: $first
-    after: $after
-    filter: {
-      assignee: { displayName: { eqIgnoreCase: $assigneeName } }
-      cycle: { number: { eq: $cycleNumber } }
-    }
-  ) {
-    nodes {
-      id
-      identifier
-      title
-      state {
-        name
-        type
-      }
-      priority
-      updatedAt
-      labels {
-        nodes {
-          name
-        }
-      }
-    }
-    pageInfo {
-      hasNextPage
-      endCursor
-    }
-  }
-}
 
 query UsersForCompletion($first: Int!) {
   users(first: $first) {

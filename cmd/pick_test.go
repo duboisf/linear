@@ -192,7 +192,7 @@ func TestIssuesToCompletions(t *testing.T) {
 			Identifier: "ENG-1",
 			Title:      "First",
 			Priority:   2,
-			State: &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
 				Name: "In Progress",
 				Type: "started",
 			},

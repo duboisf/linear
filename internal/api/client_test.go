@@ -499,9 +499,9 @@ func TestGetIssue_GraphQLError(t *testing.T) {
 	}
 }
 
-// --- ListMyActiveIssues tests ---
+// --- ListMyIssues tests ---
 
-func TestListMyActiveIssues_Success(t *testing.T) {
+func TestListMyIssues_Success(t *testing.T) {
 	t.Parallel()
 
 	const listJSON = `{
@@ -538,13 +538,13 @@ func TestListMyActiveIssues_Success(t *testing.T) {
 	}`
 
 	server := newOperationServer(t, map[string]string{
-		"ListMyActiveIssues": listJSON,
+		"ListMyIssues": listJSON,
 	})
 
 	client := api.NewClientWithHTTPClient(server.Client(), server.URL)
-	resp, err := api.ListMyActiveIssues(context.Background(), client, 50, nil)
+	resp, err := api.ListMyIssues(context.Background(), client, 50, nil, nil)
 	if err != nil {
-		t.Fatalf("ListMyActiveIssues returned error: %v", err)
+		t.Fatalf("ListMyIssues returned error: %v", err)
 	}
 
 	if resp.Viewer == nil {
@@ -596,7 +596,7 @@ func TestListMyActiveIssues_Success(t *testing.T) {
 	}
 }
 
-func TestListMyActiveIssues_HasHardcodedFilter(t *testing.T) {
+func TestListMyIssues_AcceptsFilterParam(t *testing.T) {
 	t.Parallel()
 
 	const listJSON = `{
@@ -624,13 +624,13 @@ func TestListMyActiveIssues_HasHardcodedFilter(t *testing.T) {
 	}`
 
 	server := newOperationServer(t, map[string]string{
-		"ListMyActiveIssues": listJSON,
+		"ListMyIssues": listJSON,
 	})
 
 	client := api.NewClientWithHTTPClient(server.Client(), server.URL)
-	resp, err := api.ListMyActiveIssues(context.Background(), client, 10, nil)
+	resp, err := api.ListMyIssues(context.Background(), client, 10, nil, nil)
 	if err != nil {
-		t.Fatalf("ListMyActiveIssues returned error: %v", err)
+		t.Fatalf("ListMyIssues returned error: %v", err)
 	}
 
 	nodes := resp.Viewer.AssignedIssues.Nodes
@@ -642,7 +642,7 @@ func TestListMyActiveIssues_HasHardcodedFilter(t *testing.T) {
 	}
 }
 
-func TestListMyActiveIssues_WithPagination(t *testing.T) {
+func TestListMyIssues_WithPagination(t *testing.T) {
 	t.Parallel()
 
 	cursor := "cursor-abc"
@@ -671,13 +671,13 @@ func TestListMyActiveIssues_WithPagination(t *testing.T) {
 	}`
 
 	server := newOperationServer(t, map[string]string{
-		"ListMyActiveIssues": paginatedJSON,
+		"ListMyIssues": paginatedJSON,
 	})
 
 	client := api.NewClientWithHTTPClient(server.Client(), server.URL)
-	resp, err := api.ListMyActiveIssues(context.Background(), client, 1, &cursor)
+	resp, err := api.ListMyIssues(context.Background(), client, 1, &cursor, nil)
 	if err != nil {
-		t.Fatalf("ListMyActiveIssues with pagination returned error: %v", err)
+		t.Fatalf("ListMyIssues with pagination returned error: %v", err)
 	}
 
 	nodes := resp.Viewer.AssignedIssues.Nodes
@@ -697,7 +697,7 @@ func TestListMyActiveIssues_WithPagination(t *testing.T) {
 	}
 }
 
-func TestListMyActiveIssues_EmptyResult(t *testing.T) {
+func TestListMyIssues_EmptyResult(t *testing.T) {
 	t.Parallel()
 
 	const emptyJSON = `{
@@ -715,13 +715,13 @@ func TestListMyActiveIssues_EmptyResult(t *testing.T) {
 	}`
 
 	server := newOperationServer(t, map[string]string{
-		"ListMyActiveIssues": emptyJSON,
+		"ListMyIssues": emptyJSON,
 	})
 
 	client := api.NewClientWithHTTPClient(server.Client(), server.URL)
-	resp, err := api.ListMyActiveIssues(context.Background(), client, 50, nil)
+	resp, err := api.ListMyIssues(context.Background(), client, 50, nil, nil)
 	if err != nil {
-		t.Fatalf("ListMyActiveIssues returned error: %v", err)
+		t.Fatalf("ListMyIssues returned error: %v", err)
 	}
 
 	nodes := resp.Viewer.AssignedIssues.Nodes
@@ -730,7 +730,7 @@ func TestListMyActiveIssues_EmptyResult(t *testing.T) {
 	}
 }
 
-func TestListMyActiveIssues_GraphQLError(t *testing.T) {
+func TestListMyIssues_GraphQLError(t *testing.T) {
 	t.Parallel()
 
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -740,7 +740,7 @@ func TestListMyActiveIssues_GraphQLError(t *testing.T) {
 	t.Cleanup(server.Close)
 
 	client := api.NewClientWithHTTPClient(server.Client(), server.URL)
-	_, err := api.ListMyActiveIssues(context.Background(), client, 50, nil)
+	_, err := api.ListMyIssues(context.Background(), client, 50, nil, nil)
 	if err == nil {
 		t.Fatal("expected error from GraphQL errors response")
 	}
@@ -899,7 +899,7 @@ func TestMultipleOperations_DispatchByName(t *testing.T) {
 				}
 			}
 		}`,
-		"ListMyActiveIssues": `{
+		"ListMyIssues": `{
 			"data": {
 				"viewer": {
 					"assignedIssues": {
@@ -931,13 +931,13 @@ func TestMultipleOperations_DispatchByName(t *testing.T) {
 		t.Errorf("GetIssue returned unexpected result: %+v", getResp.Issue)
 	}
 
-	// ListMyActiveIssues
-	listResp, err := api.ListMyActiveIssues(context.Background(), client, 10, nil)
+	// ListMyIssues
+	listResp, err := api.ListMyIssues(context.Background(), client, 10, nil, nil)
 	if err != nil {
-		t.Fatalf("ListMyActiveIssues returned error: %v", err)
+		t.Fatalf("ListMyIssues returned error: %v", err)
 	}
 	if len(listResp.Viewer.AssignedIssues.Nodes) != 0 {
-		t.Errorf("expected 0 nodes from ListMyActiveIssues, got %d", len(listResp.Viewer.AssignedIssues.Nodes))
+		t.Errorf("expected 0 nodes from ListMyIssues, got %d", len(listResp.Viewer.AssignedIssues.Nodes))
 	}
 
 	// ActiveIssuesForCompletion

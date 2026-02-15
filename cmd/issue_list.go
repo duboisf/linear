@@ -28,7 +28,7 @@ var stateTypeOrder = map[string]int{
 	"canceled":  6,
 }
 
-func issueStateRank(issue *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) int {
+func issueStateRank(issue *issueNode) int {
 	if issue.State == nil {
 		return 99
 	}
@@ -51,12 +51,12 @@ func issuePriorityRank(p float64) float64 {
 // assigned to the authenticated user.
 func newIssueListCmd(opts Options) *cobra.Command {
 	var (
-		all         bool
-		cycle       string
-		interactive bool
-		limit       int
-		sortBy      string
-		user        string
+		cycle        string
+		interactive  bool
+		limit        int
+		sortBy       string
+		statusFilter string
+		user         string
 	)
 
 	cmd := &cobra.Command{
@@ -76,78 +76,29 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				return err
 			}
 
+			filter, ci, err := buildIssueFilter(statusFilter, user, cycle, cmd.Context(), client, opts.Cache)
+			if err != nil {
+				return err
+			}
+			if ci != nil {
+				fmt.Fprintln(opts.Stdout, ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout())))
+			}
+
 			var nodes []*issueNode
 
-			if cycle != "" {
-				ci, err := resolveCycle(cmd.Context(), client, opts.Cache, cycle)
-				if err != nil {
-					return err
-				}
-				fmt.Fprintln(opts.Stdout, ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout())))
-				nodes, err = listIssuesByCycle(cmd.Context(), client, limit, user, all, ci.Number)
-				if err != nil {
-					return err
-				}
-			} else if user != "" {
-				if all {
-					resp, err := api.ListAllUserIssues(cmd.Context(), client, limit, nil, user)
-					if err != nil {
-						return fmt.Errorf("listing issues: %w", err)
-					}
-					if resp.Issues == nil {
-						return fmt.Errorf("no issues data returned from API")
-					}
-					for _, n := range resp.Issues.Nodes {
-						nodes = append(nodes, convertAllUserIssueNode(n))
-					}
-				} else {
-					resp, err := api.ListUserIssues(cmd.Context(), client, limit, nil, user)
-					if err != nil {
-						return fmt.Errorf("listing issues: %w", err)
-					}
-					if resp.Issues == nil {
-						return fmt.Errorf("no issues data returned from API")
-					}
-					for _, n := range resp.Issues.Nodes {
-						nodes = append(nodes, convertUserIssueNode(n))
-					}
-				}
-			} else if all {
-				resp, err := api.ListMyAllIssues(cmd.Context(), client, limit, nil)
+			if user != "" {
+				resp, err := api.ListIssues(cmd.Context(), client, limit, nil, filter)
 				if err != nil {
 					return fmt.Errorf("listing issues: %w", err)
 				}
-				if resp.Viewer == nil {
-					return fmt.Errorf("no viewer data returned from API")
+				if resp.Issues == nil {
+					return fmt.Errorf("no issues data returned from API")
 				}
-				if resp.Viewer.AssignedIssues == nil {
-					return fmt.Errorf("no assigned issues data returned from API")
-				}
-				for _, n := range resp.Viewer.AssignedIssues.Nodes {
-					var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-					if n.Labels != nil {
-						convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-						for i, l := range n.Labels.Nodes {
-							convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-								Name: l.Name,
-							}
-						}
-						labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-							Nodes: convertedNodes,
-						}
-					}
-					nodes = append(nodes, &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
-						Id:         n.Id,
-						Identifier: n.Identifier,
-						Title:      n.Title,
-						State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-						Priority:   n.Priority,
-						UpdatedAt:  n.UpdatedAt,
-						Labels:     labels,
-					})
+				for _, n := range resp.Issues.Nodes {
+					nodes = append(nodes, convertListIssuesNode(n))
 				}
 			} else {
-				resp, err := api.ListMyActiveIssues(cmd.Context(), client, limit, nil)
+				resp, err := api.ListMyIssues(cmd.Context(), client, limit, nil, filter)
 				if err != nil {
 					return fmt.Errorf("listing issues: %w", err)
 				}
@@ -183,7 +134,6 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
-	cmd.Flags().BoolVarP(&all, "all", "a", false, "Include completed and canceled issues")
 	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: current, next, previous, or a cycle number")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeCycleValues(cmd, opts)
@@ -193,6 +143,10 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"status", "priority", "identifier", "title"}, cobra.ShellCompDirectiveNoFileComp
 	})
+	cmd.Flags().StringVarP(&statusFilter, "status", "S", "", "Filter by status type: all, or comma-separated list of started, unstarted, triage, backlog, completed, canceled")
+	_ = cmd.RegisterFlagCompletionFunc("status", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"all", "started", "unstarted", "triage", "backlog", "completed", "canceled"}, cobra.ShellCompDirectiveNoFileComp
+	})
 	cmd.Flags().StringVarP(&user, "user", "u", "", "User whose issues to list")
 	_ = cmd.RegisterFlagCompletionFunc("user", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeUserNames(cmd, opts)
@@ -201,53 +155,95 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	return cmd
 }
 
-func convertUserIssueNode(n *api.ListUserIssuesIssuesIssueConnectionNodesIssue) *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
+// buildIssueFilter constructs an IssueFilter from the flag values.
+// When cycle is set, the resolved cycleInfo is returned for header rendering.
+func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, client graphql.Client, c *cache.Cache) (*api.IssueFilter, *cycleInfo, error) {
+	var filter *api.IssueFilter
+
+	// State filter based on --status flag.
+	statusLower := strings.ToLower(strings.TrimSpace(statusFilter))
+	switch {
+	case statusLower == "all":
+		// No state filter — include everything.
+		filter = nil
+	case statusLower != "":
+		// Explicit status list → use "in" filter.
+		var types []string
+		for s := range strings.SplitSeq(statusLower, ",") {
+			s = strings.TrimSpace(s)
+			if s != "" {
+				types = append(types, s)
+			}
+		}
+		filter = &api.IssueFilter{
+			State: &api.WorkflowStateFilter{
+				Type: &api.StringComparator{In: types},
+			},
+		}
+	default:
+		// Default: exclude completed and canceled.
+		filter = &api.IssueFilter{
+			State: &api.WorkflowStateFilter{
+				Type: &api.StringComparator{Nin: []string{"completed", "canceled"}},
+			},
+		}
+	}
+
+	// Assignee filter for --user flag (only used with ListIssues query).
+	if user != "" {
+		if filter == nil {
+			filter = &api.IssueFilter{}
+		}
+		filter.Assignee = &api.NullableUserFilter{
+			DisplayName: &api.StringComparator{EqIgnoreCase: &user},
+		}
+	}
+
+	// Cycle filter for --cycle flag.
+	var resolvedCycle *cycleInfo
+	if cycle != "" {
+		if filter == nil {
+			filter = &api.IssueFilter{}
+		}
+		ci, err := resolveCycle(ctx, client, c, cycle)
+		if err != nil {
+			return nil, nil, err
+		}
+		resolvedCycle = &ci
+		filter.Cycle = &api.NullableCycleFilter{
+			Number: &api.NumberComparator{Eq: &ci.Number},
+		}
+	}
+
+	return filter, resolvedCycle, nil
+}
+
+// convertListIssuesNode converts a ListIssues node to the canonical issueNode type.
+func convertListIssuesNode(n *api.ListIssuesIssuesIssueConnectionNodesIssue) *issueNode {
+	var labels *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
 	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
+		convertedNodes := make([]*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
 		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
+			convertedNodes[i] = &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
 				Name: l.Name,
 			}
 		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
+		labels = &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
 			Nodes: convertedNodes,
 		}
 	}
-	return &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+	return &issueNode{
 		Id:         n.Id,
 		Identifier: n.Identifier,
 		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
+		State:      (*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
 		Priority:   n.Priority,
 		UpdatedAt:  n.UpdatedAt,
 		Labels:     labels,
 	}
 }
 
-func convertAllUserIssueNode(n *api.ListAllUserIssuesIssuesIssueConnectionNodesIssue) *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-				Name: l.Name,
-			}
-		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-			Nodes: convertedNodes,
-		}
-	}
-	return &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
-		Id:         n.Id,
-		Identifier: n.Identifier,
-		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-		Priority:   n.Priority,
-		UpdatedAt:  n.UpdatedAt,
-		Labels:     labels,
-	}
-}
+type issueNode = api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
 
 // cycleInfo holds resolved cycle metadata for display.
 type cycleInfo struct {
@@ -368,171 +364,6 @@ func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, va
 
 	return cycleInfo{}, fmt.Errorf("no %s cycle found", value)
 }
-
-// listIssuesByCycle dispatches to the appropriate ByCycle query variant based
-// on the user and all flags, then converts results to the common issueNode type.
-func listIssuesByCycle(ctx context.Context, client graphql.Client, limit int, user string, all bool, cycleNumber float64) ([]*issueNode, error) {
-	if user != "" {
-		if all {
-			resp, err := api.ListAllUserIssuesByCycle(ctx, client, limit, nil, user, cycleNumber)
-			if err != nil {
-				return nil, fmt.Errorf("listing issues: %w", err)
-			}
-			if resp.Issues == nil {
-				return nil, fmt.Errorf("no issues data returned from API")
-			}
-			var nodes []*issueNode
-			for _, n := range resp.Issues.Nodes {
-				nodes = append(nodes, convertAllUserIssuesByCycleNode(n))
-			}
-			return nodes, nil
-		}
-		resp, err := api.ListUserIssuesByCycle(ctx, client, limit, nil, user, cycleNumber)
-		if err != nil {
-			return nil, fmt.Errorf("listing issues: %w", err)
-		}
-		if resp.Issues == nil {
-			return nil, fmt.Errorf("no issues data returned from API")
-		}
-		var nodes []*issueNode
-		for _, n := range resp.Issues.Nodes {
-			nodes = append(nodes, convertUserIssuesByCycleNode(n))
-		}
-		return nodes, nil
-	}
-
-	if all {
-		resp, err := api.ListMyAllIssuesByCycle(ctx, client, limit, nil, cycleNumber)
-		if err != nil {
-			return nil, fmt.Errorf("listing issues: %w", err)
-		}
-		if resp.Viewer == nil {
-			return nil, fmt.Errorf("no viewer data returned from API")
-		}
-		if resp.Viewer.AssignedIssues == nil {
-			return nil, fmt.Errorf("no assigned issues data returned from API")
-		}
-		var nodes []*issueNode
-		for _, n := range resp.Viewer.AssignedIssues.Nodes {
-			nodes = append(nodes, convertMyAllIssuesByCycleNode(n))
-		}
-		return nodes, nil
-	}
-
-	resp, err := api.ListMyActiveIssuesByCycle(ctx, client, limit, nil, cycleNumber)
-	if err != nil {
-		return nil, fmt.Errorf("listing issues: %w", err)
-	}
-	if resp.Viewer == nil {
-		return nil, fmt.Errorf("no viewer data returned from API")
-	}
-	if resp.Viewer.AssignedIssues == nil {
-		return nil, fmt.Errorf("no assigned issues data returned from API")
-	}
-	var nodes []*issueNode
-	for _, n := range resp.Viewer.AssignedIssues.Nodes {
-		nodes = append(nodes, convertMyActiveIssuesByCycleNode(n))
-	}
-	return nodes, nil
-}
-
-func convertMyActiveIssuesByCycleNode(n *api.ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) *issueNode {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-				Name: l.Name,
-			}
-		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-			Nodes: convertedNodes,
-		}
-	}
-	return &issueNode{
-		Id:         n.Id,
-		Identifier: n.Identifier,
-		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-		Priority:   n.Priority,
-		UpdatedAt:  n.UpdatedAt,
-		Labels:     labels,
-	}
-}
-
-func convertMyAllIssuesByCycleNode(n *api.ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) *issueNode {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-				Name: l.Name,
-			}
-		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-			Nodes: convertedNodes,
-		}
-	}
-	return &issueNode{
-		Id:         n.Id,
-		Identifier: n.Identifier,
-		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-		Priority:   n.Priority,
-		UpdatedAt:  n.UpdatedAt,
-		Labels:     labels,
-	}
-}
-
-func convertUserIssuesByCycleNode(n *api.ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) *issueNode {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-				Name: l.Name,
-			}
-		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-			Nodes: convertedNodes,
-		}
-	}
-	return &issueNode{
-		Id:         n.Id,
-		Identifier: n.Identifier,
-		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-		Priority:   n.Priority,
-		UpdatedAt:  n.UpdatedAt,
-		Labels:     labels,
-	}
-}
-
-func convertAllUserIssuesByCycleNode(n *api.ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) *issueNode {
-	var labels *api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection
-	if n.Labels != nil {
-		convertedNodes := make([]*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel, len(n.Labels.Nodes))
-		for i, l := range n.Labels.Nodes {
-			convertedNodes[i] = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
-				Name: l.Name,
-			}
-		}
-		labels = &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
-			Nodes: convertedNodes,
-		}
-	}
-	return &issueNode{
-		Id:         n.Id,
-		Identifier: n.Identifier,
-		Title:      n.Title,
-		State:      (*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
-		Priority:   n.Priority,
-		UpdatedAt:  n.UpdatedAt,
-		Labels:     labels,
-	}
-}
-
-type issueNode = api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
 
 func sortIssues(nodes []*issueNode, sortBy string) {
 	slices.SortFunc(nodes, func(a, b *issueNode) int {

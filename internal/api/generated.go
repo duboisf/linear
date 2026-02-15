@@ -99,6 +99,828 @@ func (v *ActiveIssuesForCompletionViewerUserAssignedIssuesIssueConnectionNodesIs
 	return v.Type
 }
 
+// Activity collection filtering options.
+type ActivityCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the activity.
+	And []*ActivityCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all activities.
+	Every *ActivityFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the activity.
+	Or []*ActivityCollectionFilter `json:"or,omitempty"`
+	// Filters that needs to be matched by some activities.
+	Some *ActivityFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the activity's user must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns ActivityCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetAnd() []*ActivityCollectionFilter { return v.And }
+
+// GetCreatedAt returns ActivityCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns ActivityCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetEvery() *ActivityFilter { return v.Every }
+
+// GetId returns ActivityCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns ActivityCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns ActivityCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetOr() []*ActivityCollectionFilter { return v.Or }
+
+// GetSome returns ActivityCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetSome() *ActivityFilter { return v.Some }
+
+// GetUpdatedAt returns ActivityCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns ActivityCollectionFilter.User, and is useful for accessing the field via an interface.
+func (v *ActivityCollectionFilter) GetUser() *UserFilter { return v.User }
+
+// Activity filtering options.
+type ActivityFilter struct {
+	// Compound filters, all of which need to be matched by the activity.
+	And []*ActivityFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the activity.
+	Or []*ActivityFilter `json:"or,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the activity's user must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns ActivityFilter.And, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetAnd() []*ActivityFilter { return v.And }
+
+// GetCreatedAt returns ActivityFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns ActivityFilter.Id, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns ActivityFilter.Or, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetOr() []*ActivityFilter { return v.Or }
+
+// GetUpdatedAt returns ActivityFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns ActivityFilter.User, and is useful for accessing the field via an interface.
+func (v *ActivityFilter) GetUser() *UserFilter { return v.User }
+
+// Attachment collection filtering options.
+type AttachmentCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the attachment.
+	And []*AttachmentCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the attachments creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Filters that needs to be matched by all attachments.
+	Every *AttachmentFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the attachment.
+	Or []*AttachmentCollectionFilter `json:"or,omitempty"`
+	// Filters that needs to be matched by some attachments.
+	Some *AttachmentFilter `json:"some,omitempty"`
+	// Comparator for the source type.
+	SourceType *SourceTypeComparator `json:"sourceType,omitempty"`
+	// Comparator for the subtitle.
+	Subtitle *NullableStringComparator `json:"subtitle,omitempty"`
+	// Comparator for the title.
+	Title *StringComparator `json:"title,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Comparator for the url.
+	Url *StringComparator `json:"url,omitempty"`
+}
+
+// GetAnd returns AttachmentCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetAnd() []*AttachmentCollectionFilter { return v.And }
+
+// GetCreatedAt returns AttachmentCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns AttachmentCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetEvery returns AttachmentCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetEvery() *AttachmentFilter { return v.Every }
+
+// GetId returns AttachmentCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns AttachmentCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns AttachmentCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetOr() []*AttachmentCollectionFilter { return v.Or }
+
+// GetSome returns AttachmentCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetSome() *AttachmentFilter { return v.Some }
+
+// GetSourceType returns AttachmentCollectionFilter.SourceType, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetSourceType() *SourceTypeComparator { return v.SourceType }
+
+// GetSubtitle returns AttachmentCollectionFilter.Subtitle, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetSubtitle() *NullableStringComparator { return v.Subtitle }
+
+// GetTitle returns AttachmentCollectionFilter.Title, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetUpdatedAt returns AttachmentCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUrl returns AttachmentCollectionFilter.Url, and is useful for accessing the field via an interface.
+func (v *AttachmentCollectionFilter) GetUrl() *StringComparator { return v.Url }
+
+// Attachment filtering options.
+type AttachmentFilter struct {
+	// Compound filters, all of which need to be matched by the attachment.
+	And []*AttachmentFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the attachments creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the attachment.
+	Or []*AttachmentFilter `json:"or,omitempty"`
+	// Comparator for the source type.
+	SourceType *SourceTypeComparator `json:"sourceType,omitempty"`
+	// Comparator for the subtitle.
+	Subtitle *NullableStringComparator `json:"subtitle,omitempty"`
+	// Comparator for the title.
+	Title *StringComparator `json:"title,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Comparator for the url.
+	Url *StringComparator `json:"url,omitempty"`
+}
+
+// GetAnd returns AttachmentFilter.And, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetAnd() []*AttachmentFilter { return v.And }
+
+// GetCreatedAt returns AttachmentFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns AttachmentFilter.Creator, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetId returns AttachmentFilter.Id, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns AttachmentFilter.Or, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetOr() []*AttachmentFilter { return v.Or }
+
+// GetSourceType returns AttachmentFilter.SourceType, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetSourceType() *SourceTypeComparator { return v.SourceType }
+
+// GetSubtitle returns AttachmentFilter.Subtitle, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetSubtitle() *NullableStringComparator { return v.Subtitle }
+
+// GetTitle returns AttachmentFilter.Title, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetUpdatedAt returns AttachmentFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUrl returns AttachmentFilter.Url, and is useful for accessing the field via an interface.
+func (v *AttachmentFilter) GetUrl() *StringComparator { return v.Url }
+
+// Comparator for booleans.
+type BooleanComparator struct {
+	// Equals constraint.
+	Eq *bool `json:"eq"`
+	// Not equals constraint.
+	Neq *bool `json:"neq"`
+}
+
+// GetEq returns BooleanComparator.Eq, and is useful for accessing the field via an interface.
+func (v *BooleanComparator) GetEq() *bool { return v.Eq }
+
+// GetNeq returns BooleanComparator.Neq, and is useful for accessing the field via an interface.
+func (v *BooleanComparator) GetNeq() *bool { return v.Neq }
+
+// Comment filtering options.
+type CommentCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the comment.
+	And []*CommentCollectionFilter `json:"and,omitempty"`
+	// Comparator for the comment's body.
+	Body *StringComparator `json:"body,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the comment's document content must satisfy.
+	DocumentContent *NullableDocumentContentFilter `json:"documentContent,omitempty"`
+	// Filters that needs to be matched by all comments.
+	Every *CommentFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the comment's issue must satisfy.
+	Issue *NullableIssueFilter `json:"issue,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Filters that the comment's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Compound filters, one of which need to be matched by the comment.
+	Or []*CommentCollectionFilter `json:"or,omitempty"`
+	// Filters that the comment parent must satisfy.
+	Parent *NullableCommentFilter `json:"parent,omitempty"`
+	// Filters that the comment's project update must satisfy.
+	ProjectUpdate *NullableProjectUpdateFilter `json:"projectUpdate,omitempty"`
+	// Filters that the comment's reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// Filters that needs to be matched by some comments.
+	Some *CommentFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the comment's creator must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns CommentCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetAnd() []*CommentCollectionFilter { return v.And }
+
+// GetBody returns CommentCollectionFilter.Body, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetBody() *StringComparator { return v.Body }
+
+// GetCreatedAt returns CommentCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDocumentContent returns CommentCollectionFilter.DocumentContent, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetDocumentContent() *NullableDocumentContentFilter {
+	return v.DocumentContent
+}
+
+// GetEvery returns CommentCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetEvery() *CommentFilter { return v.Every }
+
+// GetId returns CommentCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssue returns CommentCollectionFilter.Issue, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetIssue() *NullableIssueFilter { return v.Issue }
+
+// GetLength returns CommentCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetNeeds returns CommentCollectionFilter.Needs, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetOr returns CommentCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetOr() []*CommentCollectionFilter { return v.Or }
+
+// GetParent returns CommentCollectionFilter.Parent, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetParent() *NullableCommentFilter { return v.Parent }
+
+// GetProjectUpdate returns CommentCollectionFilter.ProjectUpdate, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetProjectUpdate() *NullableProjectUpdateFilter {
+	return v.ProjectUpdate
+}
+
+// GetReactions returns CommentCollectionFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetSome returns CommentCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetSome() *CommentFilter { return v.Some }
+
+// GetUpdatedAt returns CommentCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns CommentCollectionFilter.User, and is useful for accessing the field via an interface.
+func (v *CommentCollectionFilter) GetUser() *UserFilter { return v.User }
+
+// Comment filtering options.
+type CommentFilter struct {
+	// Compound filters, all of which need to be matched by the comment.
+	And []*CommentFilter `json:"and,omitempty"`
+	// Comparator for the comment's body.
+	Body *StringComparator `json:"body,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the comment's document content must satisfy.
+	DocumentContent *NullableDocumentContentFilter `json:"documentContent,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the comment's issue must satisfy.
+	Issue *NullableIssueFilter `json:"issue,omitempty"`
+	// Filters that the comment's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Compound filters, one of which need to be matched by the comment.
+	Or []*CommentFilter `json:"or,omitempty"`
+	// Filters that the comment parent must satisfy.
+	Parent *NullableCommentFilter `json:"parent,omitempty"`
+	// Filters that the comment's project update must satisfy.
+	ProjectUpdate *NullableProjectUpdateFilter `json:"projectUpdate,omitempty"`
+	// Filters that the comment's reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the comment's creator must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns CommentFilter.And, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetAnd() []*CommentFilter { return v.And }
+
+// GetBody returns CommentFilter.Body, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetBody() *StringComparator { return v.Body }
+
+// GetCreatedAt returns CommentFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDocumentContent returns CommentFilter.DocumentContent, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetDocumentContent() *NullableDocumentContentFilter { return v.DocumentContent }
+
+// GetId returns CommentFilter.Id, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssue returns CommentFilter.Issue, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetIssue() *NullableIssueFilter { return v.Issue }
+
+// GetNeeds returns CommentFilter.Needs, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetOr returns CommentFilter.Or, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetOr() []*CommentFilter { return v.Or }
+
+// GetParent returns CommentFilter.Parent, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetParent() *NullableCommentFilter { return v.Parent }
+
+// GetProjectUpdate returns CommentFilter.ProjectUpdate, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetProjectUpdate() *NullableProjectUpdateFilter { return v.ProjectUpdate }
+
+// GetReactions returns CommentFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetUpdatedAt returns CommentFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns CommentFilter.User, and is useful for accessing the field via an interface.
+func (v *CommentFilter) GetUser() *UserFilter { return v.User }
+
+// [Internal] Comparator for content.
+type ContentComparator struct {
+	// [Internal] Contains constraint.
+	Contains *string `json:"contains"`
+	// [Internal] Not-contains constraint.
+	NotContains *string `json:"notContains"`
+}
+
+// GetContains returns ContentComparator.Contains, and is useful for accessing the field via an interface.
+func (v *ContentComparator) GetContains() *string { return v.Contains }
+
+// GetNotContains returns ContentComparator.NotContains, and is useful for accessing the field via an interface.
+func (v *ContentComparator) GetNotContains() *string { return v.NotContains }
+
+// Customer needs filtering options.
+type CustomerNeedCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the customer needs.
+	And []*CustomerNeedCollectionFilter `json:"and,omitempty"`
+	// Filters that the need's comment must satisfy.
+	Comment *NullableCommentFilter `json:"comment,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the need's customer must satisfy.
+	Customer *NullableCustomerFilter `json:"customer,omitempty"`
+	// Filters that needs to be matched by all customer needs.
+	Every *CustomerNeedFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the need's issue must satisfy.
+	Issue *NullableIssueFilter `json:"issue,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the customer needs.
+	Or []*CustomerNeedCollectionFilter `json:"or,omitempty"`
+	// Comparator for the customer need priority.
+	Priority *NumberComparator `json:"priority,omitempty"`
+	// Filters that the need's project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Filters that needs to be matched by some customer needs.
+	Some *CustomerNeedFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns CustomerNeedCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetAnd() []*CustomerNeedCollectionFilter { return v.And }
+
+// GetComment returns CustomerNeedCollectionFilter.Comment, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetComment() *NullableCommentFilter { return v.Comment }
+
+// GetCreatedAt returns CustomerNeedCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCustomer returns CustomerNeedCollectionFilter.Customer, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetCustomer() *NullableCustomerFilter { return v.Customer }
+
+// GetEvery returns CustomerNeedCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetEvery() *CustomerNeedFilter { return v.Every }
+
+// GetId returns CustomerNeedCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssue returns CustomerNeedCollectionFilter.Issue, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetIssue() *NullableIssueFilter { return v.Issue }
+
+// GetLength returns CustomerNeedCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns CustomerNeedCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetOr() []*CustomerNeedCollectionFilter { return v.Or }
+
+// GetPriority returns CustomerNeedCollectionFilter.Priority, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetPriority() *NumberComparator { return v.Priority }
+
+// GetProject returns CustomerNeedCollectionFilter.Project, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetSome returns CustomerNeedCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetSome() *CustomerNeedFilter { return v.Some }
+
+// GetUpdatedAt returns CustomerNeedCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerNeedCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Customer filtering options.
+type CustomerNeedFilter struct {
+	// Compound filters, all of which need to be matched by the customer need.
+	And []*CustomerNeedFilter `json:"and,omitempty"`
+	// Filters that the need's comment must satisfy.
+	Comment *NullableCommentFilter `json:"comment,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the need's customer must satisfy.
+	Customer *NullableCustomerFilter `json:"customer,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the need's issue must satisfy.
+	Issue *NullableIssueFilter `json:"issue,omitempty"`
+	// Compound filters, one of which need to be matched by the customer need.
+	Or []*CustomerNeedFilter `json:"or,omitempty"`
+	// Comparator for the customer need priority.
+	Priority *NumberComparator `json:"priority,omitempty"`
+	// Filters that the need's project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns CustomerNeedFilter.And, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetAnd() []*CustomerNeedFilter { return v.And }
+
+// GetComment returns CustomerNeedFilter.Comment, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetComment() *NullableCommentFilter { return v.Comment }
+
+// GetCreatedAt returns CustomerNeedFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCustomer returns CustomerNeedFilter.Customer, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetCustomer() *NullableCustomerFilter { return v.Customer }
+
+// GetId returns CustomerNeedFilter.Id, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssue returns CustomerNeedFilter.Issue, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetIssue() *NullableIssueFilter { return v.Issue }
+
+// GetOr returns CustomerNeedFilter.Or, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetOr() []*CustomerNeedFilter { return v.Or }
+
+// GetPriority returns CustomerNeedFilter.Priority, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetPriority() *NumberComparator { return v.Priority }
+
+// GetProject returns CustomerNeedFilter.Project, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetUpdatedAt returns CustomerNeedFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerNeedFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Customer status filtering options.
+type CustomerStatusFilter struct {
+	// Compound filters, all of which need to be matched by the customer status.
+	And []*CustomerStatusFilter `json:"and,omitempty"`
+	// Comparator for the customer status color.
+	Color *StringComparator `json:"color,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the customer status description.
+	Description *StringComparator `json:"description,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the customer status name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which needs to be matched by the customer status.
+	Or []*CustomerStatusFilter `json:"or,omitempty"`
+	// Comparator for the customer status position.
+	Position *NumberComparator `json:"position,omitempty"`
+	// Comparator for the customer status type.
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns CustomerStatusFilter.And, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetAnd() []*CustomerStatusFilter { return v.And }
+
+// GetColor returns CustomerStatusFilter.Color, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetColor() *StringComparator { return v.Color }
+
+// GetCreatedAt returns CustomerStatusFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns CustomerStatusFilter.Description, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetDescription() *StringComparator { return v.Description }
+
+// GetId returns CustomerStatusFilter.Id, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns CustomerStatusFilter.Name, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns CustomerStatusFilter.Or, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetOr() []*CustomerStatusFilter { return v.Or }
+
+// GetPosition returns CustomerStatusFilter.Position, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetPosition() *NumberComparator { return v.Position }
+
+// GetType returns CustomerStatusFilter.Type, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns CustomerStatusFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerStatusFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Customer tier filtering options.
+type CustomerTierFilter struct {
+	// Compound filters, all of which need to be matched by the customer tier.
+	And []*CustomerTierFilter `json:"and,omitempty"`
+	// Comparator for the customer tier color.
+	Color *StringComparator `json:"color,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the customer tier description.
+	Description *StringComparator `json:"description,omitempty"`
+	// Comparator for the customer tier display name.
+	DisplayName *StringComparator `json:"displayName,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which needs to be matched by the customer tier.
+	Or []*CustomerTierFilter `json:"or,omitempty"`
+	// Comparator for the customer tier position.
+	Position *NumberComparator `json:"position,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns CustomerTierFilter.And, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetAnd() []*CustomerTierFilter { return v.And }
+
+// GetColor returns CustomerTierFilter.Color, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetColor() *StringComparator { return v.Color }
+
+// GetCreatedAt returns CustomerTierFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns CustomerTierFilter.Description, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetDescription() *StringComparator { return v.Description }
+
+// GetDisplayName returns CustomerTierFilter.DisplayName, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetDisplayName() *StringComparator { return v.DisplayName }
+
+// GetId returns CustomerTierFilter.Id, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns CustomerTierFilter.Or, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetOr() []*CustomerTierFilter { return v.Or }
+
+// GetPosition returns CustomerTierFilter.Position, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetPosition() *NumberComparator { return v.Position }
+
+// GetUpdatedAt returns CustomerTierFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *CustomerTierFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+type CyclePeriod string
+
+const (
+	CyclePeriodAfter  CyclePeriod = "after"
+	CyclePeriodBefore CyclePeriod = "before"
+	CyclePeriodDuring CyclePeriod = "during"
+)
+
+var AllCyclePeriod = []CyclePeriod{
+	CyclePeriodAfter,
+	CyclePeriodBefore,
+	CyclePeriodDuring,
+}
+
+// Comparator for period when issue was added to a cycle.
+type CyclePeriodComparator struct {
+	// Equals constraint.
+	Eq *CyclePeriod `json:"eq"`
+	// In-array constraint.
+	In []CyclePeriod `json:"in"`
+	// Not-equals constraint.
+	Neq *CyclePeriod `json:"neq"`
+	// Not-in-array constraint.
+	Nin []CyclePeriod `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns CyclePeriodComparator.Eq, and is useful for accessing the field via an interface.
+func (v *CyclePeriodComparator) GetEq() *CyclePeriod { return v.Eq }
+
+// GetIn returns CyclePeriodComparator.In, and is useful for accessing the field via an interface.
+func (v *CyclePeriodComparator) GetIn() []CyclePeriod { return v.In }
+
+// GetNeq returns CyclePeriodComparator.Neq, and is useful for accessing the field via an interface.
+func (v *CyclePeriodComparator) GetNeq() *CyclePeriod { return v.Neq }
+
+// GetNin returns CyclePeriodComparator.Nin, and is useful for accessing the field via an interface.
+func (v *CyclePeriodComparator) GetNin() []CyclePeriod { return v.Nin }
+
+// GetNull returns CyclePeriodComparator.Null, and is useful for accessing the field via an interface.
+func (v *CyclePeriodComparator) GetNull() *bool { return v.Null }
+
+// Comparator for dates.
+type DateComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *string `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *string `json:"gte"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *string `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *string `json:"lte"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+}
+
+// GetEq returns DateComparator.Eq, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetEq() *string { return v.Eq }
+
+// GetGt returns DateComparator.Gt, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetGt() *string { return v.Gt }
+
+// GetGte returns DateComparator.Gte, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetGte() *string { return v.Gte }
+
+// GetIn returns DateComparator.In, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetIn() []string { return v.In }
+
+// GetLt returns DateComparator.Lt, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetLt() *string { return v.Lt }
+
+// GetLte returns DateComparator.Lte, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetLte() *string { return v.Lte }
+
+// GetNeq returns DateComparator.Neq, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns DateComparator.Nin, and is useful for accessing the field via an interface.
+func (v *DateComparator) GetNin() []string { return v.Nin }
+
+// Document filtering options.
+type DocumentFilter struct {
+	// Compound filters, all of which need to be matched by the document.
+	And []*DocumentFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the document's creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the document's initiative must satisfy.
+	Initiative *InitiativeFilter `json:"initiative,omitempty"`
+	// Filters that the document's issue must satisfy.
+	Issue *IssueFilter `json:"issue,omitempty"`
+	// Compound filters, one of which need to be matched by the document.
+	Or []*DocumentFilter `json:"or,omitempty"`
+	// Filters that the document's project must satisfy.
+	Project *ProjectFilter `json:"project,omitempty"`
+	// Comparator for the document slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Comparator for the document title.
+	Title *StringComparator `json:"title,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns DocumentFilter.And, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetAnd() []*DocumentFilter { return v.And }
+
+// GetCreatedAt returns DocumentFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns DocumentFilter.Creator, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetId returns DocumentFilter.Id, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetId() *IDComparator { return v.Id }
+
+// GetInitiative returns DocumentFilter.Initiative, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetInitiative() *InitiativeFilter { return v.Initiative }
+
+// GetIssue returns DocumentFilter.Issue, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetIssue() *IssueFilter { return v.Issue }
+
+// GetOr returns DocumentFilter.Or, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetOr() []*DocumentFilter { return v.Or }
+
+// GetProject returns DocumentFilter.Project, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetProject() *ProjectFilter { return v.Project }
+
+// GetSlugId returns DocumentFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetTitle returns DocumentFilter.Title, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetUpdatedAt returns DocumentFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *DocumentFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for estimates.
+type EstimateComparator struct {
+	// Compound filters, one of which need to be matched by the estimate.
+	And []*NullableNumberComparator `json:"and,omitempty"`
+	// Equals constraint.
+	Eq *float64 `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *float64 `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *float64 `json:"gte"`
+	// In-array constraint.
+	In []float64 `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *float64 `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *float64 `json:"lte"`
+	// Not-equals constraint.
+	Neq *float64 `json:"neq"`
+	// Not-in-array constraint.
+	Nin []float64 `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+	// Compound filters, all of which need to be matched by the estimate.
+	Or []*NullableNumberComparator `json:"or,omitempty"`
+}
+
+// GetAnd returns EstimateComparator.And, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetAnd() []*NullableNumberComparator { return v.And }
+
+// GetEq returns EstimateComparator.Eq, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetEq() *float64 { return v.Eq }
+
+// GetGt returns EstimateComparator.Gt, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetGt() *float64 { return v.Gt }
+
+// GetGte returns EstimateComparator.Gte, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetGte() *float64 { return v.Gte }
+
+// GetIn returns EstimateComparator.In, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetIn() []float64 { return v.In }
+
+// GetLt returns EstimateComparator.Lt, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetLt() *float64 { return v.Lt }
+
+// GetLte returns EstimateComparator.Lte, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetLte() *float64 { return v.Lte }
+
+// GetNeq returns EstimateComparator.Neq, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetNeq() *float64 { return v.Neq }
+
+// GetNin returns EstimateComparator.Nin, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetNin() []float64 { return v.Nin }
+
+// GetNull returns EstimateComparator.Null, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetNull() *bool { return v.Null }
+
+// GetOr returns EstimateComparator.Or, and is useful for accessing the field via an interface.
+func (v *EstimateComparator) GetOr() []*NullableNumberComparator { return v.Or }
+
 // GetIssueIssue includes the requested fields of the GraphQL type Issue.
 // The GraphQL type's documentation follows.
 //
@@ -368,283 +1190,1240 @@ func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetAdmin() bool { ret
 // GetIsMe returns GetUserByDisplayNameUsersUserConnectionNodesUser.IsMe, and is useful for accessing the field via an interface.
 func (v *GetUserByDisplayNameUsersUserConnectionNodesUser) GetIsMe() bool { return v.IsMe }
 
-// ListAllUserIssuesByCycleIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListAllUserIssuesByCycleIssuesIssueConnection struct {
-	Nodes    []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+// Comparator for identifiers.
+type IDComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
 }
 
-// GetNodes returns ListAllUserIssuesByCycleIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnection) GetNodes() []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue {
-	return v.Nodes
+// GetEq returns IDComparator.Eq, and is useful for accessing the field via an interface.
+func (v *IDComparator) GetEq() *string { return v.Eq }
+
+// GetIn returns IDComparator.In, and is useful for accessing the field via an interface.
+func (v *IDComparator) GetIn() []string { return v.In }
+
+// GetNeq returns IDComparator.Neq, and is useful for accessing the field via an interface.
+func (v *IDComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns IDComparator.Nin, and is useful for accessing the field via an interface.
+func (v *IDComparator) GetNin() []string { return v.Nin }
+
+// Initiative collection filtering options.
+type InitiativeCollectionFilter struct {
+	// Comparator for the initiative activity type.
+	ActivityType *StringComparator `json:"activityType,omitempty"`
+	// Filters that the initiative must be an ancestor of.
+	Ancestors *InitiativeCollectionFilter `json:"ancestors,omitempty"`
+	// Compound filters, all of which need to be matched by the initiative.
+	And []*InitiativeCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the initiative creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Filters that needs to be matched by all initiatives.
+	Every *InitiativeFilter `json:"every,omitempty"`
+	// Comparator for the initiative health: onTrack, atRisk, offTrack
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the initiative health (with age): onTrack, atRisk, offTrack, outdated, noUpdate
+	HealthWithAge *StringComparator `json:"healthWithAge,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the initiative name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the initiative.
+	Or []*InitiativeCollectionFilter `json:"or,omitempty"`
+	// Filters that the initiative owner must satisfy.
+	Owner *NullableUserFilter `json:"owner,omitempty"`
+	// Comparator for the initiative slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Filters that needs to be matched by some initiatives.
+	Some *InitiativeFilter `json:"some,omitempty"`
+	// Comparator for the initiative status: Planned, Active, Completed
+	Status *StringComparator `json:"status,omitempty"`
+	// Comparator for the initiative target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Filters that the initiative teams must satisfy.
+	Teams *TeamCollectionFilter `json:"teams,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
 
-// GetPageInfo returns ListAllUserIssuesByCycleIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnection) GetPageInfo() *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo {
-	return v.PageInfo
+// GetActivityType returns InitiativeCollectionFilter.ActivityType, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetActivityType() *StringComparator { return v.ActivityType }
+
+// GetAncestors returns InitiativeCollectionFilter.Ancestors, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetAncestors() *InitiativeCollectionFilter { return v.Ancestors }
+
+// GetAnd returns InitiativeCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetAnd() []*InitiativeCollectionFilter { return v.And }
+
+// GetCreatedAt returns InitiativeCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns InitiativeCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetEvery returns InitiativeCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetEvery() *InitiativeFilter { return v.Every }
+
+// GetHealth returns InitiativeCollectionFilter.Health, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetHealthWithAge returns InitiativeCollectionFilter.HealthWithAge, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetHealthWithAge() *StringComparator { return v.HealthWithAge }
+
+// GetId returns InitiativeCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns InitiativeCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns InitiativeCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns InitiativeCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetOr() []*InitiativeCollectionFilter { return v.Or }
+
+// GetOwner returns InitiativeCollectionFilter.Owner, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetOwner() *NullableUserFilter { return v.Owner }
+
+// GetSlugId returns InitiativeCollectionFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetSome returns InitiativeCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetSome() *InitiativeFilter { return v.Some }
+
+// GetStatus returns InitiativeCollectionFilter.Status, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetStatus() *StringComparator { return v.Status }
+
+// GetTargetDate returns InitiativeCollectionFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetTeams returns InitiativeCollectionFilter.Teams, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetTeams() *TeamCollectionFilter { return v.Teams }
+
+// GetUpdatedAt returns InitiativeCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *InitiativeCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Initiative filtering options.
+type InitiativeFilter struct {
+	// Comparator for the initiative activity type.
+	ActivityType *StringComparator `json:"activityType,omitempty"`
+	// Filters that the initiative must be an ancestor of.
+	Ancestors *InitiativeCollectionFilter `json:"ancestors,omitempty"`
+	// Compound filters, all of which need to be matched by the initiative.
+	And []*InitiativeFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the initiative creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Comparator for the initiative health: onTrack, atRisk, offTrack
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the initiative health (with age): onTrack, atRisk, offTrack, outdated, noUpdate
+	HealthWithAge *StringComparator `json:"healthWithAge,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the initiative name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the initiative.
+	Or []*InitiativeFilter `json:"or,omitempty"`
+	// Filters that the initiative owner must satisfy.
+	Owner *NullableUserFilter `json:"owner,omitempty"`
+	// Comparator for the initiative slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Comparator for the initiative status: Planned, Active, Completed
+	Status *StringComparator `json:"status,omitempty"`
+	// Comparator for the initiative target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Filters that the initiative teams must satisfy.
+	Teams *TeamCollectionFilter `json:"teams,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
 
-// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+// GetActivityType returns InitiativeFilter.ActivityType, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetActivityType() *StringComparator { return v.ActivityType }
+
+// GetAncestors returns InitiativeFilter.Ancestors, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetAncestors() *InitiativeCollectionFilter { return v.Ancestors }
+
+// GetAnd returns InitiativeFilter.And, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetAnd() []*InitiativeFilter { return v.And }
+
+// GetCreatedAt returns InitiativeFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns InitiativeFilter.Creator, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetHealth returns InitiativeFilter.Health, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetHealthWithAge returns InitiativeFilter.HealthWithAge, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetHealthWithAge() *StringComparator { return v.HealthWithAge }
+
+// GetId returns InitiativeFilter.Id, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns InitiativeFilter.Name, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns InitiativeFilter.Or, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetOr() []*InitiativeFilter { return v.Or }
+
+// GetOwner returns InitiativeFilter.Owner, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetOwner() *NullableUserFilter { return v.Owner }
+
+// GetSlugId returns InitiativeFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetStatus returns InitiativeFilter.Status, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetStatus() *StringComparator { return v.Status }
+
+// GetTargetDate returns InitiativeFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetTeams returns InitiativeFilter.Teams, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetTeams() *TeamCollectionFilter { return v.Teams }
+
+// GetUpdatedAt returns InitiativeFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *InitiativeFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Issue filtering options.
+type IssueCollectionFilter struct {
+	// [Internal] Comparator for the issue's accumulatedStateUpdatedAt date.
+	AccumulatedStateUpdatedAt *NullableDateComparator `json:"accumulatedStateUpdatedAt,omitempty"`
+	// Filters that the issue's activities must satisfy.
+	Activity *ActivityCollectionFilter `json:"activity,omitempty"`
+	// Comparator for the issues added to cycle at date.
+	AddedToCycleAt *NullableDateComparator `json:"addedToCycleAt,omitempty"`
+	// Comparator for the period when issue was added to a cycle.
+	AddedToCyclePeriod *CyclePeriodComparator `json:"addedToCyclePeriod,omitempty"`
+	// [Internal] Age (created -> now) comparator, defined if the issue is still open.
+	AgeTime *NullableDurationComparator `json:"ageTime,omitempty"`
+	// Compound filters, all of which need to be matched by the issue.
+	And []*IssueCollectionFilter `json:"and,omitempty"`
+	// Comparator for the issues archived at date.
+	ArchivedAt *NullableDateComparator `json:"archivedAt,omitempty"`
+	// Filters that the issues assignee must satisfy.
+	Assignee *NullableUserFilter `json:"assignee,omitempty"`
+	// Filters that the issues attachments must satisfy.
+	Attachments *AttachmentCollectionFilter `json:"attachments,omitempty"`
+	// Comparator for the issues auto archived at date.
+	AutoArchivedAt *NullableDateComparator `json:"autoArchivedAt,omitempty"`
+	// Comparator for the issues auto closed at date.
+	AutoClosedAt *NullableDateComparator `json:"autoClosedAt,omitempty"`
+	// Comparator for the issues canceled at date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Filters that the child issues must satisfy.
+	Children *IssueCollectionFilter `json:"children,omitempty"`
+	// Filters that the issues comments must satisfy.
+	Comments *CommentCollectionFilter `json:"comments,omitempty"`
+	// Comparator for the issues completed at date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the issues creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Filters that the issues cycle must satisfy.
+	Cycle *NullableCycleFilter `json:"cycle,omitempty"`
+	// [Internal] Cycle time (started -> completed) comparator.
+	CycleTime *NullableDurationComparator `json:"cycleTime,omitempty"`
+	// Filters that the issue's delegated agent must satisfy.
+	Delegate *NullableUserFilter `json:"delegate,omitempty"`
+	// Comparator for the issues description.
+	Description *NullableStringComparator `json:"description,omitempty"`
+	// Comparator for the issues due date.
+	DueDate *NullableTimelessDateComparator `json:"dueDate,omitempty"`
+	// Comparator for the issues estimate.
+	Estimate *EstimateComparator `json:"estimate,omitempty"`
+	// Filters that needs to be matched by all issues.
+	Every *IssueFilter `json:"every,omitempty"`
+	// Comparator for filtering issues which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering issues which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// Comparator for filtering issues which are duplicates.
+	HasDuplicateRelations *RelationExistsComparator `json:"hasDuplicateRelations,omitempty"`
+	// Comparator for filtering issues with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering issues which have been shared with users outside of the team.
+	HasSharedUsers *RelationExistsComparator `json:"hasSharedUsers,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested assignees.
+	HasSuggestedAssignees *RelationExistsComparator `json:"hasSuggestedAssignees,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested labels.
+	HasSuggestedLabels *RelationExistsComparator `json:"hasSuggestedLabels,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested projects.
+	HasSuggestedProjects *RelationExistsComparator `json:"hasSuggestedProjects,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested related issues.
+	HasSuggestedRelatedIssues *RelationExistsComparator `json:"hasSuggestedRelatedIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested similar issues.
+	HasSuggestedSimilarIssues *RelationExistsComparator `json:"hasSuggestedSimilarIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested teams.
+	HasSuggestedTeams *RelationExistsComparator `json:"hasSuggestedTeams,omitempty"`
+	// Comparator for the identifier.
+	Id *IssueIDComparator `json:"id,omitempty"`
+	// Filters that issue labels must satisfy.
+	Labels *IssueLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// [Internal] Lead time (created -> completed) comparator.
+	LeadTime *NullableDurationComparator `json:"leadTime,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Filters that the issue's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Comparator for the issues number.
+	Number *NumberComparator `json:"number,omitempty"`
+	// Compound filters, one of which need to be matched by the issue.
+	Or []*IssueCollectionFilter `json:"or,omitempty"`
+	// Filters that the issue parent must satisfy.
+	Parent *NullableIssueFilter `json:"parent,omitempty"`
+	// Comparator for the issues priority. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the issues project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Filters that the issues project milestone must satisfy.
+	ProjectMilestone *NullableProjectMilestoneFilter `json:"projectMilestone,omitempty"`
+	// Filters that the issues reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// [ALPHA] Filters that the recurring issue template must satisfy.
+	RecurringIssueTemplate *NullableTemplateFilter `json:"recurringIssueTemplate,omitempty"`
+	// [ALPHA] Filters that the issue's releases must satisfy.
+	Releases *ReleaseCollectionFilter `json:"releases,omitempty"`
+	// [Internal] Comparator for the issues content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Filters that users the issue has been shared with must satisfy.
+	SharedWith *UserCollectionFilter `json:"sharedWith,omitempty"`
+	// Comparator for the issues sla status.
+	SlaStatus *SlaStatusComparator `json:"slaStatus,omitempty"`
+	// Filters that the issues snoozer must satisfy.
+	SnoozedBy *NullableUserFilter `json:"snoozedBy,omitempty"`
+	// Comparator for the issues snoozed until date.
+	SnoozedUntilAt *NullableDateComparator `json:"snoozedUntilAt,omitempty"`
+	// Filters that needs to be matched by some issues.
+	Some *IssueFilter `json:"some,omitempty"`
+	// Filters that the source must satisfy.
+	SourceMetadata *SourceMetadataComparator `json:"sourceMetadata,omitempty"`
+	// Comparator for the issues started at date.
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// Filters that the issues state must satisfy.
+	State *WorkflowStateFilter `json:"state,omitempty"`
+	// Filters that issue subscribers must satisfy.
+	Subscribers *UserCollectionFilter `json:"subscribers,omitempty"`
+	// [Internal] Filters that the issue's suggestions must satisfy.
+	Suggestions *IssueSuggestionCollectionFilter `json:"suggestions,omitempty"`
+	// Filters that the issues team must satisfy.
+	Team *TeamFilter `json:"team,omitempty"`
+	// Comparator for the issues title.
+	Title *StringComparator `json:"title,omitempty"`
+	// [Internal] Triage time (entered triaged -> triaged) comparator.
+	TriageTime *NullableDurationComparator `json:"triageTime,omitempty"`
+	// Comparator for the issues triaged at date.
+	TriagedAt *NullableDateComparator `json:"triagedAt,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
 
-// GetId returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
-
-// GetIdentifier returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
+// GetAccumulatedStateUpdatedAt returns IssueCollectionFilter.AccumulatedStateUpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAccumulatedStateUpdatedAt() *NullableDateComparator {
+	return v.AccumulatedStateUpdatedAt
 }
 
-// GetTitle returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+// GetActivity returns IssueCollectionFilter.Activity, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetActivity() *ActivityCollectionFilter { return v.Activity }
 
-// GetState returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetState() *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
+// GetAddedToCycleAt returns IssueCollectionFilter.AddedToCycleAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAddedToCycleAt() *NullableDateComparator { return v.AddedToCycleAt }
+
+// GetAddedToCyclePeriod returns IssueCollectionFilter.AddedToCyclePeriod, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAddedToCyclePeriod() *CyclePeriodComparator {
+	return v.AddedToCyclePeriod
 }
 
-// GetPriority returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
+// GetAgeTime returns IssueCollectionFilter.AgeTime, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAgeTime() *NullableDurationComparator { return v.AgeTime }
+
+// GetAnd returns IssueCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAnd() []*IssueCollectionFilter { return v.And }
+
+// GetArchivedAt returns IssueCollectionFilter.ArchivedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetArchivedAt() *NullableDateComparator { return v.ArchivedAt }
+
+// GetAssignee returns IssueCollectionFilter.Assignee, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAssignee() *NullableUserFilter { return v.Assignee }
+
+// GetAttachments returns IssueCollectionFilter.Attachments, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAttachments() *AttachmentCollectionFilter { return v.Attachments }
+
+// GetAutoArchivedAt returns IssueCollectionFilter.AutoArchivedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAutoArchivedAt() *NullableDateComparator { return v.AutoArchivedAt }
+
+// GetAutoClosedAt returns IssueCollectionFilter.AutoClosedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetAutoClosedAt() *NullableDateComparator { return v.AutoClosedAt }
+
+// GetCanceledAt returns IssueCollectionFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetChildren returns IssueCollectionFilter.Children, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetChildren() *IssueCollectionFilter { return v.Children }
+
+// GetComments returns IssueCollectionFilter.Comments, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetComments() *CommentCollectionFilter { return v.Comments }
+
+// GetCompletedAt returns IssueCollectionFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCreatedAt returns IssueCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns IssueCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetCustomerCount returns IssueCollectionFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns IssueCollectionFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCustomerImportantCount() *NumberComparator {
+	return v.CustomerImportantCount
 }
 
-// GetUpdatedAt returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
+// GetCycle returns IssueCollectionFilter.Cycle, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCycle() *NullableCycleFilter { return v.Cycle }
+
+// GetCycleTime returns IssueCollectionFilter.CycleTime, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetCycleTime() *NullableDurationComparator { return v.CycleTime }
+
+// GetDelegate returns IssueCollectionFilter.Delegate, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetDelegate() *NullableUserFilter { return v.Delegate }
+
+// GetDescription returns IssueCollectionFilter.Description, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetDescription() *NullableStringComparator { return v.Description }
+
+// GetDueDate returns IssueCollectionFilter.DueDate, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetDueDate() *NullableTimelessDateComparator { return v.DueDate }
+
+// GetEstimate returns IssueCollectionFilter.Estimate, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetEstimate() *EstimateComparator { return v.Estimate }
+
+// GetEvery returns IssueCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetEvery() *IssueFilter { return v.Every }
+
+// GetHasBlockedByRelations returns IssueCollectionFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
 }
 
-// GetLabels returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetLabels() *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
+// GetHasBlockingRelations returns IssueCollectionFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
 }
 
-// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+// GetHasDuplicateRelations returns IssueCollectionFilter.HasDuplicateRelations, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasDuplicateRelations() *RelationExistsComparator {
+	return v.HasDuplicateRelations
 }
 
-// GetNodes returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
+// GetHasRelatedRelations returns IssueCollectionFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
 }
 
-// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
+// GetHasSharedUsers returns IssueCollectionFilter.HasSharedUsers, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSharedUsers() *RelationExistsComparator {
+	return v.HasSharedUsers
 }
 
-// GetName returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
+// GetHasSuggestedAssignees returns IssueCollectionFilter.HasSuggestedAssignees, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedAssignees() *RelationExistsComparator {
+	return v.HasSuggestedAssignees
 }
 
-// ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
+// GetHasSuggestedLabels returns IssueCollectionFilter.HasSuggestedLabels, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedLabels() *RelationExistsComparator {
+	return v.HasSuggestedLabels
 }
 
-// GetName returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
+// GetHasSuggestedProjects returns IssueCollectionFilter.HasSuggestedProjects, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedProjects() *RelationExistsComparator {
+	return v.HasSuggestedProjects
 }
 
-// GetType returns ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
+// GetHasSuggestedRelatedIssues returns IssueCollectionFilter.HasSuggestedRelatedIssues, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedRelatedIssues() *RelationExistsComparator {
+	return v.HasSuggestedRelatedIssues
 }
 
-// ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
+// GetHasSuggestedSimilarIssues returns IssueCollectionFilter.HasSuggestedSimilarIssues, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedSimilarIssues() *RelationExistsComparator {
+	return v.HasSuggestedSimilarIssues
 }
 
-// GetHasNextPage returns ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
+// GetHasSuggestedTeams returns IssueCollectionFilter.HasSuggestedTeams, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetHasSuggestedTeams() *RelationExistsComparator {
+	return v.HasSuggestedTeams
 }
 
-// GetEndCursor returns ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
+// GetId returns IssueCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetId() *IssueIDComparator { return v.Id }
+
+// GetLabels returns IssueCollectionFilter.Labels, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetLabels() *IssueLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns IssueCollectionFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetLastAppliedTemplate() *NullableTemplateFilter {
+	return v.LastAppliedTemplate
 }
 
-// ListAllUserIssuesByCycleResponse is returned by ListAllUserIssuesByCycle on success.
-type ListAllUserIssuesByCycleResponse struct {
-	// All issues.
-	Issues *ListAllUserIssuesByCycleIssuesIssueConnection `json:"issues"`
+// GetLeadTime returns IssueCollectionFilter.LeadTime, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetLeadTime() *NullableDurationComparator { return v.LeadTime }
+
+// GetLength returns IssueCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetNeeds returns IssueCollectionFilter.Needs, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNumber returns IssueCollectionFilter.Number, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetNumber() *NumberComparator { return v.Number }
+
+// GetOr returns IssueCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetOr() []*IssueCollectionFilter { return v.Or }
+
+// GetParent returns IssueCollectionFilter.Parent, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetParent() *NullableIssueFilter { return v.Parent }
+
+// GetPriority returns IssueCollectionFilter.Priority, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProject returns IssueCollectionFilter.Project, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetProjectMilestone returns IssueCollectionFilter.ProjectMilestone, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetProjectMilestone() *NullableProjectMilestoneFilter {
+	return v.ProjectMilestone
 }
 
-// GetIssues returns ListAllUserIssuesByCycleResponse.Issues, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesByCycleResponse) GetIssues() *ListAllUserIssuesByCycleIssuesIssueConnection {
-	return v.Issues
+// GetReactions returns IssueCollectionFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetRecurringIssueTemplate returns IssueCollectionFilter.RecurringIssueTemplate, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetRecurringIssueTemplate() *NullableTemplateFilter {
+	return v.RecurringIssueTemplate
 }
 
-// ListAllUserIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListAllUserIssuesIssuesIssueConnection struct {
-	Nodes    []*ListAllUserIssuesIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListAllUserIssuesIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+// GetReleases returns IssueCollectionFilter.Releases, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetReleases() *ReleaseCollectionFilter { return v.Releases }
+
+// GetSearchableContent returns IssueCollectionFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSearchableContent() *ContentComparator { return v.SearchableContent }
+
+// GetSharedWith returns IssueCollectionFilter.SharedWith, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSharedWith() *UserCollectionFilter { return v.SharedWith }
+
+// GetSlaStatus returns IssueCollectionFilter.SlaStatus, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSlaStatus() *SlaStatusComparator { return v.SlaStatus }
+
+// GetSnoozedBy returns IssueCollectionFilter.SnoozedBy, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSnoozedBy() *NullableUserFilter { return v.SnoozedBy }
+
+// GetSnoozedUntilAt returns IssueCollectionFilter.SnoozedUntilAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSnoozedUntilAt() *NullableDateComparator { return v.SnoozedUntilAt }
+
+// GetSome returns IssueCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSome() *IssueFilter { return v.Some }
+
+// GetSourceMetadata returns IssueCollectionFilter.SourceMetadata, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSourceMetadata() *SourceMetadataComparator {
+	return v.SourceMetadata
 }
 
-// GetNodes returns ListAllUserIssuesIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnection) GetNodes() []*ListAllUserIssuesIssuesIssueConnectionNodesIssue {
-	return v.Nodes
+// GetStartedAt returns IssueCollectionFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns IssueCollectionFilter.State, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetState() *WorkflowStateFilter { return v.State }
+
+// GetSubscribers returns IssueCollectionFilter.Subscribers, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSubscribers() *UserCollectionFilter { return v.Subscribers }
+
+// GetSuggestions returns IssueCollectionFilter.Suggestions, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetSuggestions() *IssueSuggestionCollectionFilter {
+	return v.Suggestions
 }
 
-// GetPageInfo returns ListAllUserIssuesIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnection) GetPageInfo() *ListAllUserIssuesIssuesIssueConnectionPageInfo {
-	return v.PageInfo
+// GetTeam returns IssueCollectionFilter.Team, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetTeam() *TeamFilter { return v.Team }
+
+// GetTitle returns IssueCollectionFilter.Title, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetTriageTime returns IssueCollectionFilter.TriageTime, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetTriageTime() *NullableDurationComparator { return v.TriageTime }
+
+// GetTriagedAt returns IssueCollectionFilter.TriagedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetTriagedAt() *NullableDateComparator { return v.TriagedAt }
+
+// GetUpdatedAt returns IssueCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Issue filtering options.
+type IssueFilter struct {
+	// [Internal] Comparator for the issue's accumulatedStateUpdatedAt date.
+	AccumulatedStateUpdatedAt *NullableDateComparator `json:"accumulatedStateUpdatedAt,omitempty"`
+	// Filters that the issue's activities must satisfy.
+	Activity *ActivityCollectionFilter `json:"activity,omitempty"`
+	// Comparator for the issues added to cycle at date.
+	AddedToCycleAt *NullableDateComparator `json:"addedToCycleAt,omitempty"`
+	// Comparator for the period when issue was added to a cycle.
+	AddedToCyclePeriod *CyclePeriodComparator `json:"addedToCyclePeriod,omitempty"`
+	// [Internal] Age (created -> now) comparator, defined if the issue is still open.
+	AgeTime *NullableDurationComparator `json:"ageTime,omitempty"`
+	// Compound filters, all of which need to be matched by the issue.
+	And []*IssueFilter `json:"and,omitempty"`
+	// Comparator for the issues archived at date.
+	ArchivedAt *NullableDateComparator `json:"archivedAt,omitempty"`
+	// Filters that the issues assignee must satisfy.
+	Assignee *NullableUserFilter `json:"assignee,omitempty"`
+	// Filters that the issues attachments must satisfy.
+	Attachments *AttachmentCollectionFilter `json:"attachments,omitempty"`
+	// Comparator for the issues auto archived at date.
+	AutoArchivedAt *NullableDateComparator `json:"autoArchivedAt,omitempty"`
+	// Comparator for the issues auto closed at date.
+	AutoClosedAt *NullableDateComparator `json:"autoClosedAt,omitempty"`
+	// Comparator for the issues canceled at date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Filters that the child issues must satisfy.
+	Children *IssueCollectionFilter `json:"children,omitempty"`
+	// Filters that the issues comments must satisfy.
+	Comments *CommentCollectionFilter `json:"comments,omitempty"`
+	// Comparator for the issues completed at date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the issues creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Filters that the issues cycle must satisfy.
+	Cycle *NullableCycleFilter `json:"cycle,omitempty"`
+	// [Internal] Cycle time (started -> completed) comparator.
+	CycleTime *NullableDurationComparator `json:"cycleTime,omitempty"`
+	// Filters that the issue's delegated agent must satisfy.
+	Delegate *NullableUserFilter `json:"delegate,omitempty"`
+	// Comparator for the issues description.
+	Description *NullableStringComparator `json:"description,omitempty"`
+	// Comparator for the issues due date.
+	DueDate *NullableTimelessDateComparator `json:"dueDate,omitempty"`
+	// Comparator for the issues estimate.
+	Estimate *EstimateComparator `json:"estimate,omitempty"`
+	// Comparator for filtering issues which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering issues which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// Comparator for filtering issues which are duplicates.
+	HasDuplicateRelations *RelationExistsComparator `json:"hasDuplicateRelations,omitempty"`
+	// Comparator for filtering issues with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering issues which have been shared with users outside of the team.
+	HasSharedUsers *RelationExistsComparator `json:"hasSharedUsers,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested assignees.
+	HasSuggestedAssignees *RelationExistsComparator `json:"hasSuggestedAssignees,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested labels.
+	HasSuggestedLabels *RelationExistsComparator `json:"hasSuggestedLabels,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested projects.
+	HasSuggestedProjects *RelationExistsComparator `json:"hasSuggestedProjects,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested related issues.
+	HasSuggestedRelatedIssues *RelationExistsComparator `json:"hasSuggestedRelatedIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested similar issues.
+	HasSuggestedSimilarIssues *RelationExistsComparator `json:"hasSuggestedSimilarIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested teams.
+	HasSuggestedTeams *RelationExistsComparator `json:"hasSuggestedTeams,omitempty"`
+	// Comparator for the identifier.
+	Id *IssueIDComparator `json:"id,omitempty"`
+	// Filters that issue labels must satisfy.
+	Labels *IssueLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// [Internal] Lead time (created -> completed) comparator.
+	LeadTime *NullableDurationComparator `json:"leadTime,omitempty"`
+	// Filters that the issue's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Comparator for the issues number.
+	Number *NumberComparator `json:"number,omitempty"`
+	// Compound filters, one of which need to be matched by the issue.
+	Or []*IssueFilter `json:"or,omitempty"`
+	// Filters that the issue parent must satisfy.
+	Parent *NullableIssueFilter `json:"parent,omitempty"`
+	// Comparator for the issues priority. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the issues project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Filters that the issues project milestone must satisfy.
+	ProjectMilestone *NullableProjectMilestoneFilter `json:"projectMilestone,omitempty"`
+	// Filters that the issues reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// [ALPHA] Filters that the recurring issue template must satisfy.
+	RecurringIssueTemplate *NullableTemplateFilter `json:"recurringIssueTemplate,omitempty"`
+	// [ALPHA] Filters that the issue's releases must satisfy.
+	Releases *ReleaseCollectionFilter `json:"releases,omitempty"`
+	// [Internal] Comparator for the issues content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Filters that users the issue has been shared with must satisfy.
+	SharedWith *UserCollectionFilter `json:"sharedWith,omitempty"`
+	// Comparator for the issues sla status.
+	SlaStatus *SlaStatusComparator `json:"slaStatus,omitempty"`
+	// Filters that the issues snoozer must satisfy.
+	SnoozedBy *NullableUserFilter `json:"snoozedBy,omitempty"`
+	// Comparator for the issues snoozed until date.
+	SnoozedUntilAt *NullableDateComparator `json:"snoozedUntilAt,omitempty"`
+	// Filters that the source must satisfy.
+	SourceMetadata *SourceMetadataComparator `json:"sourceMetadata,omitempty"`
+	// Comparator for the issues started at date.
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// Filters that the issues state must satisfy.
+	State *WorkflowStateFilter `json:"state,omitempty"`
+	// Filters that issue subscribers must satisfy.
+	Subscribers *UserCollectionFilter `json:"subscribers,omitempty"`
+	// [Internal] Filters that the issue's suggestions must satisfy.
+	Suggestions *IssueSuggestionCollectionFilter `json:"suggestions,omitempty"`
+	// Filters that the issues team must satisfy.
+	Team *TeamFilter `json:"team,omitempty"`
+	// Comparator for the issues title.
+	Title *StringComparator `json:"title,omitempty"`
+	// [Internal] Triage time (entered triaged -> triaged) comparator.
+	TriageTime *NullableDurationComparator `json:"triageTime,omitempty"`
+	// Comparator for the issues triaged at date.
+	TriagedAt *NullableDateComparator `json:"triagedAt,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
 
-// ListAllUserIssuesIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListAllUserIssuesIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+// GetAccumulatedStateUpdatedAt returns IssueFilter.AccumulatedStateUpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAccumulatedStateUpdatedAt() *NullableDateComparator {
+	return v.AccumulatedStateUpdatedAt
 }
 
-// GetId returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
+// GetActivity returns IssueFilter.Activity, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetActivity() *ActivityCollectionFilter { return v.Activity }
 
-// GetIdentifier returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
+// GetAddedToCycleAt returns IssueFilter.AddedToCycleAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAddedToCycleAt() *NullableDateComparator { return v.AddedToCycleAt }
+
+// GetAddedToCyclePeriod returns IssueFilter.AddedToCyclePeriod, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAddedToCyclePeriod() *CyclePeriodComparator { return v.AddedToCyclePeriod }
+
+// GetAgeTime returns IssueFilter.AgeTime, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAgeTime() *NullableDurationComparator { return v.AgeTime }
+
+// GetAnd returns IssueFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAnd() []*IssueFilter { return v.And }
+
+// GetArchivedAt returns IssueFilter.ArchivedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetArchivedAt() *NullableDateComparator { return v.ArchivedAt }
+
+// GetAssignee returns IssueFilter.Assignee, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAssignee() *NullableUserFilter { return v.Assignee }
+
+// GetAttachments returns IssueFilter.Attachments, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAttachments() *AttachmentCollectionFilter { return v.Attachments }
+
+// GetAutoArchivedAt returns IssueFilter.AutoArchivedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAutoArchivedAt() *NullableDateComparator { return v.AutoArchivedAt }
+
+// GetAutoClosedAt returns IssueFilter.AutoClosedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetAutoClosedAt() *NullableDateComparator { return v.AutoClosedAt }
+
+// GetCanceledAt returns IssueFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetChildren returns IssueFilter.Children, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetChildren() *IssueCollectionFilter { return v.Children }
+
+// GetComments returns IssueFilter.Comments, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetComments() *CommentCollectionFilter { return v.Comments }
+
+// GetCompletedAt returns IssueFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCreatedAt returns IssueFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns IssueFilter.Creator, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetCustomerCount returns IssueFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns IssueFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCustomerImportantCount() *NumberComparator { return v.CustomerImportantCount }
+
+// GetCycle returns IssueFilter.Cycle, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCycle() *NullableCycleFilter { return v.Cycle }
+
+// GetCycleTime returns IssueFilter.CycleTime, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetCycleTime() *NullableDurationComparator { return v.CycleTime }
+
+// GetDelegate returns IssueFilter.Delegate, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetDelegate() *NullableUserFilter { return v.Delegate }
+
+// GetDescription returns IssueFilter.Description, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetDescription() *NullableStringComparator { return v.Description }
+
+// GetDueDate returns IssueFilter.DueDate, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetDueDate() *NullableTimelessDateComparator { return v.DueDate }
+
+// GetEstimate returns IssueFilter.Estimate, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetEstimate() *EstimateComparator { return v.Estimate }
+
+// GetHasBlockedByRelations returns IssueFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
 }
 
-// GetTitle returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
-
-// GetState returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetState() *ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
+// GetHasBlockingRelations returns IssueFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
 }
 
-// GetPriority returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetPriority() float64 { return v.Priority }
-
-// GetUpdatedAt returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetUpdatedAt() string { return v.UpdatedAt }
-
-// GetLabels returns ListAllUserIssuesIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssue) GetLabels() *ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
+// GetHasDuplicateRelations returns IssueFilter.HasDuplicateRelations, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasDuplicateRelations() *RelationExistsComparator {
+	return v.HasDuplicateRelations
 }
 
-// ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+// GetHasRelatedRelations returns IssueFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
 }
 
-// GetNodes returns ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
+// GetHasSharedUsers returns IssueFilter.HasSharedUsers, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSharedUsers() *RelationExistsComparator { return v.HasSharedUsers }
+
+// GetHasSuggestedAssignees returns IssueFilter.HasSuggestedAssignees, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedAssignees() *RelationExistsComparator {
+	return v.HasSuggestedAssignees
 }
 
-// ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
+// GetHasSuggestedLabels returns IssueFilter.HasSuggestedLabels, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedLabels() *RelationExistsComparator { return v.HasSuggestedLabels }
+
+// GetHasSuggestedProjects returns IssueFilter.HasSuggestedProjects, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedProjects() *RelationExistsComparator {
+	return v.HasSuggestedProjects
 }
 
-// GetName returns ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
+// GetHasSuggestedRelatedIssues returns IssueFilter.HasSuggestedRelatedIssues, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedRelatedIssues() *RelationExistsComparator {
+	return v.HasSuggestedRelatedIssues
 }
 
-// ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
+// GetHasSuggestedSimilarIssues returns IssueFilter.HasSuggestedSimilarIssues, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedSimilarIssues() *RelationExistsComparator {
+	return v.HasSuggestedSimilarIssues
 }
 
-// GetName returns ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
+// GetHasSuggestedTeams returns IssueFilter.HasSuggestedTeams, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetHasSuggestedTeams() *RelationExistsComparator { return v.HasSuggestedTeams }
+
+// GetId returns IssueFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetId() *IssueIDComparator { return v.Id }
+
+// GetLabels returns IssueFilter.Labels, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetLabels() *IssueLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns IssueFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetLastAppliedTemplate() *NullableTemplateFilter { return v.LastAppliedTemplate }
+
+// GetLeadTime returns IssueFilter.LeadTime, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetLeadTime() *NullableDurationComparator { return v.LeadTime }
+
+// GetNeeds returns IssueFilter.Needs, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNumber returns IssueFilter.Number, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetNumber() *NumberComparator { return v.Number }
+
+// GetOr returns IssueFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetOr() []*IssueFilter { return v.Or }
+
+// GetParent returns IssueFilter.Parent, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetParent() *NullableIssueFilter { return v.Parent }
+
+// GetPriority returns IssueFilter.Priority, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProject returns IssueFilter.Project, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetProjectMilestone returns IssueFilter.ProjectMilestone, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetProjectMilestone() *NullableProjectMilestoneFilter {
+	return v.ProjectMilestone
 }
 
-// GetType returns ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
+// GetReactions returns IssueFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetRecurringIssueTemplate returns IssueFilter.RecurringIssueTemplate, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetRecurringIssueTemplate() *NullableTemplateFilter {
+	return v.RecurringIssueTemplate
 }
 
-// ListAllUserIssuesIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListAllUserIssuesIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
+// GetReleases returns IssueFilter.Releases, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetReleases() *ReleaseCollectionFilter { return v.Releases }
+
+// GetSearchableContent returns IssueFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSearchableContent() *ContentComparator { return v.SearchableContent }
+
+// GetSharedWith returns IssueFilter.SharedWith, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSharedWith() *UserCollectionFilter { return v.SharedWith }
+
+// GetSlaStatus returns IssueFilter.SlaStatus, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSlaStatus() *SlaStatusComparator { return v.SlaStatus }
+
+// GetSnoozedBy returns IssueFilter.SnoozedBy, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSnoozedBy() *NullableUserFilter { return v.SnoozedBy }
+
+// GetSnoozedUntilAt returns IssueFilter.SnoozedUntilAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSnoozedUntilAt() *NullableDateComparator { return v.SnoozedUntilAt }
+
+// GetSourceMetadata returns IssueFilter.SourceMetadata, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSourceMetadata() *SourceMetadataComparator { return v.SourceMetadata }
+
+// GetStartedAt returns IssueFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns IssueFilter.State, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetState() *WorkflowStateFilter { return v.State }
+
+// GetSubscribers returns IssueFilter.Subscribers, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSubscribers() *UserCollectionFilter { return v.Subscribers }
+
+// GetSuggestions returns IssueFilter.Suggestions, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetSuggestions() *IssueSuggestionCollectionFilter { return v.Suggestions }
+
+// GetTeam returns IssueFilter.Team, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetTeam() *TeamFilter { return v.Team }
+
+// GetTitle returns IssueFilter.Title, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetTriageTime returns IssueFilter.TriageTime, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetTriageTime() *NullableDurationComparator { return v.TriageTime }
+
+// GetTriagedAt returns IssueFilter.TriagedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetTriagedAt() *NullableDateComparator { return v.TriagedAt }
+
+// GetUpdatedAt returns IssueFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for issue identifiers.
+type IssueIDComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
 }
 
-// GetHasNextPage returns ListAllUserIssuesIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionPageInfo) GetHasNextPage() bool { return v.HasNextPage }
+// GetEq returns IssueIDComparator.Eq, and is useful for accessing the field via an interface.
+func (v *IssueIDComparator) GetEq() *string { return v.Eq }
 
-// GetEndCursor returns ListAllUserIssuesIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesIssuesIssueConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
+// GetIn returns IssueIDComparator.In, and is useful for accessing the field via an interface.
+func (v *IssueIDComparator) GetIn() []string { return v.In }
 
-// ListAllUserIssuesResponse is returned by ListAllUserIssues on success.
-type ListAllUserIssuesResponse struct {
-	// All issues.
-	Issues *ListAllUserIssuesIssuesIssueConnection `json:"issues"`
+// GetNeq returns IssueIDComparator.Neq, and is useful for accessing the field via an interface.
+func (v *IssueIDComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns IssueIDComparator.Nin, and is useful for accessing the field via an interface.
+func (v *IssueIDComparator) GetNin() []string { return v.Nin }
+
+// Issue label filtering options.
+type IssueLabelCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the label.
+	And []*IssueLabelCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the issue labels creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Filters that needs to be matched by all issue labels.
+	Every *IssueLabelFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for whether the label is a group label.
+	IsGroup *BooleanComparator `json:"isGroup,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the label.
+	Or []*IssueLabelCollectionFilter `json:"or,omitempty"`
+	// Filters that the issue label's parent label must satisfy.
+	Parent *IssueLabelFilter `json:"parent,omitempty"`
+	// Filters that needs to be matched by some issue labels.
+	Some *IssueLabelFilter `json:"some,omitempty"`
+	// Filters that the issue labels team must satisfy.
+	Team *NullableTeamFilter `json:"team,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
 
-// GetIssues returns ListAllUserIssuesResponse.Issues, and is useful for accessing the field via an interface.
-func (v *ListAllUserIssuesResponse) GetIssues() *ListAllUserIssuesIssuesIssueConnection {
-	return v.Issues
+// GetAnd returns IssueLabelCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetAnd() []*IssueLabelCollectionFilter { return v.And }
+
+// GetCreatedAt returns IssueLabelCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns IssueLabelCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetEvery returns IssueLabelCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetEvery() *IssueLabelFilter { return v.Every }
+
+// GetId returns IssueLabelCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetIsGroup returns IssueLabelCollectionFilter.IsGroup, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetIsGroup() *BooleanComparator { return v.IsGroup }
+
+// GetLength returns IssueLabelCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns IssueLabelCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns IssueLabelCollectionFilter.Null, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns IssueLabelCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetOr() []*IssueLabelCollectionFilter { return v.Or }
+
+// GetParent returns IssueLabelCollectionFilter.Parent, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetParent() *IssueLabelFilter { return v.Parent }
+
+// GetSome returns IssueLabelCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetSome() *IssueLabelFilter { return v.Some }
+
+// GetTeam returns IssueLabelCollectionFilter.Team, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetTeam() *NullableTeamFilter { return v.Team }
+
+// GetUpdatedAt returns IssueLabelCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueLabelCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Issue label filtering options.
+type IssueLabelFilter struct {
+	// Compound filters, all of which need to be matched by the label.
+	And []*IssueLabelFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the issue labels creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for whether the label is a group label.
+	IsGroup *BooleanComparator `json:"isGroup,omitempty"`
+	// Comparator for the name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the label.
+	Or []*IssueLabelFilter `json:"or,omitempty"`
+	// Filters that the issue label's parent label must satisfy.
+	Parent *IssueLabelFilter `json:"parent,omitempty"`
+	// Filters that the issue labels team must satisfy.
+	Team *NullableTeamFilter `json:"team,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
 }
+
+// GetAnd returns IssueLabelFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetAnd() []*IssueLabelFilter { return v.And }
+
+// GetCreatedAt returns IssueLabelFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns IssueLabelFilter.Creator, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetId returns IssueLabelFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetId() *IDComparator { return v.Id }
+
+// GetIsGroup returns IssueLabelFilter.IsGroup, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetIsGroup() *BooleanComparator { return v.IsGroup }
+
+// GetName returns IssueLabelFilter.Name, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns IssueLabelFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetOr() []*IssueLabelFilter { return v.Or }
+
+// GetParent returns IssueLabelFilter.Parent, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetParent() *IssueLabelFilter { return v.Parent }
+
+// GetTeam returns IssueLabelFilter.Team, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetTeam() *NullableTeamFilter { return v.Team }
+
+// GetUpdatedAt returns IssueLabelFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueLabelFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// IssueSuggestion collection filtering options.
+type IssueSuggestionCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the suggestion.
+	And []*IssueSuggestionCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all suggestions.
+	Every *IssueSuggestionFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the suggestion.
+	Or []*IssueSuggestionCollectionFilter `json:"or,omitempty"`
+	// Filters that needs to be matched by some suggestions.
+	Some *IssueSuggestionFilter `json:"some,omitempty"`
+	// Comparator for the suggestion state.
+	State *StringComparator `json:"state,omitempty"`
+	// Filters that the suggested label must satisfy.
+	SuggestedLabel *IssueLabelFilter `json:"suggestedLabel,omitempty"`
+	// Filters that the suggested project must satisfy.
+	SuggestedProject *NullableProjectFilter `json:"suggestedProject,omitempty"`
+	// Filters that the suggested team must satisfy.
+	SuggestedTeam *NullableTeamFilter `json:"suggestedTeam,omitempty"`
+	// Filters that the suggested user must satisfy.
+	SuggestedUser *NullableUserFilter `json:"suggestedUser,omitempty"`
+	// Comparator for the suggestion type.
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns IssueSuggestionCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetAnd() []*IssueSuggestionCollectionFilter { return v.And }
+
+// GetCreatedAt returns IssueSuggestionCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns IssueSuggestionCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetEvery() *IssueSuggestionFilter { return v.Every }
+
+// GetId returns IssueSuggestionCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns IssueSuggestionCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns IssueSuggestionCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetOr() []*IssueSuggestionCollectionFilter { return v.Or }
+
+// GetSome returns IssueSuggestionCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetSome() *IssueSuggestionFilter { return v.Some }
+
+// GetState returns IssueSuggestionCollectionFilter.State, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetState() *StringComparator { return v.State }
+
+// GetSuggestedLabel returns IssueSuggestionCollectionFilter.SuggestedLabel, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetSuggestedLabel() *IssueLabelFilter {
+	return v.SuggestedLabel
+}
+
+// GetSuggestedProject returns IssueSuggestionCollectionFilter.SuggestedProject, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetSuggestedProject() *NullableProjectFilter {
+	return v.SuggestedProject
+}
+
+// GetSuggestedTeam returns IssueSuggestionCollectionFilter.SuggestedTeam, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetSuggestedTeam() *NullableTeamFilter {
+	return v.SuggestedTeam
+}
+
+// GetSuggestedUser returns IssueSuggestionCollectionFilter.SuggestedUser, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetSuggestedUser() *NullableUserFilter {
+	return v.SuggestedUser
+}
+
+// GetType returns IssueSuggestionCollectionFilter.Type, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns IssueSuggestionCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// IssueSuggestion filtering options.
+type IssueSuggestionFilter struct {
+	// Compound filters, all of which need to be matched by the suggestion.
+	And []*IssueSuggestionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the suggestion.
+	Or []*IssueSuggestionFilter `json:"or,omitempty"`
+	// Comparator for the suggestion state.
+	State *StringComparator `json:"state,omitempty"`
+	// Filters that the suggested label must satisfy.
+	SuggestedLabel *IssueLabelFilter `json:"suggestedLabel,omitempty"`
+	// Filters that the suggested project must satisfy.
+	SuggestedProject *NullableProjectFilter `json:"suggestedProject,omitempty"`
+	// Filters that the suggested team must satisfy.
+	SuggestedTeam *NullableTeamFilter `json:"suggestedTeam,omitempty"`
+	// Filters that the suggested user must satisfy.
+	SuggestedUser *NullableUserFilter `json:"suggestedUser,omitempty"`
+	// Comparator for the suggestion type.
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns IssueSuggestionFilter.And, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetAnd() []*IssueSuggestionFilter { return v.And }
+
+// GetCreatedAt returns IssueSuggestionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns IssueSuggestionFilter.Id, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns IssueSuggestionFilter.Or, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetOr() []*IssueSuggestionFilter { return v.Or }
+
+// GetState returns IssueSuggestionFilter.State, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetState() *StringComparator { return v.State }
+
+// GetSuggestedLabel returns IssueSuggestionFilter.SuggestedLabel, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetSuggestedLabel() *IssueLabelFilter { return v.SuggestedLabel }
+
+// GetSuggestedProject returns IssueSuggestionFilter.SuggestedProject, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetSuggestedProject() *NullableProjectFilter {
+	return v.SuggestedProject
+}
+
+// GetSuggestedTeam returns IssueSuggestionFilter.SuggestedTeam, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetSuggestedTeam() *NullableTeamFilter { return v.SuggestedTeam }
+
+// GetSuggestedUser returns IssueSuggestionFilter.SuggestedUser, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetSuggestedUser() *NullableUserFilter { return v.SuggestedUser }
+
+// GetType returns IssueSuggestionFilter.Type, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns IssueSuggestionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *IssueSuggestionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
 
 // ListCyclesCyclesCycleConnection includes the requested fields of the GraphQL type CycleConnection.
 type ListCyclesCyclesCycleConnection struct {
@@ -722,52 +2501,27 @@ type ListCyclesResponse struct {
 // GetCycles returns ListCyclesResponse.Cycles, and is useful for accessing the field via an interface.
 func (v *ListCyclesResponse) GetCycles() *ListCyclesCyclesCycleConnection { return v.Cycles }
 
-// ListMyActiveIssuesByCycleResponse is returned by ListMyActiveIssuesByCycle on success.
-type ListMyActiveIssuesByCycleResponse struct {
-	// The currently authenticated user.
-	Viewer *ListMyActiveIssuesByCycleViewerUser `json:"viewer"`
+// ListIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListIssuesIssuesIssueConnection struct {
+	Nodes    []*ListIssuesIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListIssuesIssuesIssueConnectionPageInfo     `json:"pageInfo"`
 }
 
-// GetViewer returns ListMyActiveIssuesByCycleResponse.Viewer, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleResponse) GetViewer() *ListMyActiveIssuesByCycleViewerUser {
-	return v.Viewer
-}
-
-// ListMyActiveIssuesByCycleViewerUser includes the requested fields of the GraphQL type User.
-// The GraphQL type's documentation follows.
-//
-// A user that has access to the the resources of an organization.
-type ListMyActiveIssuesByCycleViewerUser struct {
-	// Issues assigned to the user.
-	AssignedIssues *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
-}
-
-// GetAssignedIssues returns ListMyActiveIssuesByCycleViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUser) GetAssignedIssues() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection {
-	return v.AssignedIssues
-}
-
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection struct {
-	Nodes    []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
-}
-
-// GetNodes returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue {
+// GetNodes returns ListIssuesIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnection) GetNodes() []*ListIssuesIssuesIssueConnectionNodesIssue {
 	return v.Nodes
 }
 
-// GetPageInfo returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo {
+// GetPageInfo returns ListIssuesIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnection) GetPageInfo() *ListIssuesIssuesIssueConnectionPageInfo {
 	return v.PageInfo
 }
 
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// ListIssuesIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
 // The GraphQL type's documentation follows.
 //
 // An issue.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
+type ListIssuesIssuesIssueConnectionNodesIssue struct {
 	// The unique identifier of the entity.
 	Id string `json:"id"`
 	// Issue's human readable identifier (e.g. ENG-123).
@@ -775,757 +2529,149 @@ type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue 
 	// The issue's title.
 	Title string `json:"title"`
 	// The workflow state that the issue is associated with.
-	State *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	State *ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
 	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
 	Priority float64 `json:"priority"`
 	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
 	// been updated after creation.
 	UpdatedAt string `json:"updatedAt"`
 	// Labels associated with this issue.
-	Labels *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+	Labels *ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
 }
 
-// GetId returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
-	return v.Id
-}
+// GetId returns ListIssuesIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
 
-// GetIdentifier returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
-}
+// GetIdentifier returns ListIssuesIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetIdentifier() string { return v.Identifier }
 
-// GetTitle returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
-	return v.Title
-}
+// GetTitle returns ListIssuesIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
 
-// GetState returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
+// GetState returns ListIssuesIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetState() *ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState {
 	return v.State
 }
 
-// GetPriority returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
-}
+// GetPriority returns ListIssuesIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetPriority() float64 { return v.Priority }
 
-// GetUpdatedAt returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
-}
+// GetUpdatedAt returns ListIssuesIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetUpdatedAt() string { return v.UpdatedAt }
 
-// GetLabels returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+// GetLabels returns ListIssuesIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssue) GetLabels() *ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
 	return v.Labels
 }
 
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+// ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
 }
 
-// GetNodes returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+// GetNodes returns ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
 	return v.Nodes
 }
 
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
 // The GraphQL type's documentation follows.
 //
 // Labels that can be associated with issues.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+type ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
 	// The label's name.
 	Name string `json:"name"`
 }
 
-// GetName returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+// GetName returns ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
 	return v.Name
 }
 
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
 // The GraphQL type's documentation follows.
 //
 // A state in a team workflow.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+type ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState struct {
 	// The state's name.
 	Name string `json:"name"`
 	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
 	Type string `json:"type"`
 }
 
-// GetName returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
-}
+// GetName returns ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string { return v.Name }
 
-// GetType returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
-}
+// GetType returns ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string { return v.Type }
 
-// ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo struct {
+// ListIssuesIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListIssuesIssuesIssueConnectionPageInfo struct {
 	// Indicates if there are more results when paginating forward.
 	HasNextPage bool `json:"hasNextPage"`
 	// Cursor representing the last result in the paginated results.
 	EndCursor *string `json:"endCursor"`
 }
 
-// GetHasNextPage returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
+// GetHasNextPage returns ListIssuesIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionPageInfo) GetHasNextPage() bool { return v.HasNextPage }
 
-// GetEndCursor returns ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
-}
+// GetEndCursor returns ListIssuesIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListIssuesIssuesIssueConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
 
-// ListMyActiveIssuesResponse is returned by ListMyActiveIssues on success.
-type ListMyActiveIssuesResponse struct {
-	// The currently authenticated user.
-	Viewer *ListMyActiveIssuesViewerUser `json:"viewer"`
-}
-
-// GetViewer returns ListMyActiveIssuesResponse.Viewer, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesResponse) GetViewer() *ListMyActiveIssuesViewerUser { return v.Viewer }
-
-// ListMyActiveIssuesViewerUser includes the requested fields of the GraphQL type User.
-// The GraphQL type's documentation follows.
-//
-// A user that has access to the the resources of an organization.
-type ListMyActiveIssuesViewerUser struct {
-	// Issues assigned to the user.
-	AssignedIssues *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
-}
-
-// GetAssignedIssues returns ListMyActiveIssuesViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUser) GetAssignedIssues() *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection {
-	return v.AssignedIssues
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection struct {
-	Nodes    []*ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
-}
-
-// GetNodes returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
-	return v.Nodes
-}
-
-// GetPageInfo returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo {
-	return v.PageInfo
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
-}
-
-// GetId returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
-	return v.Id
-}
-
-// GetIdentifier returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
-}
-
-// GetTitle returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
-	return v.Title
-}
-
-// GetState returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
-}
-
-// GetPriority returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
-}
-
-// GetUpdatedAt returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
-}
-
-// GetLabels returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
-}
-
-// GetNodes returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
-}
-
-// GetName returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
-}
-
-// GetName returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
-}
-
-// GetType returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
-}
-
-// ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
-}
-
-// GetHasNextPage returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
-}
-
-// ListMyAllIssuesByCycleResponse is returned by ListMyAllIssuesByCycle on success.
-type ListMyAllIssuesByCycleResponse struct {
-	// The currently authenticated user.
-	Viewer *ListMyAllIssuesByCycleViewerUser `json:"viewer"`
-}
-
-// GetViewer returns ListMyAllIssuesByCycleResponse.Viewer, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleResponse) GetViewer() *ListMyAllIssuesByCycleViewerUser {
-	return v.Viewer
-}
-
-// ListMyAllIssuesByCycleViewerUser includes the requested fields of the GraphQL type User.
-// The GraphQL type's documentation follows.
-//
-// A user that has access to the the resources of an organization.
-type ListMyAllIssuesByCycleViewerUser struct {
-	// Issues assigned to the user.
-	AssignedIssues *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
-}
-
-// GetAssignedIssues returns ListMyAllIssuesByCycleViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUser) GetAssignedIssues() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection {
-	return v.AssignedIssues
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection struct {
-	Nodes    []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
-}
-
-// GetNodes returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue {
-	return v.Nodes
-}
-
-// GetPageInfo returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo {
-	return v.PageInfo
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
-}
-
-// GetId returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
-	return v.Id
-}
-
-// GetIdentifier returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
-}
-
-// GetTitle returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
-	return v.Title
-}
-
-// GetState returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
-}
-
-// GetPriority returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
-}
-
-// GetUpdatedAt returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
-}
-
-// GetLabels returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
-}
-
-// GetNodes returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
-}
-
-// GetName returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
-}
-
-// GetName returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
-}
-
-// GetType returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
-}
-
-// ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
-}
-
-// GetHasNextPage returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesByCycleViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
-}
-
-// ListMyAllIssuesResponse is returned by ListMyAllIssues on success.
-type ListMyAllIssuesResponse struct {
-	// The currently authenticated user.
-	Viewer *ListMyAllIssuesViewerUser `json:"viewer"`
-}
-
-// GetViewer returns ListMyAllIssuesResponse.Viewer, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesResponse) GetViewer() *ListMyAllIssuesViewerUser { return v.Viewer }
-
-// ListMyAllIssuesViewerUser includes the requested fields of the GraphQL type User.
-// The GraphQL type's documentation follows.
-//
-// A user that has access to the the resources of an organization.
-type ListMyAllIssuesViewerUser struct {
-	// Issues assigned to the user.
-	AssignedIssues *ListMyAllIssuesViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
-}
-
-// GetAssignedIssues returns ListMyAllIssuesViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUser) GetAssignedIssues() *ListMyAllIssuesViewerUserAssignedIssuesIssueConnection {
-	return v.AssignedIssues
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnection struct {
-	Nodes    []*ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
-}
-
-// GetNodes returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
-	return v.Nodes
-}
-
-// GetPageInfo returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo {
-	return v.PageInfo
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
-}
-
-// GetId returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string {
-	return v.Id
-}
-
-// GetIdentifier returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
-}
-
-// GetTitle returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
-	return v.Title
-}
-
-// GetState returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
-}
-
-// GetPriority returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
-}
-
-// GetUpdatedAt returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
-}
-
-// GetLabels returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
-}
-
-// GetNodes returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
-}
-
-// GetName returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
-}
-
-// GetName returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
-}
-
-// GetType returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
-}
-
-// ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
-}
-
-// GetHasNextPage returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListMyAllIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
-}
-
-// ListUserIssuesByCycleIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListUserIssuesByCycleIssuesIssueConnection struct {
-	Nodes    []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListUserIssuesByCycleIssuesIssueConnectionPageInfo     `json:"pageInfo"`
-}
-
-// GetNodes returns ListUserIssuesByCycleIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnection) GetNodes() []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssue {
-	return v.Nodes
-}
-
-// GetPageInfo returns ListUserIssuesByCycleIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnection) GetPageInfo() *ListUserIssuesByCycleIssuesIssueConnectionPageInfo {
-	return v.PageInfo
-}
-
-// ListUserIssuesByCycleIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
-// The GraphQL type's documentation follows.
-//
-// An issue.
-type ListUserIssuesByCycleIssuesIssueConnectionNodesIssue struct {
-	// The unique identifier of the entity.
-	Id string `json:"id"`
-	// Issue's human readable identifier (e.g. ENG-123).
-	Identifier string `json:"identifier"`
-	// The issue's title.
-	Title string `json:"title"`
-	// The workflow state that the issue is associated with.
-	State *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
-	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
-	Priority float64 `json:"priority"`
-	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
-	// been updated after creation.
-	UpdatedAt string `json:"updatedAt"`
-	// Labels associated with this issue.
-	Labels *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
-}
-
-// GetId returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
-
-// GetIdentifier returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetIdentifier() string {
-	return v.Identifier
-}
-
-// GetTitle returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
-
-// GetState returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetState() *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState {
-	return v.State
-}
-
-// GetPriority returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetPriority() float64 {
-	return v.Priority
-}
-
-// GetUpdatedAt returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
-	return v.UpdatedAt
-}
-
-// GetLabels returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssue) GetLabels() *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
-	return v.Labels
-}
-
-// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
-}
-
-// GetNodes returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
-	return v.Nodes
-}
-
-// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
-// The GraphQL type's documentation follows.
-//
-// Labels that can be associated with issues.
-type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
-	// The label's name.
-	Name string `json:"name"`
-}
-
-// GetName returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
-	return v.Name
-}
-
-// ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
-// The GraphQL type's documentation follows.
-//
-// A state in a team workflow.
-type ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState struct {
-	// The state's name.
-	Name string `json:"name"`
-	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
-	Type string `json:"type"`
-}
-
-// GetName returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
-	return v.Name
-}
-
-// GetType returns ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
-	return v.Type
-}
-
-// ListUserIssuesByCycleIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListUserIssuesByCycleIssuesIssueConnectionPageInfo struct {
-	// Indicates if there are more results when paginating forward.
-	HasNextPage bool `json:"hasNextPage"`
-	// Cursor representing the last result in the paginated results.
-	EndCursor *string `json:"endCursor"`
-}
-
-// GetHasNextPage returns ListUserIssuesByCycleIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
-	return v.HasNextPage
-}
-
-// GetEndCursor returns ListUserIssuesByCycleIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleIssuesIssueConnectionPageInfo) GetEndCursor() *string {
-	return v.EndCursor
-}
-
-// ListUserIssuesByCycleResponse is returned by ListUserIssuesByCycle on success.
-type ListUserIssuesByCycleResponse struct {
+// ListIssuesResponse is returned by ListIssues on success.
+type ListIssuesResponse struct {
 	// All issues.
-	Issues *ListUserIssuesByCycleIssuesIssueConnection `json:"issues"`
+	Issues *ListIssuesIssuesIssueConnection `json:"issues"`
 }
 
-// GetIssues returns ListUserIssuesByCycleResponse.Issues, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesByCycleResponse) GetIssues() *ListUserIssuesByCycleIssuesIssueConnection {
-	return v.Issues
+// GetIssues returns ListIssuesResponse.Issues, and is useful for accessing the field via an interface.
+func (v *ListIssuesResponse) GetIssues() *ListIssuesIssuesIssueConnection { return v.Issues }
+
+// ListMyIssuesResponse is returned by ListMyIssues on success.
+type ListMyIssuesResponse struct {
+	// The currently authenticated user.
+	Viewer *ListMyIssuesViewerUser `json:"viewer"`
 }
 
-// ListUserIssuesIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
-type ListUserIssuesIssuesIssueConnection struct {
-	Nodes    []*ListUserIssuesIssuesIssueConnectionNodesIssue `json:"nodes"`
-	PageInfo *ListUserIssuesIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+// GetViewer returns ListMyIssuesResponse.Viewer, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesResponse) GetViewer() *ListMyIssuesViewerUser { return v.Viewer }
+
+// ListMyIssuesViewerUser includes the requested fields of the GraphQL type User.
+// The GraphQL type's documentation follows.
+//
+// A user that has access to the the resources of an organization.
+type ListMyIssuesViewerUser struct {
+	// Issues assigned to the user.
+	AssignedIssues *ListMyIssuesViewerUserAssignedIssuesIssueConnection `json:"assignedIssues"`
 }
 
-// GetNodes returns ListUserIssuesIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnection) GetNodes() []*ListUserIssuesIssuesIssueConnectionNodesIssue {
+// GetAssignedIssues returns ListMyIssuesViewerUser.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUser) GetAssignedIssues() *ListMyIssuesViewerUserAssignedIssuesIssueConnection {
+	return v.AssignedIssues
+}
+
+// ListMyIssuesViewerUserAssignedIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type ListMyIssuesViewerUserAssignedIssuesIssueConnection struct {
+	Nodes    []*ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue `json:"nodes"`
+	PageInfo *ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo     `json:"pageInfo"`
+}
+
+// GetNodes returns ListMyIssuesViewerUserAssignedIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnection) GetNodes() []*ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue {
 	return v.Nodes
 }
 
-// GetPageInfo returns ListUserIssuesIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnection) GetPageInfo() *ListUserIssuesIssuesIssueConnectionPageInfo {
+// GetPageInfo returns ListMyIssuesViewerUserAssignedIssuesIssueConnection.PageInfo, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnection) GetPageInfo() *ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo {
 	return v.PageInfo
 }
 
-// ListUserIssuesIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
 // The GraphQL type's documentation follows.
 //
 // An issue.
-type ListUserIssuesIssuesIssueConnectionNodesIssue struct {
+type ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue struct {
 	// The unique identifier of the entity.
 	Id string `json:"id"`
 	// Issue's human readable identifier (e.g. ENG-123).
@@ -1533,108 +2679,111 @@ type ListUserIssuesIssuesIssueConnectionNodesIssue struct {
 	// The issue's title.
 	Title string `json:"title"`
 	// The workflow state that the issue is associated with.
-	State *ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	State *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
 	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
 	Priority float64 `json:"priority"`
 	// The last time at which the entity was meaningfully updated. This is the same as the creation time if the entity hasn't
 	// been updated after creation.
 	UpdatedAt string `json:"updatedAt"`
 	// Labels associated with this issue.
-	Labels *ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
+	Labels *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection `json:"labels"`
 }
 
-// GetId returns ListUserIssuesIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
+// GetId returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Id, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetId() string { return v.Id }
 
-// GetIdentifier returns ListUserIssuesIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetIdentifier() string { return v.Identifier }
+// GetIdentifier returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
 
-// GetTitle returns ListUserIssuesIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetTitle() string { return v.Title }
+// GetTitle returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetTitle() string {
+	return v.Title
+}
 
-// GetState returns ListUserIssuesIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetState() *ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState {
+// GetState returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetState() *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState {
 	return v.State
 }
 
-// GetPriority returns ListUserIssuesIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetPriority() float64 { return v.Priority }
+// GetPriority returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
 
-// GetUpdatedAt returns ListUserIssuesIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetUpdatedAt() string { return v.UpdatedAt }
+// GetUpdatedAt returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetUpdatedAt() string {
+	return v.UpdatedAt
+}
 
-// GetLabels returns ListUserIssuesIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssue) GetLabels() *ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
+// GetLabels returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue.Labels, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) GetLabels() *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection {
 	return v.Labels
 }
 
-// ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
-type ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
-	Nodes []*ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+// ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
 }
 
-// GetNodes returns ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
+// GetNodes returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection) GetNodes() []*ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel {
 	return v.Nodes
 }
 
-// ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
 // The GraphQL type's documentation follows.
 //
 // Labels that can be associated with issues.
-type ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+type ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
 	// The label's name.
 	Name string `json:"name"`
 }
 
-// GetName returns ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
+// GetName returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string {
 	return v.Name
 }
 
-// ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
 // The GraphQL type's documentation follows.
 //
 // A state in a team workflow.
-type ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+type ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState struct {
 	// The state's name.
 	Name string `json:"name"`
 	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
 	Type string `json:"type"`
 }
 
-// GetName returns ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+// GetName returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
 	return v.Name
 }
 
-// GetType returns ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+// GetType returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
 	return v.Type
 }
 
-// ListUserIssuesIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
-type ListUserIssuesIssuesIssueConnectionPageInfo struct {
+// ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo includes the requested fields of the GraphQL type PageInfo.
+type ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo struct {
 	// Indicates if there are more results when paginating forward.
 	HasNextPage bool `json:"hasNextPage"`
 	// Cursor representing the last result in the paginated results.
 	EndCursor *string `json:"endCursor"`
 }
 
-// GetHasNextPage returns ListUserIssuesIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionPageInfo) GetHasNextPage() bool { return v.HasNextPage }
-
-// GetEndCursor returns ListUserIssuesIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesIssuesIssueConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
-
-// ListUserIssuesResponse is returned by ListUserIssues on success.
-type ListUserIssuesResponse struct {
-	// All issues.
-	Issues *ListUserIssuesIssuesIssueConnection `json:"issues"`
+// GetHasNextPage returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.HasNextPage, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetHasNextPage() bool {
+	return v.HasNextPage
 }
 
-// GetIssues returns ListUserIssuesResponse.Issues, and is useful for accessing the field via an interface.
-func (v *ListUserIssuesResponse) GetIssues() *ListUserIssuesIssuesIssueConnection { return v.Issues }
+// GetEndCursor returns ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
+func (v *ListMyIssuesViewerUserAssignedIssuesIssueConnectionPageInfo) GetEndCursor() *string {
+	return v.EndCursor
+}
 
 // ListUsersResponse is returned by ListUsers on success.
 type ListUsersResponse struct {
@@ -1716,6 +2865,3514 @@ func (v *ListUsersUsersUserConnectionPageInfo) GetHasNextPage() bool { return v.
 
 // GetEndCursor returns ListUsersUsersUserConnectionPageInfo.EndCursor, and is useful for accessing the field via an interface.
 func (v *ListUsersUsersUserConnectionPageInfo) GetEndCursor() *string { return v.EndCursor }
+
+// Comment filtering options.
+type NullableCommentFilter struct {
+	// Compound filters, all of which need to be matched by the comment.
+	And []*NullableCommentFilter `json:"and,omitempty"`
+	// Comparator for the comment's body.
+	Body *StringComparator `json:"body,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the comment's document content must satisfy.
+	DocumentContent *NullableDocumentContentFilter `json:"documentContent,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the comment's issue must satisfy.
+	Issue *NullableIssueFilter `json:"issue,omitempty"`
+	// Filters that the comment's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the comment.
+	Or []*NullableCommentFilter `json:"or,omitempty"`
+	// Filters that the comment parent must satisfy.
+	Parent *NullableCommentFilter `json:"parent,omitempty"`
+	// Filters that the comment's project update must satisfy.
+	ProjectUpdate *NullableProjectUpdateFilter `json:"projectUpdate,omitempty"`
+	// Filters that the comment's reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the comment's creator must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns NullableCommentFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetAnd() []*NullableCommentFilter { return v.And }
+
+// GetBody returns NullableCommentFilter.Body, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetBody() *StringComparator { return v.Body }
+
+// GetCreatedAt returns NullableCommentFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDocumentContent returns NullableCommentFilter.DocumentContent, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetDocumentContent() *NullableDocumentContentFilter {
+	return v.DocumentContent
+}
+
+// GetId returns NullableCommentFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssue returns NullableCommentFilter.Issue, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetIssue() *NullableIssueFilter { return v.Issue }
+
+// GetNeeds returns NullableCommentFilter.Needs, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNull returns NullableCommentFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableCommentFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetOr() []*NullableCommentFilter { return v.Or }
+
+// GetParent returns NullableCommentFilter.Parent, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetParent() *NullableCommentFilter { return v.Parent }
+
+// GetProjectUpdate returns NullableCommentFilter.ProjectUpdate, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetProjectUpdate() *NullableProjectUpdateFilter {
+	return v.ProjectUpdate
+}
+
+// GetReactions returns NullableCommentFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetUpdatedAt returns NullableCommentFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns NullableCommentFilter.User, and is useful for accessing the field via an interface.
+func (v *NullableCommentFilter) GetUser() *UserFilter { return v.User }
+
+// Customer filtering options.
+type NullableCustomerFilter struct {
+	// Compound filters, all of which need to be matched by the customer.
+	And []*NullableCustomerFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the customer's domains.
+	Domains *StringArrayComparator `json:"domains,omitempty"`
+	// Comparator for the customer's external IDs.
+	ExternalIds *StringArrayComparator `json:"externalIds,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the customer name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filters that the customer's needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the customer.
+	Or []*NullableCustomerFilter `json:"or,omitempty"`
+	// Filters that the customer owner must satisfy.
+	Owner *NullableUserFilter `json:"owner,omitempty"`
+	// Comparator for the customer generated revenue.
+	Revenue *NumberComparator `json:"revenue,omitempty"`
+	// Comparator for the customer size.
+	Size *NumberComparator `json:"size,omitempty"`
+	// Comparator for the customer slack channel ID.
+	SlackChannelId *StringComparator `json:"slackChannelId,omitempty"`
+	// Filters that the customer's status must satisfy.
+	Status *CustomerStatusFilter `json:"status,omitempty"`
+	// Filters that the customer's tier must satisfy.
+	Tier *CustomerTierFilter `json:"tier,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableCustomerFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetAnd() []*NullableCustomerFilter { return v.And }
+
+// GetCreatedAt returns NullableCustomerFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDomains returns NullableCustomerFilter.Domains, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetDomains() *StringArrayComparator { return v.Domains }
+
+// GetExternalIds returns NullableCustomerFilter.ExternalIds, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetExternalIds() *StringArrayComparator { return v.ExternalIds }
+
+// GetId returns NullableCustomerFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns NullableCustomerFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetName() *StringComparator { return v.Name }
+
+// GetNeeds returns NullableCustomerFilter.Needs, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNull returns NullableCustomerFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableCustomerFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetOr() []*NullableCustomerFilter { return v.Or }
+
+// GetOwner returns NullableCustomerFilter.Owner, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetOwner() *NullableUserFilter { return v.Owner }
+
+// GetRevenue returns NullableCustomerFilter.Revenue, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetRevenue() *NumberComparator { return v.Revenue }
+
+// GetSize returns NullableCustomerFilter.Size, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetSize() *NumberComparator { return v.Size }
+
+// GetSlackChannelId returns NullableCustomerFilter.SlackChannelId, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetSlackChannelId() *StringComparator { return v.SlackChannelId }
+
+// GetStatus returns NullableCustomerFilter.Status, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetStatus() *CustomerStatusFilter { return v.Status }
+
+// GetTier returns NullableCustomerFilter.Tier, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetTier() *CustomerTierFilter { return v.Tier }
+
+// GetUpdatedAt returns NullableCustomerFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCustomerFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Cycle filtering options.
+type NullableCycleFilter struct {
+	// Compound filters, all of which need to be matched by the cycle.
+	And []*NullableCycleFilter `json:"and,omitempty"`
+	// Comparator for the cycle completed at date.
+	CompletedAt *DateComparator `json:"completedAt,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the cycle ends at date.
+	EndsAt *DateComparator `json:"endsAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the inherited cycle ID.
+	InheritedFromId *IDComparator `json:"inheritedFromId,omitempty"`
+	// Comparator for the filtering active cycle.
+	IsActive *BooleanComparator `json:"isActive,omitempty"`
+	// Comparator for the filtering future cycles.
+	IsFuture *BooleanComparator `json:"isFuture,omitempty"`
+	// Comparator for filtering for whether the cycle is currently in cooldown.
+	IsInCooldown *BooleanComparator `json:"isInCooldown,omitempty"`
+	// Comparator for the filtering next cycle.
+	IsNext *BooleanComparator `json:"isNext,omitempty"`
+	// Comparator for the filtering past cycles.
+	IsPast *BooleanComparator `json:"isPast,omitempty"`
+	// Comparator for the filtering previous cycle.
+	IsPrevious *BooleanComparator `json:"isPrevious,omitempty"`
+	// Filters that the cycles issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Comparator for the cycle name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Comparator for the cycle number.
+	Number *NumberComparator `json:"number,omitempty"`
+	// Compound filters, one of which need to be matched by the cycle.
+	Or []*NullableCycleFilter `json:"or,omitempty"`
+	// Comparator for the cycle start date.
+	StartsAt *DateComparator `json:"startsAt,omitempty"`
+	// Filters that the cycles team must satisfy.
+	Team *TeamFilter `json:"team,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableCycleFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetAnd() []*NullableCycleFilter { return v.And }
+
+// GetCompletedAt returns NullableCycleFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetCompletedAt() *DateComparator { return v.CompletedAt }
+
+// GetCreatedAt returns NullableCycleFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEndsAt returns NullableCycleFilter.EndsAt, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetEndsAt() *DateComparator { return v.EndsAt }
+
+// GetId returns NullableCycleFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetId() *IDComparator { return v.Id }
+
+// GetInheritedFromId returns NullableCycleFilter.InheritedFromId, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetInheritedFromId() *IDComparator { return v.InheritedFromId }
+
+// GetIsActive returns NullableCycleFilter.IsActive, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsActive() *BooleanComparator { return v.IsActive }
+
+// GetIsFuture returns NullableCycleFilter.IsFuture, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsFuture() *BooleanComparator { return v.IsFuture }
+
+// GetIsInCooldown returns NullableCycleFilter.IsInCooldown, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsInCooldown() *BooleanComparator { return v.IsInCooldown }
+
+// GetIsNext returns NullableCycleFilter.IsNext, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsNext() *BooleanComparator { return v.IsNext }
+
+// GetIsPast returns NullableCycleFilter.IsPast, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsPast() *BooleanComparator { return v.IsPast }
+
+// GetIsPrevious returns NullableCycleFilter.IsPrevious, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIsPrevious() *BooleanComparator { return v.IsPrevious }
+
+// GetIssues returns NullableCycleFilter.Issues, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetName returns NullableCycleFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns NullableCycleFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetNull() *bool { return v.Null }
+
+// GetNumber returns NullableCycleFilter.Number, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetNumber() *NumberComparator { return v.Number }
+
+// GetOr returns NullableCycleFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetOr() []*NullableCycleFilter { return v.Or }
+
+// GetStartsAt returns NullableCycleFilter.StartsAt, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetStartsAt() *DateComparator { return v.StartsAt }
+
+// GetTeam returns NullableCycleFilter.Team, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetTeam() *TeamFilter { return v.Team }
+
+// GetUpdatedAt returns NullableCycleFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableCycleFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for optional dates.
+type NullableDateComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *string `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *string `json:"gte"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *string `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *string `json:"lte"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns NullableDateComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetEq() *string { return v.Eq }
+
+// GetGt returns NullableDateComparator.Gt, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetGt() *string { return v.Gt }
+
+// GetGte returns NullableDateComparator.Gte, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetGte() *string { return v.Gte }
+
+// GetIn returns NullableDateComparator.In, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetIn() []string { return v.In }
+
+// GetLt returns NullableDateComparator.Lt, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetLt() *string { return v.Lt }
+
+// GetLte returns NullableDateComparator.Lte, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetLte() *string { return v.Lte }
+
+// GetNeq returns NullableDateComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns NullableDateComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetNin() []string { return v.Nin }
+
+// GetNull returns NullableDateComparator.Null, and is useful for accessing the field via an interface.
+func (v *NullableDateComparator) GetNull() *bool { return v.Null }
+
+// Document content filtering options.
+type NullableDocumentContentFilter struct {
+	// Compound filters, all of which need to be matched by the user.
+	And []*NullableDocumentContentFilter `json:"and,omitempty"`
+	// Comparator for the document content.
+	Content *NullableStringComparator `json:"content,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the document content document must satisfy.
+	Document *DocumentFilter `json:"document,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the user.
+	Or []*NullableDocumentContentFilter `json:"or,omitempty"`
+	// Filters that the document content project must satisfy.
+	Project *ProjectFilter `json:"project,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableDocumentContentFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetAnd() []*NullableDocumentContentFilter { return v.And }
+
+// GetContent returns NullableDocumentContentFilter.Content, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetContent() *NullableStringComparator { return v.Content }
+
+// GetCreatedAt returns NullableDocumentContentFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDocument returns NullableDocumentContentFilter.Document, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetDocument() *DocumentFilter { return v.Document }
+
+// GetId returns NullableDocumentContentFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetId() *IDComparator { return v.Id }
+
+// GetNull returns NullableDocumentContentFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableDocumentContentFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetOr() []*NullableDocumentContentFilter { return v.Or }
+
+// GetProject returns NullableDocumentContentFilter.Project, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetProject() *ProjectFilter { return v.Project }
+
+// GetUpdatedAt returns NullableDocumentContentFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableDocumentContentFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Nullable comparator for optional durations.
+type NullableDurationComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *string `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *string `json:"gte"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *string `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *string `json:"lte"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns NullableDurationComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetEq() *string { return v.Eq }
+
+// GetGt returns NullableDurationComparator.Gt, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetGt() *string { return v.Gt }
+
+// GetGte returns NullableDurationComparator.Gte, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetGte() *string { return v.Gte }
+
+// GetIn returns NullableDurationComparator.In, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetIn() []string { return v.In }
+
+// GetLt returns NullableDurationComparator.Lt, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetLt() *string { return v.Lt }
+
+// GetLte returns NullableDurationComparator.Lte, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetLte() *string { return v.Lte }
+
+// GetNeq returns NullableDurationComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns NullableDurationComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetNin() []string { return v.Nin }
+
+// GetNull returns NullableDurationComparator.Null, and is useful for accessing the field via an interface.
+func (v *NullableDurationComparator) GetNull() *bool { return v.Null }
+
+// Issue filtering options.
+type NullableIssueFilter struct {
+	// [Internal] Comparator for the issue's accumulatedStateUpdatedAt date.
+	AccumulatedStateUpdatedAt *NullableDateComparator `json:"accumulatedStateUpdatedAt,omitempty"`
+	// Filters that the issue's activities must satisfy.
+	Activity *ActivityCollectionFilter `json:"activity,omitempty"`
+	// Comparator for the issues added to cycle at date.
+	AddedToCycleAt *NullableDateComparator `json:"addedToCycleAt,omitempty"`
+	// Comparator for the period when issue was added to a cycle.
+	AddedToCyclePeriod *CyclePeriodComparator `json:"addedToCyclePeriod,omitempty"`
+	// [Internal] Age (created -> now) comparator, defined if the issue is still open.
+	AgeTime *NullableDurationComparator `json:"ageTime,omitempty"`
+	// Compound filters, all of which need to be matched by the issue.
+	And []*NullableIssueFilter `json:"and,omitempty"`
+	// Comparator for the issues archived at date.
+	ArchivedAt *NullableDateComparator `json:"archivedAt,omitempty"`
+	// Filters that the issues assignee must satisfy.
+	Assignee *NullableUserFilter `json:"assignee,omitempty"`
+	// Filters that the issues attachments must satisfy.
+	Attachments *AttachmentCollectionFilter `json:"attachments,omitempty"`
+	// Comparator for the issues auto archived at date.
+	AutoArchivedAt *NullableDateComparator `json:"autoArchivedAt,omitempty"`
+	// Comparator for the issues auto closed at date.
+	AutoClosedAt *NullableDateComparator `json:"autoClosedAt,omitempty"`
+	// Comparator for the issues canceled at date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Filters that the child issues must satisfy.
+	Children *IssueCollectionFilter `json:"children,omitempty"`
+	// Filters that the issues comments must satisfy.
+	Comments *CommentCollectionFilter `json:"comments,omitempty"`
+	// Comparator for the issues completed at date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the issues creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Filters that the issues cycle must satisfy.
+	Cycle *NullableCycleFilter `json:"cycle,omitempty"`
+	// [Internal] Cycle time (started -> completed) comparator.
+	CycleTime *NullableDurationComparator `json:"cycleTime,omitempty"`
+	// Filters that the issue's delegated agent must satisfy.
+	Delegate *NullableUserFilter `json:"delegate,omitempty"`
+	// Comparator for the issues description.
+	Description *NullableStringComparator `json:"description,omitempty"`
+	// Comparator for the issues due date.
+	DueDate *NullableTimelessDateComparator `json:"dueDate,omitempty"`
+	// Comparator for the issues estimate.
+	Estimate *EstimateComparator `json:"estimate,omitempty"`
+	// Comparator for filtering issues which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering issues which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// Comparator for filtering issues which are duplicates.
+	HasDuplicateRelations *RelationExistsComparator `json:"hasDuplicateRelations,omitempty"`
+	// Comparator for filtering issues with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering issues which have been shared with users outside of the team.
+	HasSharedUsers *RelationExistsComparator `json:"hasSharedUsers,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested assignees.
+	HasSuggestedAssignees *RelationExistsComparator `json:"hasSuggestedAssignees,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested labels.
+	HasSuggestedLabels *RelationExistsComparator `json:"hasSuggestedLabels,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested projects.
+	HasSuggestedProjects *RelationExistsComparator `json:"hasSuggestedProjects,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested related issues.
+	HasSuggestedRelatedIssues *RelationExistsComparator `json:"hasSuggestedRelatedIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested similar issues.
+	HasSuggestedSimilarIssues *RelationExistsComparator `json:"hasSuggestedSimilarIssues,omitempty"`
+	// [Internal] Comparator for filtering issues which have suggested teams.
+	HasSuggestedTeams *RelationExistsComparator `json:"hasSuggestedTeams,omitempty"`
+	// Comparator for the identifier.
+	Id *IssueIDComparator `json:"id,omitempty"`
+	// Filters that issue labels must satisfy.
+	Labels *IssueLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// [Internal] Lead time (created -> completed) comparator.
+	LeadTime *NullableDurationComparator `json:"leadTime,omitempty"`
+	// Filters that the issue's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Comparator for the issues number.
+	Number *NumberComparator `json:"number,omitempty"`
+	// Compound filters, one of which need to be matched by the issue.
+	Or []*NullableIssueFilter `json:"or,omitempty"`
+	// Filters that the issue parent must satisfy.
+	Parent *NullableIssueFilter `json:"parent,omitempty"`
+	// Comparator for the issues priority. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the issues project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Filters that the issues project milestone must satisfy.
+	ProjectMilestone *NullableProjectMilestoneFilter `json:"projectMilestone,omitempty"`
+	// Filters that the issues reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// [ALPHA] Filters that the recurring issue template must satisfy.
+	RecurringIssueTemplate *NullableTemplateFilter `json:"recurringIssueTemplate,omitempty"`
+	// [ALPHA] Filters that the issue's releases must satisfy.
+	Releases *ReleaseCollectionFilter `json:"releases,omitempty"`
+	// [Internal] Comparator for the issues content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Filters that users the issue has been shared with must satisfy.
+	SharedWith *UserCollectionFilter `json:"sharedWith,omitempty"`
+	// Comparator for the issues sla status.
+	SlaStatus *SlaStatusComparator `json:"slaStatus,omitempty"`
+	// Filters that the issues snoozer must satisfy.
+	SnoozedBy *NullableUserFilter `json:"snoozedBy,omitempty"`
+	// Comparator for the issues snoozed until date.
+	SnoozedUntilAt *NullableDateComparator `json:"snoozedUntilAt,omitempty"`
+	// Filters that the source must satisfy.
+	SourceMetadata *SourceMetadataComparator `json:"sourceMetadata,omitempty"`
+	// Comparator for the issues started at date.
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// Filters that the issues state must satisfy.
+	State *WorkflowStateFilter `json:"state,omitempty"`
+	// Filters that issue subscribers must satisfy.
+	Subscribers *UserCollectionFilter `json:"subscribers,omitempty"`
+	// [Internal] Filters that the issue's suggestions must satisfy.
+	Suggestions *IssueSuggestionCollectionFilter `json:"suggestions,omitempty"`
+	// Filters that the issues team must satisfy.
+	Team *TeamFilter `json:"team,omitempty"`
+	// Comparator for the issues title.
+	Title *StringComparator `json:"title,omitempty"`
+	// [Internal] Triage time (entered triaged -> triaged) comparator.
+	TriageTime *NullableDurationComparator `json:"triageTime,omitempty"`
+	// Comparator for the issues triaged at date.
+	TriagedAt *NullableDateComparator `json:"triagedAt,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAccumulatedStateUpdatedAt returns NullableIssueFilter.AccumulatedStateUpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAccumulatedStateUpdatedAt() *NullableDateComparator {
+	return v.AccumulatedStateUpdatedAt
+}
+
+// GetActivity returns NullableIssueFilter.Activity, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetActivity() *ActivityCollectionFilter { return v.Activity }
+
+// GetAddedToCycleAt returns NullableIssueFilter.AddedToCycleAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAddedToCycleAt() *NullableDateComparator { return v.AddedToCycleAt }
+
+// GetAddedToCyclePeriod returns NullableIssueFilter.AddedToCyclePeriod, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAddedToCyclePeriod() *CyclePeriodComparator {
+	return v.AddedToCyclePeriod
+}
+
+// GetAgeTime returns NullableIssueFilter.AgeTime, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAgeTime() *NullableDurationComparator { return v.AgeTime }
+
+// GetAnd returns NullableIssueFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAnd() []*NullableIssueFilter { return v.And }
+
+// GetArchivedAt returns NullableIssueFilter.ArchivedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetArchivedAt() *NullableDateComparator { return v.ArchivedAt }
+
+// GetAssignee returns NullableIssueFilter.Assignee, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAssignee() *NullableUserFilter { return v.Assignee }
+
+// GetAttachments returns NullableIssueFilter.Attachments, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAttachments() *AttachmentCollectionFilter { return v.Attachments }
+
+// GetAutoArchivedAt returns NullableIssueFilter.AutoArchivedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAutoArchivedAt() *NullableDateComparator { return v.AutoArchivedAt }
+
+// GetAutoClosedAt returns NullableIssueFilter.AutoClosedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetAutoClosedAt() *NullableDateComparator { return v.AutoClosedAt }
+
+// GetCanceledAt returns NullableIssueFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetChildren returns NullableIssueFilter.Children, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetChildren() *IssueCollectionFilter { return v.Children }
+
+// GetComments returns NullableIssueFilter.Comments, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetComments() *CommentCollectionFilter { return v.Comments }
+
+// GetCompletedAt returns NullableIssueFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCreatedAt returns NullableIssueFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns NullableIssueFilter.Creator, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetCustomerCount returns NullableIssueFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns NullableIssueFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCustomerImportantCount() *NumberComparator {
+	return v.CustomerImportantCount
+}
+
+// GetCycle returns NullableIssueFilter.Cycle, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCycle() *NullableCycleFilter { return v.Cycle }
+
+// GetCycleTime returns NullableIssueFilter.CycleTime, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetCycleTime() *NullableDurationComparator { return v.CycleTime }
+
+// GetDelegate returns NullableIssueFilter.Delegate, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetDelegate() *NullableUserFilter { return v.Delegate }
+
+// GetDescription returns NullableIssueFilter.Description, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetDescription() *NullableStringComparator { return v.Description }
+
+// GetDueDate returns NullableIssueFilter.DueDate, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetDueDate() *NullableTimelessDateComparator { return v.DueDate }
+
+// GetEstimate returns NullableIssueFilter.Estimate, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetEstimate() *EstimateComparator { return v.Estimate }
+
+// GetHasBlockedByRelations returns NullableIssueFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
+}
+
+// GetHasBlockingRelations returns NullableIssueFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
+}
+
+// GetHasDuplicateRelations returns NullableIssueFilter.HasDuplicateRelations, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasDuplicateRelations() *RelationExistsComparator {
+	return v.HasDuplicateRelations
+}
+
+// GetHasRelatedRelations returns NullableIssueFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
+}
+
+// GetHasSharedUsers returns NullableIssueFilter.HasSharedUsers, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSharedUsers() *RelationExistsComparator { return v.HasSharedUsers }
+
+// GetHasSuggestedAssignees returns NullableIssueFilter.HasSuggestedAssignees, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedAssignees() *RelationExistsComparator {
+	return v.HasSuggestedAssignees
+}
+
+// GetHasSuggestedLabels returns NullableIssueFilter.HasSuggestedLabels, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedLabels() *RelationExistsComparator {
+	return v.HasSuggestedLabels
+}
+
+// GetHasSuggestedProjects returns NullableIssueFilter.HasSuggestedProjects, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedProjects() *RelationExistsComparator {
+	return v.HasSuggestedProjects
+}
+
+// GetHasSuggestedRelatedIssues returns NullableIssueFilter.HasSuggestedRelatedIssues, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedRelatedIssues() *RelationExistsComparator {
+	return v.HasSuggestedRelatedIssues
+}
+
+// GetHasSuggestedSimilarIssues returns NullableIssueFilter.HasSuggestedSimilarIssues, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedSimilarIssues() *RelationExistsComparator {
+	return v.HasSuggestedSimilarIssues
+}
+
+// GetHasSuggestedTeams returns NullableIssueFilter.HasSuggestedTeams, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetHasSuggestedTeams() *RelationExistsComparator {
+	return v.HasSuggestedTeams
+}
+
+// GetId returns NullableIssueFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetId() *IssueIDComparator { return v.Id }
+
+// GetLabels returns NullableIssueFilter.Labels, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetLabels() *IssueLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns NullableIssueFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetLastAppliedTemplate() *NullableTemplateFilter {
+	return v.LastAppliedTemplate
+}
+
+// GetLeadTime returns NullableIssueFilter.LeadTime, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetLeadTime() *NullableDurationComparator { return v.LeadTime }
+
+// GetNeeds returns NullableIssueFilter.Needs, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNull returns NullableIssueFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetNull() *bool { return v.Null }
+
+// GetNumber returns NullableIssueFilter.Number, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetNumber() *NumberComparator { return v.Number }
+
+// GetOr returns NullableIssueFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetOr() []*NullableIssueFilter { return v.Or }
+
+// GetParent returns NullableIssueFilter.Parent, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetParent() *NullableIssueFilter { return v.Parent }
+
+// GetPriority returns NullableIssueFilter.Priority, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProject returns NullableIssueFilter.Project, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetProjectMilestone returns NullableIssueFilter.ProjectMilestone, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetProjectMilestone() *NullableProjectMilestoneFilter {
+	return v.ProjectMilestone
+}
+
+// GetReactions returns NullableIssueFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetRecurringIssueTemplate returns NullableIssueFilter.RecurringIssueTemplate, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetRecurringIssueTemplate() *NullableTemplateFilter {
+	return v.RecurringIssueTemplate
+}
+
+// GetReleases returns NullableIssueFilter.Releases, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetReleases() *ReleaseCollectionFilter { return v.Releases }
+
+// GetSearchableContent returns NullableIssueFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSearchableContent() *ContentComparator { return v.SearchableContent }
+
+// GetSharedWith returns NullableIssueFilter.SharedWith, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSharedWith() *UserCollectionFilter { return v.SharedWith }
+
+// GetSlaStatus returns NullableIssueFilter.SlaStatus, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSlaStatus() *SlaStatusComparator { return v.SlaStatus }
+
+// GetSnoozedBy returns NullableIssueFilter.SnoozedBy, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSnoozedBy() *NullableUserFilter { return v.SnoozedBy }
+
+// GetSnoozedUntilAt returns NullableIssueFilter.SnoozedUntilAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSnoozedUntilAt() *NullableDateComparator { return v.SnoozedUntilAt }
+
+// GetSourceMetadata returns NullableIssueFilter.SourceMetadata, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSourceMetadata() *SourceMetadataComparator { return v.SourceMetadata }
+
+// GetStartedAt returns NullableIssueFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns NullableIssueFilter.State, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetState() *WorkflowStateFilter { return v.State }
+
+// GetSubscribers returns NullableIssueFilter.Subscribers, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSubscribers() *UserCollectionFilter { return v.Subscribers }
+
+// GetSuggestions returns NullableIssueFilter.Suggestions, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetSuggestions() *IssueSuggestionCollectionFilter { return v.Suggestions }
+
+// GetTeam returns NullableIssueFilter.Team, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetTeam() *TeamFilter { return v.Team }
+
+// GetTitle returns NullableIssueFilter.Title, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetTitle() *StringComparator { return v.Title }
+
+// GetTriageTime returns NullableIssueFilter.TriageTime, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetTriageTime() *NullableDurationComparator { return v.TriageTime }
+
+// GetTriagedAt returns NullableIssueFilter.TriagedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetTriagedAt() *NullableDateComparator { return v.TriagedAt }
+
+// GetUpdatedAt returns NullableIssueFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableIssueFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for optional numbers.
+type NullableNumberComparator struct {
+	// Equals constraint.
+	Eq *float64 `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *float64 `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *float64 `json:"gte"`
+	// In-array constraint.
+	In []float64 `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *float64 `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *float64 `json:"lte"`
+	// Not-equals constraint.
+	Neq *float64 `json:"neq"`
+	// Not-in-array constraint.
+	Nin []float64 `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns NullableNumberComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetEq() *float64 { return v.Eq }
+
+// GetGt returns NullableNumberComparator.Gt, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetGt() *float64 { return v.Gt }
+
+// GetGte returns NullableNumberComparator.Gte, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetGte() *float64 { return v.Gte }
+
+// GetIn returns NullableNumberComparator.In, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetIn() []float64 { return v.In }
+
+// GetLt returns NullableNumberComparator.Lt, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetLt() *float64 { return v.Lt }
+
+// GetLte returns NullableNumberComparator.Lte, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetLte() *float64 { return v.Lte }
+
+// GetNeq returns NullableNumberComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetNeq() *float64 { return v.Neq }
+
+// GetNin returns NullableNumberComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetNin() []float64 { return v.Nin }
+
+// GetNull returns NullableNumberComparator.Null, and is useful for accessing the field via an interface.
+func (v *NullableNumberComparator) GetNull() *bool { return v.Null }
+
+// Project filtering options.
+type NullableProjectFilter struct {
+	// Filters that the project's team must satisfy.
+	AccessibleTeams *TeamCollectionFilter `json:"accessibleTeams,omitempty"`
+	// [ALPHA] Comparator for the project activity type: buzzin, active, some, none
+	ActivityType *StringComparator `json:"activityType,omitempty"`
+	// Compound filters, all of which need to be matched by the project.
+	And []*NullableProjectFilter `json:"and,omitempty"`
+	// Comparator for the project cancelation date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Comparator for the project completion date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Filters that the project's completed milestones must satisfy.
+	CompletedProjectMilestones *ProjectMilestoneCollectionFilter `json:"completedProjectMilestones,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the projects creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Comparator for filtering projects which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering projects which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// [Deprecated] Comparator for filtering projects which this is depended on by.
+	HasDependedOnByRelations *RelationExistsComparator `json:"hasDependedOnByRelations,omitempty"`
+	// [Deprecated]Comparator for filtering projects which this depends on.
+	HasDependsOnRelations *RelationExistsComparator `json:"hasDependsOnRelations,omitempty"`
+	// Comparator for filtering projects with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering projects with violated dependencies.
+	HasViolatedRelations *RelationExistsComparator `json:"hasViolatedRelations,omitempty"`
+	// Comparator for the project health: onTrack, atRisk, offTrack
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the project health (with age): onTrack, atRisk, offTrack, outdated, noUpdate
+	HealthWithAge *StringComparator `json:"healthWithAge,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the projects initiatives must satisfy.
+	Initiatives *InitiativeCollectionFilter `json:"initiatives,omitempty"`
+	// Filters that the projects issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Filters that project labels must satisfy.
+	Labels *ProjectLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// Filters that the projects lead must satisfy.
+	Lead *NullableUserFilter `json:"lead,omitempty"`
+	// Filters that the projects members must satisfy.
+	Members *UserCollectionFilter `json:"members,omitempty"`
+	// Comparator for the project name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filters that the project's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filters that the project's next milestone must satisfy.
+	NextProjectMilestone *ProjectMilestoneFilter `json:"nextProjectMilestone,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the project.
+	Or []*NullableProjectFilter `json:"or,omitempty"`
+	// Comparator for the projects priority.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the project's milestones must satisfy.
+	ProjectMilestones *ProjectMilestoneCollectionFilter `json:"projectMilestones,omitempty"`
+	// Comparator for the project updates.
+	ProjectUpdates *ProjectUpdatesCollectionFilter `json:"projectUpdates,omitempty"`
+	// Filters that the projects roadmaps must satisfy.
+	Roadmaps *RoadmapCollectionFilter `json:"roadmaps,omitempty"`
+	// [Internal] Comparator for the project's content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Comparator for the project slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Comparator for the project start date.
+	StartDate *NullableDateComparator `json:"startDate,omitempty"`
+	// Comparator for the project started date (when it was moved to an "In Progress" status).
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// [DEPRECATED] Comparator for the project state.
+	State *StringComparator `json:"state,omitempty"`
+	// Filters that the project's status must satisfy.
+	Status *ProjectStatusFilter `json:"status,omitempty"`
+	// Comparator for the project target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAccessibleTeams returns NullableProjectFilter.AccessibleTeams, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetAccessibleTeams() *TeamCollectionFilter { return v.AccessibleTeams }
+
+// GetActivityType returns NullableProjectFilter.ActivityType, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetActivityType() *StringComparator { return v.ActivityType }
+
+// GetAnd returns NullableProjectFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetAnd() []*NullableProjectFilter { return v.And }
+
+// GetCanceledAt returns NullableProjectFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetCompletedAt returns NullableProjectFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCompletedProjectMilestones returns NullableProjectFilter.CompletedProjectMilestones, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCompletedProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.CompletedProjectMilestones
+}
+
+// GetCreatedAt returns NullableProjectFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns NullableProjectFilter.Creator, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetCustomerCount returns NullableProjectFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns NullableProjectFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetCustomerImportantCount() *NumberComparator {
+	return v.CustomerImportantCount
+}
+
+// GetHasBlockedByRelations returns NullableProjectFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
+}
+
+// GetHasBlockingRelations returns NullableProjectFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
+}
+
+// GetHasDependedOnByRelations returns NullableProjectFilter.HasDependedOnByRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasDependedOnByRelations() *RelationExistsComparator {
+	return v.HasDependedOnByRelations
+}
+
+// GetHasDependsOnRelations returns NullableProjectFilter.HasDependsOnRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasDependsOnRelations() *RelationExistsComparator {
+	return v.HasDependsOnRelations
+}
+
+// GetHasRelatedRelations returns NullableProjectFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
+}
+
+// GetHasViolatedRelations returns NullableProjectFilter.HasViolatedRelations, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHasViolatedRelations() *RelationExistsComparator {
+	return v.HasViolatedRelations
+}
+
+// GetHealth returns NullableProjectFilter.Health, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetHealthWithAge returns NullableProjectFilter.HealthWithAge, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetHealthWithAge() *StringComparator { return v.HealthWithAge }
+
+// GetId returns NullableProjectFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetId() *IDComparator { return v.Id }
+
+// GetInitiatives returns NullableProjectFilter.Initiatives, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetInitiatives() *InitiativeCollectionFilter { return v.Initiatives }
+
+// GetIssues returns NullableProjectFilter.Issues, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetLabels returns NullableProjectFilter.Labels, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetLabels() *ProjectLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns NullableProjectFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetLastAppliedTemplate() *NullableTemplateFilter {
+	return v.LastAppliedTemplate
+}
+
+// GetLead returns NullableProjectFilter.Lead, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetLead() *NullableUserFilter { return v.Lead }
+
+// GetMembers returns NullableProjectFilter.Members, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetMembers() *UserCollectionFilter { return v.Members }
+
+// GetName returns NullableProjectFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetName() *StringComparator { return v.Name }
+
+// GetNeeds returns NullableProjectFilter.Needs, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNextProjectMilestone returns NullableProjectFilter.NextProjectMilestone, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetNextProjectMilestone() *ProjectMilestoneFilter {
+	return v.NextProjectMilestone
+}
+
+// GetNull returns NullableProjectFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableProjectFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetOr() []*NullableProjectFilter { return v.Or }
+
+// GetPriority returns NullableProjectFilter.Priority, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProjectMilestones returns NullableProjectFilter.ProjectMilestones, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.ProjectMilestones
+}
+
+// GetProjectUpdates returns NullableProjectFilter.ProjectUpdates, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetProjectUpdates() *ProjectUpdatesCollectionFilter {
+	return v.ProjectUpdates
+}
+
+// GetRoadmaps returns NullableProjectFilter.Roadmaps, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetRoadmaps() *RoadmapCollectionFilter { return v.Roadmaps }
+
+// GetSearchableContent returns NullableProjectFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetSearchableContent() *ContentComparator { return v.SearchableContent }
+
+// GetSlugId returns NullableProjectFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetStartDate returns NullableProjectFilter.StartDate, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetStartDate() *NullableDateComparator { return v.StartDate }
+
+// GetStartedAt returns NullableProjectFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns NullableProjectFilter.State, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetState() *StringComparator { return v.State }
+
+// GetStatus returns NullableProjectFilter.Status, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetStatus() *ProjectStatusFilter { return v.Status }
+
+// GetTargetDate returns NullableProjectFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetUpdatedAt returns NullableProjectFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project milestone filtering options.
+type NullableProjectMilestoneFilter struct {
+	// Compound filters, all of which need to be matched by the project milestone.
+	And []*NullableProjectMilestoneFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the project milestone name.
+	Name *NullableStringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the project milestone.
+	Or []*NullableProjectMilestoneFilter `json:"or,omitempty"`
+	// Filters that the project milestone's project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Comparator for the project milestone target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableProjectMilestoneFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetAnd() []*NullableProjectMilestoneFilter { return v.And }
+
+// GetCreatedAt returns NullableProjectMilestoneFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns NullableProjectMilestoneFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns NullableProjectMilestoneFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetName() *NullableStringComparator { return v.Name }
+
+// GetNull returns NullableProjectMilestoneFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableProjectMilestoneFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetOr() []*NullableProjectMilestoneFilter { return v.Or }
+
+// GetProject returns NullableProjectMilestoneFilter.Project, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetTargetDate returns NullableProjectMilestoneFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetUpdatedAt returns NullableProjectMilestoneFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectMilestoneFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Nullable project update filtering options.
+type NullableProjectUpdateFilter struct {
+	// Compound filters, all of which need to be matched by the project update.
+	And []*NullableProjectUpdateFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the project update.
+	Or []*NullableProjectUpdateFilter `json:"or,omitempty"`
+	// Filters that the project update project must satisfy.
+	Project *ProjectFilter `json:"project,omitempty"`
+	// Filters that the project updates reactions must satisfy.
+	Reactions *ReactionCollectionFilter `json:"reactions,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+	// Filters that the project update creator must satisfy.
+	User *UserFilter `json:"user,omitempty"`
+}
+
+// GetAnd returns NullableProjectUpdateFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetAnd() []*NullableProjectUpdateFilter { return v.And }
+
+// GetCreatedAt returns NullableProjectUpdateFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns NullableProjectUpdateFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetId() *IDComparator { return v.Id }
+
+// GetNull returns NullableProjectUpdateFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableProjectUpdateFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetOr() []*NullableProjectUpdateFilter { return v.Or }
+
+// GetProject returns NullableProjectUpdateFilter.Project, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetProject() *ProjectFilter { return v.Project }
+
+// GetReactions returns NullableProjectUpdateFilter.Reactions, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetReactions() *ReactionCollectionFilter { return v.Reactions }
+
+// GetUpdatedAt returns NullableProjectUpdateFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// GetUser returns NullableProjectUpdateFilter.User, and is useful for accessing the field via an interface.
+func (v *NullableProjectUpdateFilter) GetUser() *UserFilter { return v.User }
+
+// Comparator for optional strings.
+type NullableStringComparator struct {
+	// Contains constraint. Matches any values that contain the given string.
+	Contains *string `json:"contains"`
+	// Contains case insensitive constraint. Matches any values that contain the given string case insensitive.
+	ContainsIgnoreCase *string `json:"containsIgnoreCase"`
+	// Contains case and accent insensitive constraint. Matches any values that contain the given string case and accent insensitive.
+	ContainsIgnoreCaseAndAccent *string `json:"containsIgnoreCaseAndAccent"`
+	// Ends with constraint. Matches any values that end with the given string.
+	EndsWith *string `json:"endsWith"`
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Equals case insensitive. Matches any values that matches the given string case insensitive.
+	EqIgnoreCase *string `json:"eqIgnoreCase"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-equals case insensitive. Matches any values that don't match the given string case insensitive.
+	NeqIgnoreCase *string `json:"neqIgnoreCase"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Doesn't contain constraint. Matches any values that don't contain the given string.
+	NotContains *string `json:"notContains"`
+	// Doesn't contain case insensitive constraint. Matches any values that don't contain the given string case insensitive.
+	NotContainsIgnoreCase *string `json:"notContainsIgnoreCase"`
+	// Doesn't end with constraint. Matches any values that don't end with the given string.
+	NotEndsWith *string `json:"notEndsWith"`
+	// Doesn't start with constraint. Matches any values that don't start with the given string.
+	NotStartsWith *string `json:"notStartsWith"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+	// Starts with constraint. Matches any values that start with the given string.
+	StartsWith *string `json:"startsWith"`
+	// Starts with case insensitive constraint. Matches any values that start with the given string.
+	StartsWithIgnoreCase *string `json:"startsWithIgnoreCase"`
+}
+
+// GetContains returns NullableStringComparator.Contains, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetContains() *string { return v.Contains }
+
+// GetContainsIgnoreCase returns NullableStringComparator.ContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetContainsIgnoreCase() *string { return v.ContainsIgnoreCase }
+
+// GetContainsIgnoreCaseAndAccent returns NullableStringComparator.ContainsIgnoreCaseAndAccent, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetContainsIgnoreCaseAndAccent() *string {
+	return v.ContainsIgnoreCaseAndAccent
+}
+
+// GetEndsWith returns NullableStringComparator.EndsWith, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetEndsWith() *string { return v.EndsWith }
+
+// GetEq returns NullableStringComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetEq() *string { return v.Eq }
+
+// GetEqIgnoreCase returns NullableStringComparator.EqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetEqIgnoreCase() *string { return v.EqIgnoreCase }
+
+// GetIn returns NullableStringComparator.In, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetIn() []string { return v.In }
+
+// GetNeq returns NullableStringComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNeq() *string { return v.Neq }
+
+// GetNeqIgnoreCase returns NullableStringComparator.NeqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNeqIgnoreCase() *string { return v.NeqIgnoreCase }
+
+// GetNin returns NullableStringComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNin() []string { return v.Nin }
+
+// GetNotContains returns NullableStringComparator.NotContains, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNotContains() *string { return v.NotContains }
+
+// GetNotContainsIgnoreCase returns NullableStringComparator.NotContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNotContainsIgnoreCase() *string { return v.NotContainsIgnoreCase }
+
+// GetNotEndsWith returns NullableStringComparator.NotEndsWith, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNotEndsWith() *string { return v.NotEndsWith }
+
+// GetNotStartsWith returns NullableStringComparator.NotStartsWith, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNotStartsWith() *string { return v.NotStartsWith }
+
+// GetNull returns NullableStringComparator.Null, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetNull() *bool { return v.Null }
+
+// GetStartsWith returns NullableStringComparator.StartsWith, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetStartsWith() *string { return v.StartsWith }
+
+// GetStartsWithIgnoreCase returns NullableStringComparator.StartsWithIgnoreCase, and is useful for accessing the field via an interface.
+func (v *NullableStringComparator) GetStartsWithIgnoreCase() *string { return v.StartsWithIgnoreCase }
+
+// Team filtering options.
+type NullableTeamFilter struct {
+	// Compound filters, all of which need to be matched by the team.
+	And []*NullableTeamFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the team description.
+	Description *NullableStringComparator `json:"description,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the teams issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Comparator for the team key.
+	Key *StringComparator `json:"key,omitempty"`
+	// Comparator for the team name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the team.
+	Or []*NullableTeamFilter `json:"or,omitempty"`
+	// Filters that the teams parent must satisfy.
+	Parent *NullableTeamFilter `json:"parent,omitempty"`
+	// Comparator for the team privacy.
+	Private *BooleanComparator `json:"private,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableTeamFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetAnd() []*NullableTeamFilter { return v.And }
+
+// GetCreatedAt returns NullableTeamFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns NullableTeamFilter.Description, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetDescription() *NullableStringComparator { return v.Description }
+
+// GetId returns NullableTeamFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssues returns NullableTeamFilter.Issues, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetKey returns NullableTeamFilter.Key, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetKey() *StringComparator { return v.Key }
+
+// GetName returns NullableTeamFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns NullableTeamFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableTeamFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetOr() []*NullableTeamFilter { return v.Or }
+
+// GetParent returns NullableTeamFilter.Parent, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetParent() *NullableTeamFilter { return v.Parent }
+
+// GetPrivate returns NullableTeamFilter.Private, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetPrivate() *BooleanComparator { return v.Private }
+
+// GetUpdatedAt returns NullableTeamFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableTeamFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Template filtering options.
+type NullableTemplateFilter struct {
+	// Compound filters, all of which need to be matched by the template.
+	And []*NullableTemplateFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the inherited template's ID.
+	InheritedFromId *IDComparator `json:"inheritedFromId,omitempty"`
+	// Comparator for the template's name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the template.
+	Or []*NullableTemplateFilter `json:"or,omitempty"`
+	// Comparator for the template's type.
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns NullableTemplateFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetAnd() []*NullableTemplateFilter { return v.And }
+
+// GetCreatedAt returns NullableTemplateFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns NullableTemplateFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetId() *IDComparator { return v.Id }
+
+// GetInheritedFromId returns NullableTemplateFilter.InheritedFromId, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetInheritedFromId() *IDComparator { return v.InheritedFromId }
+
+// GetName returns NullableTemplateFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns NullableTemplateFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableTemplateFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetOr() []*NullableTemplateFilter { return v.Or }
+
+// GetType returns NullableTemplateFilter.Type, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns NullableTemplateFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableTemplateFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for optional timeless dates.
+type NullableTimelessDateComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *string `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *string `json:"gte"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *string `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *string `json:"lte"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns NullableTimelessDateComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetEq() *string { return v.Eq }
+
+// GetGt returns NullableTimelessDateComparator.Gt, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetGt() *string { return v.Gt }
+
+// GetGte returns NullableTimelessDateComparator.Gte, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetGte() *string { return v.Gte }
+
+// GetIn returns NullableTimelessDateComparator.In, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetIn() []string { return v.In }
+
+// GetLt returns NullableTimelessDateComparator.Lt, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetLt() *string { return v.Lt }
+
+// GetLte returns NullableTimelessDateComparator.Lte, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetLte() *string { return v.Lte }
+
+// GetNeq returns NullableTimelessDateComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns NullableTimelessDateComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetNin() []string { return v.Nin }
+
+// GetNull returns NullableTimelessDateComparator.Null, and is useful for accessing the field via an interface.
+func (v *NullableTimelessDateComparator) GetNull() *bool { return v.Null }
+
+// User filtering options.
+type NullableUserFilter struct {
+	// Comparator for the user's activity status.
+	Active *BooleanComparator `json:"active,omitempty"`
+	// Comparator for the user's admin status.
+	Admin *BooleanComparator `json:"admin,omitempty"`
+	// Compound filters, all of which need to be matched by the user.
+	And []*NullableUserFilter `json:"and,omitempty"`
+	// Comparator for the user's app status.
+	App *BooleanComparator `json:"app,omitempty"`
+	// Filters that the users assigned issues must satisfy.
+	AssignedIssues *IssueCollectionFilter `json:"assignedIssues,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the user's display name.
+	DisplayName *StringComparator `json:"displayName,omitempty"`
+	// Comparator for the user's email.
+	Email *StringComparator `json:"email,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the user's invited status.
+	Invited *BooleanComparator `json:"invited,omitempty"`
+	// Comparator for the user's invited status.
+	IsInvited *BooleanComparator `json:"isInvited,omitempty"`
+	// Filter based on the currently authenticated user. Set to true to filter for the authenticated user, false for any other user.
+	IsMe *BooleanComparator `json:"isMe,omitempty"`
+	// Comparator for the user's name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the user.
+	Or []*NullableUserFilter `json:"or,omitempty"`
+	// Comparator for the user's owner status.
+	Owner *BooleanComparator `json:"owner,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetActive returns NullableUserFilter.Active, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetActive() *BooleanComparator { return v.Active }
+
+// GetAdmin returns NullableUserFilter.Admin, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetAdmin() *BooleanComparator { return v.Admin }
+
+// GetAnd returns NullableUserFilter.And, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetAnd() []*NullableUserFilter { return v.And }
+
+// GetApp returns NullableUserFilter.App, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetApp() *BooleanComparator { return v.App }
+
+// GetAssignedIssues returns NullableUserFilter.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetAssignedIssues() *IssueCollectionFilter { return v.AssignedIssues }
+
+// GetCreatedAt returns NullableUserFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDisplayName returns NullableUserFilter.DisplayName, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetDisplayName() *StringComparator { return v.DisplayName }
+
+// GetEmail returns NullableUserFilter.Email, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetEmail() *StringComparator { return v.Email }
+
+// GetId returns NullableUserFilter.Id, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetId() *IDComparator { return v.Id }
+
+// GetInvited returns NullableUserFilter.Invited, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetInvited() *BooleanComparator { return v.Invited }
+
+// GetIsInvited returns NullableUserFilter.IsInvited, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetIsInvited() *BooleanComparator { return v.IsInvited }
+
+// GetIsMe returns NullableUserFilter.IsMe, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetIsMe() *BooleanComparator { return v.IsMe }
+
+// GetName returns NullableUserFilter.Name, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns NullableUserFilter.Null, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns NullableUserFilter.Or, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetOr() []*NullableUserFilter { return v.Or }
+
+// GetOwner returns NullableUserFilter.Owner, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetOwner() *BooleanComparator { return v.Owner }
+
+// GetUpdatedAt returns NullableUserFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *NullableUserFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for numbers.
+type NumberComparator struct {
+	// Equals constraint.
+	Eq *float64 `json:"eq"`
+	// Greater-than constraint. Matches any values that are greater than the given value.
+	Gt *float64 `json:"gt"`
+	// Greater-than-or-equal constraint. Matches any values that are greater than or equal to the given value.
+	Gte *float64 `json:"gte"`
+	// In-array constraint.
+	In []float64 `json:"in"`
+	// Less-than constraint. Matches any values that are less than the given value.
+	Lt *float64 `json:"lt"`
+	// Less-than-or-equal constraint. Matches any values that are less than or equal to the given value.
+	Lte *float64 `json:"lte"`
+	// Not-equals constraint.
+	Neq *float64 `json:"neq"`
+	// Not-in-array constraint.
+	Nin []float64 `json:"nin"`
+}
+
+// GetEq returns NumberComparator.Eq, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetEq() *float64 { return v.Eq }
+
+// GetGt returns NumberComparator.Gt, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetGt() *float64 { return v.Gt }
+
+// GetGte returns NumberComparator.Gte, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetGte() *float64 { return v.Gte }
+
+// GetIn returns NumberComparator.In, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetIn() []float64 { return v.In }
+
+// GetLt returns NumberComparator.Lt, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetLt() *float64 { return v.Lt }
+
+// GetLte returns NumberComparator.Lte, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetLte() *float64 { return v.Lte }
+
+// GetNeq returns NumberComparator.Neq, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetNeq() *float64 { return v.Neq }
+
+// GetNin returns NumberComparator.Nin, and is useful for accessing the field via an interface.
+func (v *NumberComparator) GetNin() []float64 { return v.Nin }
+
+// Project filtering options.
+type ProjectCollectionFilter struct {
+	// Filters that the project's team must satisfy.
+	AccessibleTeams *TeamCollectionFilter `json:"accessibleTeams,omitempty"`
+	// [ALPHA] Comparator for the project activity type: buzzin, active, some, none
+	ActivityType *StringComparator `json:"activityType,omitempty"`
+	// Compound filters, all of which need to be matched by the project.
+	And []*ProjectCollectionFilter `json:"and,omitempty"`
+	// Comparator for the project cancelation date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Comparator for the project completion date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Filters that the project's completed milestones must satisfy.
+	CompletedProjectMilestones *ProjectMilestoneCollectionFilter `json:"completedProjectMilestones,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the projects creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Filters that needs to be matched by all projects.
+	Every *ProjectFilter `json:"every,omitempty"`
+	// Comparator for filtering projects which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering projects which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// [Deprecated] Comparator for filtering projects which this is depended on by.
+	HasDependedOnByRelations *RelationExistsComparator `json:"hasDependedOnByRelations,omitempty"`
+	// [Deprecated]Comparator for filtering projects which this depends on.
+	HasDependsOnRelations *RelationExistsComparator `json:"hasDependsOnRelations,omitempty"`
+	// Comparator for filtering projects with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering projects with violated dependencies.
+	HasViolatedRelations *RelationExistsComparator `json:"hasViolatedRelations,omitempty"`
+	// Comparator for the project health: onTrack, atRisk, offTrack
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the project health (with age): onTrack, atRisk, offTrack, outdated, noUpdate
+	HealthWithAge *StringComparator `json:"healthWithAge,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the projects initiatives must satisfy.
+	Initiatives *InitiativeCollectionFilter `json:"initiatives,omitempty"`
+	// Filters that the projects issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Filters that project labels must satisfy.
+	Labels *ProjectLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// Filters that the projects lead must satisfy.
+	Lead *NullableUserFilter `json:"lead,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Filters that the projects members must satisfy.
+	Members *UserCollectionFilter `json:"members,omitempty"`
+	// Comparator for the project name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filters that the project's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filters that the project's next milestone must satisfy.
+	NextProjectMilestone *ProjectMilestoneFilter `json:"nextProjectMilestone,omitempty"`
+	// Compound filters, one of which need to be matched by the project.
+	Or []*ProjectCollectionFilter `json:"or,omitempty"`
+	// Comparator for the projects priority.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the project's milestones must satisfy.
+	ProjectMilestones *ProjectMilestoneCollectionFilter `json:"projectMilestones,omitempty"`
+	// Comparator for the project updates.
+	ProjectUpdates *ProjectUpdatesCollectionFilter `json:"projectUpdates,omitempty"`
+	// Filters that the projects roadmaps must satisfy.
+	Roadmaps *RoadmapCollectionFilter `json:"roadmaps,omitempty"`
+	// [Internal] Comparator for the project's content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Comparator for the project slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Filters that needs to be matched by some projects.
+	Some *ProjectFilter `json:"some,omitempty"`
+	// Comparator for the project start date.
+	StartDate *NullableDateComparator `json:"startDate,omitempty"`
+	// Comparator for the project started date (when it was moved to an "In Progress" status).
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// [DEPRECATED] Comparator for the project state.
+	State *StringComparator `json:"state,omitempty"`
+	// Filters that the project's status must satisfy.
+	Status *ProjectStatusFilter `json:"status,omitempty"`
+	// Comparator for the project target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAccessibleTeams returns ProjectCollectionFilter.AccessibleTeams, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetAccessibleTeams() *TeamCollectionFilter {
+	return v.AccessibleTeams
+}
+
+// GetActivityType returns ProjectCollectionFilter.ActivityType, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetActivityType() *StringComparator { return v.ActivityType }
+
+// GetAnd returns ProjectCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetAnd() []*ProjectCollectionFilter { return v.And }
+
+// GetCanceledAt returns ProjectCollectionFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetCompletedAt returns ProjectCollectionFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCompletedProjectMilestones returns ProjectCollectionFilter.CompletedProjectMilestones, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCompletedProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.CompletedProjectMilestones
+}
+
+// GetCreatedAt returns ProjectCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns ProjectCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetCustomerCount returns ProjectCollectionFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns ProjectCollectionFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetCustomerImportantCount() *NumberComparator {
+	return v.CustomerImportantCount
+}
+
+// GetEvery returns ProjectCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetEvery() *ProjectFilter { return v.Every }
+
+// GetHasBlockedByRelations returns ProjectCollectionFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
+}
+
+// GetHasBlockingRelations returns ProjectCollectionFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
+}
+
+// GetHasDependedOnByRelations returns ProjectCollectionFilter.HasDependedOnByRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasDependedOnByRelations() *RelationExistsComparator {
+	return v.HasDependedOnByRelations
+}
+
+// GetHasDependsOnRelations returns ProjectCollectionFilter.HasDependsOnRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasDependsOnRelations() *RelationExistsComparator {
+	return v.HasDependsOnRelations
+}
+
+// GetHasRelatedRelations returns ProjectCollectionFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
+}
+
+// GetHasViolatedRelations returns ProjectCollectionFilter.HasViolatedRelations, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHasViolatedRelations() *RelationExistsComparator {
+	return v.HasViolatedRelations
+}
+
+// GetHealth returns ProjectCollectionFilter.Health, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetHealthWithAge returns ProjectCollectionFilter.HealthWithAge, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetHealthWithAge() *StringComparator { return v.HealthWithAge }
+
+// GetId returns ProjectCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetInitiatives returns ProjectCollectionFilter.Initiatives, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetInitiatives() *InitiativeCollectionFilter { return v.Initiatives }
+
+// GetIssues returns ProjectCollectionFilter.Issues, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetLabels returns ProjectCollectionFilter.Labels, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetLabels() *ProjectLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns ProjectCollectionFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetLastAppliedTemplate() *NullableTemplateFilter {
+	return v.LastAppliedTemplate
+}
+
+// GetLead returns ProjectCollectionFilter.Lead, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetLead() *NullableUserFilter { return v.Lead }
+
+// GetLength returns ProjectCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetMembers returns ProjectCollectionFilter.Members, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetMembers() *UserCollectionFilter { return v.Members }
+
+// GetName returns ProjectCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetNeeds returns ProjectCollectionFilter.Needs, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNextProjectMilestone returns ProjectCollectionFilter.NextProjectMilestone, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetNextProjectMilestone() *ProjectMilestoneFilter {
+	return v.NextProjectMilestone
+}
+
+// GetOr returns ProjectCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetOr() []*ProjectCollectionFilter { return v.Or }
+
+// GetPriority returns ProjectCollectionFilter.Priority, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProjectMilestones returns ProjectCollectionFilter.ProjectMilestones, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.ProjectMilestones
+}
+
+// GetProjectUpdates returns ProjectCollectionFilter.ProjectUpdates, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetProjectUpdates() *ProjectUpdatesCollectionFilter {
+	return v.ProjectUpdates
+}
+
+// GetRoadmaps returns ProjectCollectionFilter.Roadmaps, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetRoadmaps() *RoadmapCollectionFilter { return v.Roadmaps }
+
+// GetSearchableContent returns ProjectCollectionFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetSearchableContent() *ContentComparator {
+	return v.SearchableContent
+}
+
+// GetSlugId returns ProjectCollectionFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetSome returns ProjectCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetSome() *ProjectFilter { return v.Some }
+
+// GetStartDate returns ProjectCollectionFilter.StartDate, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetStartDate() *NullableDateComparator { return v.StartDate }
+
+// GetStartedAt returns ProjectCollectionFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns ProjectCollectionFilter.State, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetState() *StringComparator { return v.State }
+
+// GetStatus returns ProjectCollectionFilter.Status, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetStatus() *ProjectStatusFilter { return v.Status }
+
+// GetTargetDate returns ProjectCollectionFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetUpdatedAt returns ProjectCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project filtering options.
+type ProjectFilter struct {
+	// Filters that the project's team must satisfy.
+	AccessibleTeams *TeamCollectionFilter `json:"accessibleTeams,omitempty"`
+	// [ALPHA] Comparator for the project activity type: buzzin, active, some, none
+	ActivityType *StringComparator `json:"activityType,omitempty"`
+	// Compound filters, all of which need to be matched by the project.
+	And []*ProjectFilter `json:"and,omitempty"`
+	// Comparator for the project cancelation date.
+	CanceledAt *NullableDateComparator `json:"canceledAt,omitempty"`
+	// Comparator for the project completion date.
+	CompletedAt *NullableDateComparator `json:"completedAt,omitempty"`
+	// Filters that the project's completed milestones must satisfy.
+	CompletedProjectMilestones *ProjectMilestoneCollectionFilter `json:"completedProjectMilestones,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the projects creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Count of customers
+	CustomerCount *NumberComparator `json:"customerCount,omitempty"`
+	// Count of important customers
+	CustomerImportantCount *NumberComparator `json:"customerImportantCount,omitempty"`
+	// Comparator for filtering projects which are blocked.
+	HasBlockedByRelations *RelationExistsComparator `json:"hasBlockedByRelations,omitempty"`
+	// Comparator for filtering projects which are blocking.
+	HasBlockingRelations *RelationExistsComparator `json:"hasBlockingRelations,omitempty"`
+	// [Deprecated] Comparator for filtering projects which this is depended on by.
+	HasDependedOnByRelations *RelationExistsComparator `json:"hasDependedOnByRelations,omitempty"`
+	// [Deprecated]Comparator for filtering projects which this depends on.
+	HasDependsOnRelations *RelationExistsComparator `json:"hasDependsOnRelations,omitempty"`
+	// Comparator for filtering projects with relations.
+	HasRelatedRelations *RelationExistsComparator `json:"hasRelatedRelations,omitempty"`
+	// Comparator for filtering projects with violated dependencies.
+	HasViolatedRelations *RelationExistsComparator `json:"hasViolatedRelations,omitempty"`
+	// Comparator for the project health: onTrack, atRisk, offTrack
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the project health (with age): onTrack, atRisk, offTrack, outdated, noUpdate
+	HealthWithAge *StringComparator `json:"healthWithAge,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the projects initiatives must satisfy.
+	Initiatives *InitiativeCollectionFilter `json:"initiatives,omitempty"`
+	// Filters that the projects issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Filters that project labels must satisfy.
+	Labels *ProjectLabelCollectionFilter `json:"labels,omitempty"`
+	// Filters that the last applied template must satisfy.
+	LastAppliedTemplate *NullableTemplateFilter `json:"lastAppliedTemplate,omitempty"`
+	// Filters that the projects lead must satisfy.
+	Lead *NullableUserFilter `json:"lead,omitempty"`
+	// Filters that the projects members must satisfy.
+	Members *UserCollectionFilter `json:"members,omitempty"`
+	// Comparator for the project name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filters that the project's customer needs must satisfy.
+	Needs *CustomerNeedCollectionFilter `json:"needs,omitempty"`
+	// Filters that the project's next milestone must satisfy.
+	NextProjectMilestone *ProjectMilestoneFilter `json:"nextProjectMilestone,omitempty"`
+	// Compound filters, one of which need to be matched by the project.
+	Or []*ProjectFilter `json:"or,omitempty"`
+	// Comparator for the projects priority.
+	Priority *NullableNumberComparator `json:"priority,omitempty"`
+	// Filters that the project's milestones must satisfy.
+	ProjectMilestones *ProjectMilestoneCollectionFilter `json:"projectMilestones,omitempty"`
+	// Comparator for the project updates.
+	ProjectUpdates *ProjectUpdatesCollectionFilter `json:"projectUpdates,omitempty"`
+	// Filters that the projects roadmaps must satisfy.
+	Roadmaps *RoadmapCollectionFilter `json:"roadmaps,omitempty"`
+	// [Internal] Comparator for the project's content.
+	SearchableContent *ContentComparator `json:"searchableContent,omitempty"`
+	// Comparator for the project slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Comparator for the project start date.
+	StartDate *NullableDateComparator `json:"startDate,omitempty"`
+	// Comparator for the project started date (when it was moved to an "In Progress" status).
+	StartedAt *NullableDateComparator `json:"startedAt,omitempty"`
+	// [DEPRECATED] Comparator for the project state.
+	State *StringComparator `json:"state,omitempty"`
+	// Filters that the project's status must satisfy.
+	Status *ProjectStatusFilter `json:"status,omitempty"`
+	// Comparator for the project target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAccessibleTeams returns ProjectFilter.AccessibleTeams, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetAccessibleTeams() *TeamCollectionFilter { return v.AccessibleTeams }
+
+// GetActivityType returns ProjectFilter.ActivityType, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetActivityType() *StringComparator { return v.ActivityType }
+
+// GetAnd returns ProjectFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetAnd() []*ProjectFilter { return v.And }
+
+// GetCanceledAt returns ProjectFilter.CanceledAt, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCanceledAt() *NullableDateComparator { return v.CanceledAt }
+
+// GetCompletedAt returns ProjectFilter.CompletedAt, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCompletedAt() *NullableDateComparator { return v.CompletedAt }
+
+// GetCompletedProjectMilestones returns ProjectFilter.CompletedProjectMilestones, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCompletedProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.CompletedProjectMilestones
+}
+
+// GetCreatedAt returns ProjectFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns ProjectFilter.Creator, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetCustomerCount returns ProjectFilter.CustomerCount, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCustomerCount() *NumberComparator { return v.CustomerCount }
+
+// GetCustomerImportantCount returns ProjectFilter.CustomerImportantCount, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetCustomerImportantCount() *NumberComparator {
+	return v.CustomerImportantCount
+}
+
+// GetHasBlockedByRelations returns ProjectFilter.HasBlockedByRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasBlockedByRelations() *RelationExistsComparator {
+	return v.HasBlockedByRelations
+}
+
+// GetHasBlockingRelations returns ProjectFilter.HasBlockingRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasBlockingRelations() *RelationExistsComparator {
+	return v.HasBlockingRelations
+}
+
+// GetHasDependedOnByRelations returns ProjectFilter.HasDependedOnByRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasDependedOnByRelations() *RelationExistsComparator {
+	return v.HasDependedOnByRelations
+}
+
+// GetHasDependsOnRelations returns ProjectFilter.HasDependsOnRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasDependsOnRelations() *RelationExistsComparator {
+	return v.HasDependsOnRelations
+}
+
+// GetHasRelatedRelations returns ProjectFilter.HasRelatedRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasRelatedRelations() *RelationExistsComparator {
+	return v.HasRelatedRelations
+}
+
+// GetHasViolatedRelations returns ProjectFilter.HasViolatedRelations, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHasViolatedRelations() *RelationExistsComparator {
+	return v.HasViolatedRelations
+}
+
+// GetHealth returns ProjectFilter.Health, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetHealthWithAge returns ProjectFilter.HealthWithAge, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetHealthWithAge() *StringComparator { return v.HealthWithAge }
+
+// GetId returns ProjectFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetId() *IDComparator { return v.Id }
+
+// GetInitiatives returns ProjectFilter.Initiatives, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetInitiatives() *InitiativeCollectionFilter { return v.Initiatives }
+
+// GetIssues returns ProjectFilter.Issues, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetLabels returns ProjectFilter.Labels, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetLabels() *ProjectLabelCollectionFilter { return v.Labels }
+
+// GetLastAppliedTemplate returns ProjectFilter.LastAppliedTemplate, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetLastAppliedTemplate() *NullableTemplateFilter {
+	return v.LastAppliedTemplate
+}
+
+// GetLead returns ProjectFilter.Lead, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetLead() *NullableUserFilter { return v.Lead }
+
+// GetMembers returns ProjectFilter.Members, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetMembers() *UserCollectionFilter { return v.Members }
+
+// GetName returns ProjectFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetName() *StringComparator { return v.Name }
+
+// GetNeeds returns ProjectFilter.Needs, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetNeeds() *CustomerNeedCollectionFilter { return v.Needs }
+
+// GetNextProjectMilestone returns ProjectFilter.NextProjectMilestone, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetNextProjectMilestone() *ProjectMilestoneFilter {
+	return v.NextProjectMilestone
+}
+
+// GetOr returns ProjectFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetOr() []*ProjectFilter { return v.Or }
+
+// GetPriority returns ProjectFilter.Priority, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetPriority() *NullableNumberComparator { return v.Priority }
+
+// GetProjectMilestones returns ProjectFilter.ProjectMilestones, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetProjectMilestones() *ProjectMilestoneCollectionFilter {
+	return v.ProjectMilestones
+}
+
+// GetProjectUpdates returns ProjectFilter.ProjectUpdates, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetProjectUpdates() *ProjectUpdatesCollectionFilter { return v.ProjectUpdates }
+
+// GetRoadmaps returns ProjectFilter.Roadmaps, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetRoadmaps() *RoadmapCollectionFilter { return v.Roadmaps }
+
+// GetSearchableContent returns ProjectFilter.SearchableContent, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetSearchableContent() *ContentComparator { return v.SearchableContent }
+
+// GetSlugId returns ProjectFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetStartDate returns ProjectFilter.StartDate, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetStartDate() *NullableDateComparator { return v.StartDate }
+
+// GetStartedAt returns ProjectFilter.StartedAt, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetStartedAt() *NullableDateComparator { return v.StartedAt }
+
+// GetState returns ProjectFilter.State, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetState() *StringComparator { return v.State }
+
+// GetStatus returns ProjectFilter.Status, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetStatus() *ProjectStatusFilter { return v.Status }
+
+// GetTargetDate returns ProjectFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetUpdatedAt returns ProjectFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project label filtering options.
+type ProjectLabelCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the label.
+	And []*ProjectLabelCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the project labels creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Filters that needs to be matched by all project labels.
+	Every *ProjectLabelFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for whether the label is a group label.
+	IsGroup *BooleanComparator `json:"isGroup,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Filter based on the existence of the relation.
+	Null *bool `json:"null"`
+	// Compound filters, one of which need to be matched by the label.
+	Or []*ProjectLabelCollectionFilter `json:"or,omitempty"`
+	// Filters that the project label's parent label must satisfy.
+	Parent *ProjectLabelFilter `json:"parent,omitempty"`
+	// Filters that needs to be matched by some project labels.
+	Some *ProjectLabelCollectionFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectLabelCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetAnd() []*ProjectLabelCollectionFilter { return v.And }
+
+// GetCreatedAt returns ProjectLabelCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns ProjectLabelCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetEvery returns ProjectLabelCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetEvery() *ProjectLabelFilter { return v.Every }
+
+// GetId returns ProjectLabelCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetIsGroup returns ProjectLabelCollectionFilter.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetIsGroup() *BooleanComparator { return v.IsGroup }
+
+// GetLength returns ProjectLabelCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns ProjectLabelCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetNull returns ProjectLabelCollectionFilter.Null, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetNull() *bool { return v.Null }
+
+// GetOr returns ProjectLabelCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetOr() []*ProjectLabelCollectionFilter { return v.Or }
+
+// GetParent returns ProjectLabelCollectionFilter.Parent, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetParent() *ProjectLabelFilter { return v.Parent }
+
+// GetSome returns ProjectLabelCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetSome() *ProjectLabelCollectionFilter { return v.Some }
+
+// GetUpdatedAt returns ProjectLabelCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project label filtering options.
+type ProjectLabelFilter struct {
+	// Compound filters, all of which need to be matched by the label.
+	And []*ProjectLabelFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the project labels creator must satisfy.
+	Creator *NullableUserFilter `json:"creator,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for whether the label is a group label.
+	IsGroup *BooleanComparator `json:"isGroup,omitempty"`
+	// Comparator for the name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the label.
+	Or []*ProjectLabelFilter `json:"or,omitempty"`
+	// Filters that the project label's parent label must satisfy.
+	Parent *ProjectLabelFilter `json:"parent,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectLabelFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetAnd() []*ProjectLabelFilter { return v.And }
+
+// GetCreatedAt returns ProjectLabelFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns ProjectLabelFilter.Creator, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetCreator() *NullableUserFilter { return v.Creator }
+
+// GetId returns ProjectLabelFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetId() *IDComparator { return v.Id }
+
+// GetIsGroup returns ProjectLabelFilter.IsGroup, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetIsGroup() *BooleanComparator { return v.IsGroup }
+
+// GetName returns ProjectLabelFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns ProjectLabelFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetOr() []*ProjectLabelFilter { return v.Or }
+
+// GetParent returns ProjectLabelFilter.Parent, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetParent() *ProjectLabelFilter { return v.Parent }
+
+// GetUpdatedAt returns ProjectLabelFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectLabelFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Milestone collection filtering options.
+type ProjectMilestoneCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the milestone.
+	And []*ProjectMilestoneCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all milestones.
+	Every *ProjectMilestoneFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the project milestone name.
+	Name *NullableStringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the milestone.
+	Or []*ProjectMilestoneCollectionFilter `json:"or,omitempty"`
+	// Filters that the project milestone's project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Filters that needs to be matched by some milestones.
+	Some *ProjectMilestoneFilter `json:"some,omitempty"`
+	// Comparator for the project milestone target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectMilestoneCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetAnd() []*ProjectMilestoneCollectionFilter { return v.And }
+
+// GetCreatedAt returns ProjectMilestoneCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns ProjectMilestoneCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetEvery() *ProjectMilestoneFilter { return v.Every }
+
+// GetId returns ProjectMilestoneCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns ProjectMilestoneCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns ProjectMilestoneCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetName() *NullableStringComparator { return v.Name }
+
+// GetOr returns ProjectMilestoneCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetOr() []*ProjectMilestoneCollectionFilter { return v.Or }
+
+// GetProject returns ProjectMilestoneCollectionFilter.Project, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetSome returns ProjectMilestoneCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetSome() *ProjectMilestoneFilter { return v.Some }
+
+// GetTargetDate returns ProjectMilestoneCollectionFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetTargetDate() *NullableDateComparator {
+	return v.TargetDate
+}
+
+// GetUpdatedAt returns ProjectMilestoneCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project milestone filtering options.
+type ProjectMilestoneFilter struct {
+	// Compound filters, all of which need to be matched by the project milestone.
+	And []*ProjectMilestoneFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the project milestone name.
+	Name *NullableStringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the project milestone.
+	Or []*ProjectMilestoneFilter `json:"or,omitempty"`
+	// Filters that the project milestone's project must satisfy.
+	Project *NullableProjectFilter `json:"project,omitempty"`
+	// Comparator for the project milestone target date.
+	TargetDate *NullableDateComparator `json:"targetDate,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectMilestoneFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetAnd() []*ProjectMilestoneFilter { return v.And }
+
+// GetCreatedAt returns ProjectMilestoneFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns ProjectMilestoneFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns ProjectMilestoneFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetName() *NullableStringComparator { return v.Name }
+
+// GetOr returns ProjectMilestoneFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetOr() []*ProjectMilestoneFilter { return v.Or }
+
+// GetProject returns ProjectMilestoneFilter.Project, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetProject() *NullableProjectFilter { return v.Project }
+
+// GetTargetDate returns ProjectMilestoneFilter.TargetDate, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetTargetDate() *NullableDateComparator { return v.TargetDate }
+
+// GetUpdatedAt returns ProjectMilestoneFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectMilestoneFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Project status filtering options.
+type ProjectStatusFilter struct {
+	// Compound filters, all of which need to be matched by the project status.
+	And []*ProjectStatusFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the project status description.
+	Description *StringComparator `json:"description,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the project status name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which needs to be matched by the project status.
+	Or []*ProjectStatusFilter `json:"or,omitempty"`
+	// Comparator for the project status position.
+	Position *NumberComparator `json:"position,omitempty"`
+	// Filters that the project status projects must satisfy.
+	Projects *ProjectCollectionFilter `json:"projects,omitempty"`
+	// Comparator for the project status type.
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectStatusFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetAnd() []*ProjectStatusFilter { return v.And }
+
+// GetCreatedAt returns ProjectStatusFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns ProjectStatusFilter.Description, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetDescription() *StringComparator { return v.Description }
+
+// GetId returns ProjectStatusFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns ProjectStatusFilter.Name, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns ProjectStatusFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetOr() []*ProjectStatusFilter { return v.Or }
+
+// GetPosition returns ProjectStatusFilter.Position, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetPosition() *NumberComparator { return v.Position }
+
+// GetProjects returns ProjectStatusFilter.Projects, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetProjects() *ProjectCollectionFilter { return v.Projects }
+
+// GetType returns ProjectStatusFilter.Type, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns ProjectStatusFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectStatusFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Collection filtering options for filtering projects by project updates.
+type ProjectUpdatesCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the project update.
+	And []*ProjectUpdatesCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all updates.
+	Every *ProjectUpdatesFilter `json:"every,omitempty"`
+	// Comparator for the project update health.
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the update.
+	Or []*ProjectUpdatesCollectionFilter `json:"or,omitempty"`
+	// Filters that needs to be matched by some updates.
+	Some *ProjectUpdatesFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectUpdatesCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetAnd() []*ProjectUpdatesCollectionFilter { return v.And }
+
+// GetCreatedAt returns ProjectUpdatesCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns ProjectUpdatesCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetEvery() *ProjectUpdatesFilter { return v.Every }
+
+// GetHealth returns ProjectUpdatesCollectionFilter.Health, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetId returns ProjectUpdatesCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns ProjectUpdatesCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns ProjectUpdatesCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetOr() []*ProjectUpdatesCollectionFilter { return v.Or }
+
+// GetSome returns ProjectUpdatesCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetSome() *ProjectUpdatesFilter { return v.Some }
+
+// GetUpdatedAt returns ProjectUpdatesCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Options for filtering projects by project updates.
+type ProjectUpdatesFilter struct {
+	// Compound filters, all of which need to be matched by the project updates.
+	And []*ProjectUpdatesFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the project update health.
+	Health *StringComparator `json:"health,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the project updates.
+	Or []*ProjectUpdatesFilter `json:"or,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ProjectUpdatesFilter.And, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetAnd() []*ProjectUpdatesFilter { return v.And }
+
+// GetCreatedAt returns ProjectUpdatesFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetHealth returns ProjectUpdatesFilter.Health, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetHealth() *StringComparator { return v.Health }
+
+// GetId returns ProjectUpdatesFilter.Id, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns ProjectUpdatesFilter.Or, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetOr() []*ProjectUpdatesFilter { return v.Or }
+
+// GetUpdatedAt returns ProjectUpdatesFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ProjectUpdatesFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Reaction filtering options.
+type ReactionCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the reaction.
+	And []*ReactionCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the reactions custom emoji.
+	CustomEmojiId *IDComparator `json:"customEmojiId,omitempty"`
+	// Comparator for the reactions emoji.
+	Emoji *StringComparator `json:"emoji,omitempty"`
+	// Filters that needs to be matched by all reactions.
+	Every *ReactionFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the reaction.
+	Or []*ReactionCollectionFilter `json:"or,omitempty"`
+	// Filters that needs to be matched by some reactions.
+	Some *ReactionFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReactionCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetAnd() []*ReactionCollectionFilter { return v.And }
+
+// GetCreatedAt returns ReactionCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCustomEmojiId returns ReactionCollectionFilter.CustomEmojiId, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetCustomEmojiId() *IDComparator { return v.CustomEmojiId }
+
+// GetEmoji returns ReactionCollectionFilter.Emoji, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetEmoji() *StringComparator { return v.Emoji }
+
+// GetEvery returns ReactionCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetEvery() *ReactionFilter { return v.Every }
+
+// GetId returns ReactionCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns ReactionCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns ReactionCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetOr() []*ReactionCollectionFilter { return v.Or }
+
+// GetSome returns ReactionCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetSome() *ReactionFilter { return v.Some }
+
+// GetUpdatedAt returns ReactionCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReactionCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Reaction filtering options.
+type ReactionFilter struct {
+	// Compound filters, all of which need to be matched by the reaction.
+	And []*ReactionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the reactions custom emoji.
+	CustomEmojiId *IDComparator `json:"customEmojiId,omitempty"`
+	// Comparator for the reactions emoji.
+	Emoji *StringComparator `json:"emoji,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the reaction.
+	Or []*ReactionFilter `json:"or,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReactionFilter.And, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetAnd() []*ReactionFilter { return v.And }
+
+// GetCreatedAt returns ReactionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCustomEmojiId returns ReactionFilter.CustomEmojiId, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetCustomEmojiId() *IDComparator { return v.CustomEmojiId }
+
+// GetEmoji returns ReactionFilter.Emoji, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetEmoji() *StringComparator { return v.Emoji }
+
+// GetId returns ReactionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns ReactionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetOr() []*ReactionFilter { return v.Or }
+
+// GetUpdatedAt returns ReactionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReactionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Comparator for relation existence.
+type RelationExistsComparator struct {
+	// Equals constraint.
+	Eq *bool `json:"eq"`
+	// Not equals constraint.
+	Neq *bool `json:"neq"`
+}
+
+// GetEq returns RelationExistsComparator.Eq, and is useful for accessing the field via an interface.
+func (v *RelationExistsComparator) GetEq() *bool { return v.Eq }
+
+// GetNeq returns RelationExistsComparator.Neq, and is useful for accessing the field via an interface.
+func (v *RelationExistsComparator) GetNeq() *bool { return v.Neq }
+
+// [ALPHA] Release collection filtering options.
+type ReleaseCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the release.
+	And []*ReleaseCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all releases.
+	Every *ReleaseFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the release.
+	Or []*ReleaseCollectionFilter `json:"or,omitempty"`
+	// Filters that the release's pipeline must satisfy.
+	Pipeline *ReleasePipelineFilter `json:"pipeline,omitempty"`
+	// Filters that needs to be matched by some releases.
+	Some *ReleaseFilter `json:"some,omitempty"`
+	// Filters that the release's stage must satisfy.
+	Stage *ReleaseStageFilter `json:"stage,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReleaseCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetAnd() []*ReleaseCollectionFilter { return v.And }
+
+// GetCreatedAt returns ReleaseCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns ReleaseCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetEvery() *ReleaseFilter { return v.Every }
+
+// GetId returns ReleaseCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns ReleaseCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns ReleaseCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetOr() []*ReleaseCollectionFilter { return v.Or }
+
+// GetPipeline returns ReleaseCollectionFilter.Pipeline, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetPipeline() *ReleasePipelineFilter { return v.Pipeline }
+
+// GetSome returns ReleaseCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetSome() *ReleaseFilter { return v.Some }
+
+// GetStage returns ReleaseCollectionFilter.Stage, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetStage() *ReleaseStageFilter { return v.Stage }
+
+// GetUpdatedAt returns ReleaseCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// [ALPHA] Release filtering options.
+type ReleaseFilter struct {
+	// Compound filters, all of which need to be matched by the release.
+	And []*ReleaseFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the release.
+	Or []*ReleaseFilter `json:"or,omitempty"`
+	// Filters that the release's pipeline must satisfy.
+	Pipeline *ReleasePipelineFilter `json:"pipeline,omitempty"`
+	// Filters that the release's stage must satisfy.
+	Stage *ReleaseStageFilter `json:"stage,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReleaseFilter.And, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetAnd() []*ReleaseFilter { return v.And }
+
+// GetCreatedAt returns ReleaseFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns ReleaseFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns ReleaseFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetOr() []*ReleaseFilter { return v.Or }
+
+// GetPipeline returns ReleaseFilter.Pipeline, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetPipeline() *ReleasePipelineFilter { return v.Pipeline }
+
+// GetStage returns ReleaseFilter.Stage, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetStage() *ReleaseStageFilter { return v.Stage }
+
+// GetUpdatedAt returns ReleaseFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// [ALPHA] Release pipeline filtering options.
+type ReleasePipelineFilter struct {
+	// Compound filters, all of which need to be matched by the pipeline.
+	And []*ReleasePipelineFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Compound filters, one of which need to be matched by the pipeline.
+	Or []*ReleasePipelineFilter `json:"or,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReleasePipelineFilter.And, and is useful for accessing the field via an interface.
+func (v *ReleasePipelineFilter) GetAnd() []*ReleasePipelineFilter { return v.And }
+
+// GetCreatedAt returns ReleasePipelineFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReleasePipelineFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns ReleasePipelineFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReleasePipelineFilter) GetId() *IDComparator { return v.Id }
+
+// GetOr returns ReleasePipelineFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReleasePipelineFilter) GetOr() []*ReleasePipelineFilter { return v.Or }
+
+// GetUpdatedAt returns ReleasePipelineFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReleasePipelineFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// [ALPHA] Release stage filtering options.
+type ReleaseStageFilter struct {
+	// Compound filters, all of which need to be matched by the stage.
+	And []*ReleaseStageFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the stage name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the stage.
+	Or []*ReleaseStageFilter `json:"or,omitempty"`
+	// Comparator for the stage type.
+	Type *ReleaseStageTypeComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns ReleaseStageFilter.And, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetAnd() []*ReleaseStageFilter { return v.And }
+
+// GetCreatedAt returns ReleaseStageFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetId returns ReleaseStageFilter.Id, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns ReleaseStageFilter.Name, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns ReleaseStageFilter.Or, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetOr() []*ReleaseStageFilter { return v.Or }
+
+// GetType returns ReleaseStageFilter.Type, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetType() *ReleaseStageTypeComparator { return v.Type }
+
+// GetUpdatedAt returns ReleaseStageFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *ReleaseStageFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// A type of release stage.
+type ReleaseStageType string
+
+const (
+	ReleaseStageTypeCanceled  ReleaseStageType = "canceled"
+	ReleaseStageTypeCompleted ReleaseStageType = "completed"
+	ReleaseStageTypePlanned   ReleaseStageType = "planned"
+	ReleaseStageTypeStarted   ReleaseStageType = "started"
+)
+
+var AllReleaseStageType = []ReleaseStageType{
+	ReleaseStageTypeCanceled,
+	ReleaseStageTypeCompleted,
+	ReleaseStageTypePlanned,
+	ReleaseStageTypeStarted,
+}
+
+// [ALPHA] Comparator for release stage type.
+type ReleaseStageTypeComparator struct {
+	// Equals constraint.
+	Eq *ReleaseStageType `json:"eq"`
+	// In-array constraint.
+	In []ReleaseStageType `json:"in"`
+	// Not-equals constraint.
+	Neq *ReleaseStageType `json:"neq"`
+	// Not-in-array constraint.
+	Nin []ReleaseStageType `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns ReleaseStageTypeComparator.Eq, and is useful for accessing the field via an interface.
+func (v *ReleaseStageTypeComparator) GetEq() *ReleaseStageType { return v.Eq }
+
+// GetIn returns ReleaseStageTypeComparator.In, and is useful for accessing the field via an interface.
+func (v *ReleaseStageTypeComparator) GetIn() []ReleaseStageType { return v.In }
+
+// GetNeq returns ReleaseStageTypeComparator.Neq, and is useful for accessing the field via an interface.
+func (v *ReleaseStageTypeComparator) GetNeq() *ReleaseStageType { return v.Neq }
+
+// GetNin returns ReleaseStageTypeComparator.Nin, and is useful for accessing the field via an interface.
+func (v *ReleaseStageTypeComparator) GetNin() []ReleaseStageType { return v.Nin }
+
+// GetNull returns ReleaseStageTypeComparator.Null, and is useful for accessing the field via an interface.
+func (v *ReleaseStageTypeComparator) GetNull() *bool { return v.Null }
+
+// Roadmap collection filtering options.
+type RoadmapCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the roadmap.
+	And []*RoadmapCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the roadmap creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Filters that needs to be matched by all roadmaps.
+	Every *RoadmapFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the roadmap name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the roadmap.
+	Or []*RoadmapCollectionFilter `json:"or,omitempty"`
+	// Comparator for the roadmap slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Filters that needs to be matched by some roadmaps.
+	Some *RoadmapFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns RoadmapCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetAnd() []*RoadmapCollectionFilter { return v.And }
+
+// GetCreatedAt returns RoadmapCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns RoadmapCollectionFilter.Creator, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetEvery returns RoadmapCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetEvery() *RoadmapFilter { return v.Every }
+
+// GetId returns RoadmapCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns RoadmapCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns RoadmapCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns RoadmapCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetOr() []*RoadmapCollectionFilter { return v.Or }
+
+// GetSlugId returns RoadmapCollectionFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetSome returns RoadmapCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetSome() *RoadmapFilter { return v.Some }
+
+// GetUpdatedAt returns RoadmapCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *RoadmapCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Roadmap filtering options.
+type RoadmapFilter struct {
+	// Compound filters, all of which need to be matched by the roadmap.
+	And []*RoadmapFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that the roadmap creator must satisfy.
+	Creator *UserFilter `json:"creator,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the roadmap name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the roadmap.
+	Or []*RoadmapFilter `json:"or,omitempty"`
+	// Comparator for the roadmap slug ID.
+	SlugId *StringComparator `json:"slugId,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns RoadmapFilter.And, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetAnd() []*RoadmapFilter { return v.And }
+
+// GetCreatedAt returns RoadmapFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetCreator returns RoadmapFilter.Creator, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetCreator() *UserFilter { return v.Creator }
+
+// GetId returns RoadmapFilter.Id, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetId() *IDComparator { return v.Id }
+
+// GetName returns RoadmapFilter.Name, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns RoadmapFilter.Or, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetOr() []*RoadmapFilter { return v.Or }
+
+// GetSlugId returns RoadmapFilter.SlugId, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetSlugId() *StringComparator { return v.SlugId }
+
+// GetUpdatedAt returns RoadmapFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *RoadmapFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// [INTERNAL] Comparator for Salesforce metadata.
+type SalesforceMetadataIntegrationComparator struct {
+	// Salesforce Case metadata filter
+	CaseMetadata *map[string]any `json:"caseMetadata"`
+}
+
+// GetCaseMetadata returns SalesforceMetadataIntegrationComparator.CaseMetadata, and is useful for accessing the field via an interface.
+func (v *SalesforceMetadataIntegrationComparator) GetCaseMetadata() *map[string]any {
+	return v.CaseMetadata
+}
+
+type SlaStatus string
+
+const (
+	SlaStatusBreached   SlaStatus = "Breached"
+	SlaStatusCompleted  SlaStatus = "Completed"
+	SlaStatusFailed     SlaStatus = "Failed"
+	SlaStatusHighrisk   SlaStatus = "HighRisk"
+	SlaStatusLowrisk    SlaStatus = "LowRisk"
+	SlaStatusMediumrisk SlaStatus = "MediumRisk"
+)
+
+var AllSlaStatus = []SlaStatus{
+	SlaStatusBreached,
+	SlaStatusCompleted,
+	SlaStatusFailed,
+	SlaStatusHighrisk,
+	SlaStatusLowrisk,
+	SlaStatusMediumrisk,
+}
+
+// Comparator for sla status.
+type SlaStatusComparator struct {
+	// Equals constraint.
+	Eq *SlaStatus `json:"eq"`
+	// In-array constraint.
+	In []SlaStatus `json:"in"`
+	// Not-equals constraint.
+	Neq *SlaStatus `json:"neq"`
+	// Not-in-array constraint.
+	Nin []SlaStatus `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns SlaStatusComparator.Eq, and is useful for accessing the field via an interface.
+func (v *SlaStatusComparator) GetEq() *SlaStatus { return v.Eq }
+
+// GetIn returns SlaStatusComparator.In, and is useful for accessing the field via an interface.
+func (v *SlaStatusComparator) GetIn() []SlaStatus { return v.In }
+
+// GetNeq returns SlaStatusComparator.Neq, and is useful for accessing the field via an interface.
+func (v *SlaStatusComparator) GetNeq() *SlaStatus { return v.Neq }
+
+// GetNin returns SlaStatusComparator.Nin, and is useful for accessing the field via an interface.
+func (v *SlaStatusComparator) GetNin() []SlaStatus { return v.Nin }
+
+// GetNull returns SlaStatusComparator.Null, and is useful for accessing the field via an interface.
+func (v *SlaStatusComparator) GetNull() *bool { return v.Null }
+
+// Comparator for issue source type.
+type SourceMetadataComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+	// [INTERNAL] Comparator for the salesforce metadata.
+	SalesforceMetadata *SalesforceMetadataIntegrationComparator `json:"salesforceMetadata,omitempty"`
+	// Comparator for the sub type.
+	SubType *SubTypeComparator `json:"subType,omitempty"`
+}
+
+// GetEq returns SourceMetadataComparator.Eq, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetEq() *string { return v.Eq }
+
+// GetIn returns SourceMetadataComparator.In, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetIn() []string { return v.In }
+
+// GetNeq returns SourceMetadataComparator.Neq, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns SourceMetadataComparator.Nin, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetNin() []string { return v.Nin }
+
+// GetNull returns SourceMetadataComparator.Null, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetNull() *bool { return v.Null }
+
+// GetSalesforceMetadata returns SourceMetadataComparator.SalesforceMetadata, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetSalesforceMetadata() *SalesforceMetadataIntegrationComparator {
+	return v.SalesforceMetadata
+}
+
+// GetSubType returns SourceMetadataComparator.SubType, and is useful for accessing the field via an interface.
+func (v *SourceMetadataComparator) GetSubType() *SubTypeComparator { return v.SubType }
+
+// Comparator for `sourceType` field.
+type SourceTypeComparator struct {
+	// Contains constraint. Matches any values that contain the given string.
+	Contains *string `json:"contains"`
+	// Contains case insensitive constraint. Matches any values that contain the given string case insensitive.
+	ContainsIgnoreCase *string `json:"containsIgnoreCase"`
+	// Contains case and accent insensitive constraint. Matches any values that contain the given string case and accent insensitive.
+	ContainsIgnoreCaseAndAccent *string `json:"containsIgnoreCaseAndAccent"`
+	// Ends with constraint. Matches any values that end with the given string.
+	EndsWith *string `json:"endsWith"`
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Equals case insensitive. Matches any values that matches the given string case insensitive.
+	EqIgnoreCase *string `json:"eqIgnoreCase"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-equals case insensitive. Matches any values that don't match the given string case insensitive.
+	NeqIgnoreCase *string `json:"neqIgnoreCase"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Doesn't contain constraint. Matches any values that don't contain the given string.
+	NotContains *string `json:"notContains"`
+	// Doesn't contain case insensitive constraint. Matches any values that don't contain the given string case insensitive.
+	NotContainsIgnoreCase *string `json:"notContainsIgnoreCase"`
+	// Doesn't end with constraint. Matches any values that don't end with the given string.
+	NotEndsWith *string `json:"notEndsWith"`
+	// Doesn't start with constraint. Matches any values that don't start with the given string.
+	NotStartsWith *string `json:"notStartsWith"`
+	// Starts with constraint. Matches any values that start with the given string.
+	StartsWith *string `json:"startsWith"`
+	// Starts with case insensitive constraint. Matches any values that start with the given string.
+	StartsWithIgnoreCase *string `json:"startsWithIgnoreCase"`
+}
+
+// GetContains returns SourceTypeComparator.Contains, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetContains() *string { return v.Contains }
+
+// GetContainsIgnoreCase returns SourceTypeComparator.ContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetContainsIgnoreCase() *string { return v.ContainsIgnoreCase }
+
+// GetContainsIgnoreCaseAndAccent returns SourceTypeComparator.ContainsIgnoreCaseAndAccent, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetContainsIgnoreCaseAndAccent() *string {
+	return v.ContainsIgnoreCaseAndAccent
+}
+
+// GetEndsWith returns SourceTypeComparator.EndsWith, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetEndsWith() *string { return v.EndsWith }
+
+// GetEq returns SourceTypeComparator.Eq, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetEq() *string { return v.Eq }
+
+// GetEqIgnoreCase returns SourceTypeComparator.EqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetEqIgnoreCase() *string { return v.EqIgnoreCase }
+
+// GetIn returns SourceTypeComparator.In, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetIn() []string { return v.In }
+
+// GetNeq returns SourceTypeComparator.Neq, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNeq() *string { return v.Neq }
+
+// GetNeqIgnoreCase returns SourceTypeComparator.NeqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNeqIgnoreCase() *string { return v.NeqIgnoreCase }
+
+// GetNin returns SourceTypeComparator.Nin, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNin() []string { return v.Nin }
+
+// GetNotContains returns SourceTypeComparator.NotContains, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNotContains() *string { return v.NotContains }
+
+// GetNotContainsIgnoreCase returns SourceTypeComparator.NotContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNotContainsIgnoreCase() *string { return v.NotContainsIgnoreCase }
+
+// GetNotEndsWith returns SourceTypeComparator.NotEndsWith, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNotEndsWith() *string { return v.NotEndsWith }
+
+// GetNotStartsWith returns SourceTypeComparator.NotStartsWith, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetNotStartsWith() *string { return v.NotStartsWith }
+
+// GetStartsWith returns SourceTypeComparator.StartsWith, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetStartsWith() *string { return v.StartsWith }
+
+// GetStartsWithIgnoreCase returns SourceTypeComparator.StartsWithIgnoreCase, and is useful for accessing the field via an interface.
+func (v *SourceTypeComparator) GetStartsWithIgnoreCase() *string { return v.StartsWithIgnoreCase }
+
+// Comparator for strings.
+type StringArrayComparator struct {
+	// Compound filters, all of which need to be matched.
+	Every *StringItemComparator `json:"every,omitempty"`
+	// Length of the array. Matches any values that have the given length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which needs to be matched.
+	Some *StringItemComparator `json:"some,omitempty"`
+}
+
+// GetEvery returns StringArrayComparator.Every, and is useful for accessing the field via an interface.
+func (v *StringArrayComparator) GetEvery() *StringItemComparator { return v.Every }
+
+// GetLength returns StringArrayComparator.Length, and is useful for accessing the field via an interface.
+func (v *StringArrayComparator) GetLength() *NumberComparator { return v.Length }
+
+// GetSome returns StringArrayComparator.Some, and is useful for accessing the field via an interface.
+func (v *StringArrayComparator) GetSome() *StringItemComparator { return v.Some }
+
+// Comparator for strings.
+type StringComparator struct {
+	// Contains constraint. Matches any values that contain the given string.
+	Contains *string `json:"contains"`
+	// Contains case insensitive constraint. Matches any values that contain the given string case insensitive.
+	ContainsIgnoreCase *string `json:"containsIgnoreCase"`
+	// Contains case and accent insensitive constraint. Matches any values that contain the given string case and accent insensitive.
+	ContainsIgnoreCaseAndAccent *string `json:"containsIgnoreCaseAndAccent"`
+	// Ends with constraint. Matches any values that end with the given string.
+	EndsWith *string `json:"endsWith"`
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Equals case insensitive. Matches any values that matches the given string case insensitive.
+	EqIgnoreCase *string `json:"eqIgnoreCase"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-equals case insensitive. Matches any values that don't match the given string case insensitive.
+	NeqIgnoreCase *string `json:"neqIgnoreCase"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Doesn't contain constraint. Matches any values that don't contain the given string.
+	NotContains *string `json:"notContains"`
+	// Doesn't contain case insensitive constraint. Matches any values that don't contain the given string case insensitive.
+	NotContainsIgnoreCase *string `json:"notContainsIgnoreCase"`
+	// Doesn't end with constraint. Matches any values that don't end with the given string.
+	NotEndsWith *string `json:"notEndsWith"`
+	// Doesn't start with constraint. Matches any values that don't start with the given string.
+	NotStartsWith *string `json:"notStartsWith"`
+	// Starts with constraint. Matches any values that start with the given string.
+	StartsWith *string `json:"startsWith"`
+	// Starts with case insensitive constraint. Matches any values that start with the given string.
+	StartsWithIgnoreCase *string `json:"startsWithIgnoreCase"`
+}
+
+// GetContains returns StringComparator.Contains, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetContains() *string { return v.Contains }
+
+// GetContainsIgnoreCase returns StringComparator.ContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetContainsIgnoreCase() *string { return v.ContainsIgnoreCase }
+
+// GetContainsIgnoreCaseAndAccent returns StringComparator.ContainsIgnoreCaseAndAccent, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetContainsIgnoreCaseAndAccent() *string {
+	return v.ContainsIgnoreCaseAndAccent
+}
+
+// GetEndsWith returns StringComparator.EndsWith, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetEndsWith() *string { return v.EndsWith }
+
+// GetEq returns StringComparator.Eq, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetEq() *string { return v.Eq }
+
+// GetEqIgnoreCase returns StringComparator.EqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetEqIgnoreCase() *string { return v.EqIgnoreCase }
+
+// GetIn returns StringComparator.In, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetIn() []string { return v.In }
+
+// GetNeq returns StringComparator.Neq, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNeq() *string { return v.Neq }
+
+// GetNeqIgnoreCase returns StringComparator.NeqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNeqIgnoreCase() *string { return v.NeqIgnoreCase }
+
+// GetNin returns StringComparator.Nin, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNin() []string { return v.Nin }
+
+// GetNotContains returns StringComparator.NotContains, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNotContains() *string { return v.NotContains }
+
+// GetNotContainsIgnoreCase returns StringComparator.NotContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNotContainsIgnoreCase() *string { return v.NotContainsIgnoreCase }
+
+// GetNotEndsWith returns StringComparator.NotEndsWith, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNotEndsWith() *string { return v.NotEndsWith }
+
+// GetNotStartsWith returns StringComparator.NotStartsWith, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetNotStartsWith() *string { return v.NotStartsWith }
+
+// GetStartsWith returns StringComparator.StartsWith, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetStartsWith() *string { return v.StartsWith }
+
+// GetStartsWithIgnoreCase returns StringComparator.StartsWithIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringComparator) GetStartsWithIgnoreCase() *string { return v.StartsWithIgnoreCase }
+
+// Comparator for strings in arrays.
+type StringItemComparator struct {
+	// Contains constraint. Matches any values that contain the given string.
+	Contains *string `json:"contains"`
+	// Contains case insensitive constraint. Matches any values that contain the given string case insensitive.
+	ContainsIgnoreCase *string `json:"containsIgnoreCase"`
+	// Contains case and accent insensitive constraint. Matches any values that contain the given string case and accent insensitive.
+	ContainsIgnoreCaseAndAccent *string `json:"containsIgnoreCaseAndAccent"`
+	// Ends with constraint. Matches any values that end with the given string.
+	EndsWith *string `json:"endsWith"`
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// Equals case insensitive. Matches any values that matches the given string case insensitive.
+	EqIgnoreCase *string `json:"eqIgnoreCase"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-equals case insensitive. Matches any values that don't match the given string case insensitive.
+	NeqIgnoreCase *string `json:"neqIgnoreCase"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Doesn't contain constraint. Matches any values that don't contain the given string.
+	NotContains *string `json:"notContains"`
+	// Doesn't contain case insensitive constraint. Matches any values that don't contain the given string case insensitive.
+	NotContainsIgnoreCase *string `json:"notContainsIgnoreCase"`
+	// Doesn't end with constraint. Matches any values that don't end with the given string.
+	NotEndsWith *string `json:"notEndsWith"`
+	// Doesn't start with constraint. Matches any values that don't start with the given string.
+	NotStartsWith *string `json:"notStartsWith"`
+	// Starts with constraint. Matches any values that start with the given string.
+	StartsWith *string `json:"startsWith"`
+	// Starts with case insensitive constraint. Matches any values that start with the given string.
+	StartsWithIgnoreCase *string `json:"startsWithIgnoreCase"`
+}
+
+// GetContains returns StringItemComparator.Contains, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetContains() *string { return v.Contains }
+
+// GetContainsIgnoreCase returns StringItemComparator.ContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetContainsIgnoreCase() *string { return v.ContainsIgnoreCase }
+
+// GetContainsIgnoreCaseAndAccent returns StringItemComparator.ContainsIgnoreCaseAndAccent, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetContainsIgnoreCaseAndAccent() *string {
+	return v.ContainsIgnoreCaseAndAccent
+}
+
+// GetEndsWith returns StringItemComparator.EndsWith, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetEndsWith() *string { return v.EndsWith }
+
+// GetEq returns StringItemComparator.Eq, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetEq() *string { return v.Eq }
+
+// GetEqIgnoreCase returns StringItemComparator.EqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetEqIgnoreCase() *string { return v.EqIgnoreCase }
+
+// GetIn returns StringItemComparator.In, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetIn() []string { return v.In }
+
+// GetNeq returns StringItemComparator.Neq, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNeq() *string { return v.Neq }
+
+// GetNeqIgnoreCase returns StringItemComparator.NeqIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNeqIgnoreCase() *string { return v.NeqIgnoreCase }
+
+// GetNin returns StringItemComparator.Nin, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNin() []string { return v.Nin }
+
+// GetNotContains returns StringItemComparator.NotContains, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNotContains() *string { return v.NotContains }
+
+// GetNotContainsIgnoreCase returns StringItemComparator.NotContainsIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNotContainsIgnoreCase() *string { return v.NotContainsIgnoreCase }
+
+// GetNotEndsWith returns StringItemComparator.NotEndsWith, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNotEndsWith() *string { return v.NotEndsWith }
+
+// GetNotStartsWith returns StringItemComparator.NotStartsWith, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetNotStartsWith() *string { return v.NotStartsWith }
+
+// GetStartsWith returns StringItemComparator.StartsWith, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetStartsWith() *string { return v.StartsWith }
+
+// GetStartsWithIgnoreCase returns StringItemComparator.StartsWithIgnoreCase, and is useful for accessing the field via an interface.
+func (v *StringItemComparator) GetStartsWithIgnoreCase() *string { return v.StartsWithIgnoreCase }
+
+// Comparator for source type.
+type SubTypeComparator struct {
+	// Equals constraint.
+	Eq *string `json:"eq"`
+	// In-array constraint.
+	In []string `json:"in"`
+	// Not-equals constraint.
+	Neq *string `json:"neq"`
+	// Not-in-array constraint.
+	Nin []string `json:"nin"`
+	// Null constraint. Matches any non-null values if the given value is false, otherwise it matches null values.
+	Null *bool `json:"null"`
+}
+
+// GetEq returns SubTypeComparator.Eq, and is useful for accessing the field via an interface.
+func (v *SubTypeComparator) GetEq() *string { return v.Eq }
+
+// GetIn returns SubTypeComparator.In, and is useful for accessing the field via an interface.
+func (v *SubTypeComparator) GetIn() []string { return v.In }
+
+// GetNeq returns SubTypeComparator.Neq, and is useful for accessing the field via an interface.
+func (v *SubTypeComparator) GetNeq() *string { return v.Neq }
+
+// GetNin returns SubTypeComparator.Nin, and is useful for accessing the field via an interface.
+func (v *SubTypeComparator) GetNin() []string { return v.Nin }
+
+// GetNull returns SubTypeComparator.Null, and is useful for accessing the field via an interface.
+func (v *SubTypeComparator) GetNull() *bool { return v.Null }
+
+// Team collection filtering options.
+type TeamCollectionFilter struct {
+	// Compound filters, all of which need to be matched by the team.
+	And []*TeamCollectionFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Filters that needs to be matched by all teams.
+	Every *TeamFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Compound filters, one of which need to be matched by the team.
+	Or []*TeamCollectionFilter `json:"or,omitempty"`
+	// Filters that the teams parent must satisfy.
+	Parent *NullableTeamFilter `json:"parent,omitempty"`
+	// Filters that needs to be matched by some teams.
+	Some *TeamFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns TeamCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetAnd() []*TeamCollectionFilter { return v.And }
+
+// GetCreatedAt returns TeamCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetEvery returns TeamCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetEvery() *TeamFilter { return v.Every }
+
+// GetId returns TeamCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetLength returns TeamCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetOr returns TeamCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetOr() []*TeamCollectionFilter { return v.Or }
+
+// GetParent returns TeamCollectionFilter.Parent, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetParent() *NullableTeamFilter { return v.Parent }
+
+// GetSome returns TeamCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetSome() *TeamFilter { return v.Some }
+
+// GetUpdatedAt returns TeamCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *TeamCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// Team filtering options.
+type TeamFilter struct {
+	// Compound filters, all of which need to be matched by the team.
+	And []*TeamFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the team description.
+	Description *NullableStringComparator `json:"description,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the teams issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Comparator for the team key.
+	Key *StringComparator `json:"key,omitempty"`
+	// Comparator for the team name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the team.
+	Or []*TeamFilter `json:"or,omitempty"`
+	// Filters that the teams parent must satisfy.
+	Parent *NullableTeamFilter `json:"parent,omitempty"`
+	// Comparator for the team privacy.
+	Private *BooleanComparator `json:"private,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns TeamFilter.And, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetAnd() []*TeamFilter { return v.And }
+
+// GetCreatedAt returns TeamFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns TeamFilter.Description, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetDescription() *NullableStringComparator { return v.Description }
+
+// GetId returns TeamFilter.Id, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssues returns TeamFilter.Issues, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetKey returns TeamFilter.Key, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetKey() *StringComparator { return v.Key }
+
+// GetName returns TeamFilter.Name, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns TeamFilter.Or, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetOr() []*TeamFilter { return v.Or }
+
+// GetParent returns TeamFilter.Parent, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetParent() *NullableTeamFilter { return v.Parent }
+
+// GetPrivate returns TeamFilter.Private, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetPrivate() *BooleanComparator { return v.Private }
+
+// GetUpdatedAt returns TeamFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *TeamFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// User filtering options.
+type UserCollectionFilter struct {
+	// Comparator for the user's activity status.
+	Active *BooleanComparator `json:"active,omitempty"`
+	// Comparator for the user's admin status.
+	Admin *BooleanComparator `json:"admin,omitempty"`
+	// Compound filters, all of which need to be matched by the user.
+	And []*UserCollectionFilter `json:"and,omitempty"`
+	// Comparator for the user's app status.
+	App *BooleanComparator `json:"app,omitempty"`
+	// Filters that the users assigned issues must satisfy.
+	AssignedIssues *IssueCollectionFilter `json:"assignedIssues,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the user's display name.
+	DisplayName *StringComparator `json:"displayName,omitempty"`
+	// Comparator for the user's email.
+	Email *StringComparator `json:"email,omitempty"`
+	// Filters that needs to be matched by all users.
+	Every *UserFilter `json:"every,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the user's invited status.
+	Invited *BooleanComparator `json:"invited,omitempty"`
+	// Comparator for the user's invited status.
+	IsInvited *BooleanComparator `json:"isInvited,omitempty"`
+	// Filter based on the currently authenticated user. Set to true to filter for the authenticated user, false for any other user.
+	IsMe *BooleanComparator `json:"isMe,omitempty"`
+	// Comparator for the collection length.
+	Length *NumberComparator `json:"length,omitempty"`
+	// Comparator for the user's name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the user.
+	Or []*UserCollectionFilter `json:"or,omitempty"`
+	// Comparator for the user's owner status.
+	Owner *BooleanComparator `json:"owner,omitempty"`
+	// Filters that needs to be matched by some users.
+	Some *UserFilter `json:"some,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetActive returns UserCollectionFilter.Active, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetActive() *BooleanComparator { return v.Active }
+
+// GetAdmin returns UserCollectionFilter.Admin, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetAdmin() *BooleanComparator { return v.Admin }
+
+// GetAnd returns UserCollectionFilter.And, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetAnd() []*UserCollectionFilter { return v.And }
+
+// GetApp returns UserCollectionFilter.App, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetApp() *BooleanComparator { return v.App }
+
+// GetAssignedIssues returns UserCollectionFilter.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetAssignedIssues() *IssueCollectionFilter { return v.AssignedIssues }
+
+// GetCreatedAt returns UserCollectionFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDisplayName returns UserCollectionFilter.DisplayName, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetDisplayName() *StringComparator { return v.DisplayName }
+
+// GetEmail returns UserCollectionFilter.Email, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetEmail() *StringComparator { return v.Email }
+
+// GetEvery returns UserCollectionFilter.Every, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetEvery() *UserFilter { return v.Every }
+
+// GetId returns UserCollectionFilter.Id, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetId() *IDComparator { return v.Id }
+
+// GetInvited returns UserCollectionFilter.Invited, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetInvited() *BooleanComparator { return v.Invited }
+
+// GetIsInvited returns UserCollectionFilter.IsInvited, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetIsInvited() *BooleanComparator { return v.IsInvited }
+
+// GetIsMe returns UserCollectionFilter.IsMe, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetIsMe() *BooleanComparator { return v.IsMe }
+
+// GetLength returns UserCollectionFilter.Length, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetLength() *NumberComparator { return v.Length }
+
+// GetName returns UserCollectionFilter.Name, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns UserCollectionFilter.Or, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetOr() []*UserCollectionFilter { return v.Or }
+
+// GetOwner returns UserCollectionFilter.Owner, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetOwner() *BooleanComparator { return v.Owner }
+
+// GetSome returns UserCollectionFilter.Some, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetSome() *UserFilter { return v.Some }
+
+// GetUpdatedAt returns UserCollectionFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *UserCollectionFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
+// User filtering options.
+type UserFilter struct {
+	// Comparator for the user's activity status.
+	Active *BooleanComparator `json:"active,omitempty"`
+	// Comparator for the user's admin status.
+	Admin *BooleanComparator `json:"admin,omitempty"`
+	// Compound filters, all of which need to be matched by the user.
+	And []*UserFilter `json:"and,omitempty"`
+	// Comparator for the user's app status.
+	App *BooleanComparator `json:"app,omitempty"`
+	// Filters that the users assigned issues must satisfy.
+	AssignedIssues *IssueCollectionFilter `json:"assignedIssues,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the user's display name.
+	DisplayName *StringComparator `json:"displayName,omitempty"`
+	// Comparator for the user's email.
+	Email *StringComparator `json:"email,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Comparator for the user's invited status.
+	Invited *BooleanComparator `json:"invited,omitempty"`
+	// Comparator for the user's invited status.
+	IsInvited *BooleanComparator `json:"isInvited,omitempty"`
+	// Filter based on the currently authenticated user. Set to true to filter for the authenticated user, false for any other user.
+	IsMe *BooleanComparator `json:"isMe,omitempty"`
+	// Comparator for the user's name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the user.
+	Or []*UserFilter `json:"or,omitempty"`
+	// Comparator for the user's owner status.
+	Owner *BooleanComparator `json:"owner,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetActive returns UserFilter.Active, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetActive() *BooleanComparator { return v.Active }
+
+// GetAdmin returns UserFilter.Admin, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetAdmin() *BooleanComparator { return v.Admin }
+
+// GetAnd returns UserFilter.And, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetAnd() []*UserFilter { return v.And }
+
+// GetApp returns UserFilter.App, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetApp() *BooleanComparator { return v.App }
+
+// GetAssignedIssues returns UserFilter.AssignedIssues, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetAssignedIssues() *IssueCollectionFilter { return v.AssignedIssues }
+
+// GetCreatedAt returns UserFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDisplayName returns UserFilter.DisplayName, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetDisplayName() *StringComparator { return v.DisplayName }
+
+// GetEmail returns UserFilter.Email, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetEmail() *StringComparator { return v.Email }
+
+// GetId returns UserFilter.Id, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetId() *IDComparator { return v.Id }
+
+// GetInvited returns UserFilter.Invited, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetInvited() *BooleanComparator { return v.Invited }
+
+// GetIsInvited returns UserFilter.IsInvited, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetIsInvited() *BooleanComparator { return v.IsInvited }
+
+// GetIsMe returns UserFilter.IsMe, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetIsMe() *BooleanComparator { return v.IsMe }
+
+// GetName returns UserFilter.Name, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns UserFilter.Or, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetOr() []*UserFilter { return v.Or }
+
+// GetOwner returns UserFilter.Owner, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetOwner() *BooleanComparator { return v.Owner }
+
+// GetUpdatedAt returns UserFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *UserFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
 
 // UserIssuesForCompletionIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
 type UserIssuesForCompletionIssuesIssueConnection struct {
@@ -1868,6 +6525,65 @@ func (v *ViewerViewerUser) GetName() string { return v.Name }
 // GetEmail returns ViewerViewerUser.Email, and is useful for accessing the field via an interface.
 func (v *ViewerViewerUser) GetEmail() string { return v.Email }
 
+// Workflow state filtering options.
+type WorkflowStateFilter struct {
+	// Compound filters, all of which need to be matched by the workflow state.
+	And []*WorkflowStateFilter `json:"and,omitempty"`
+	// Comparator for the created at date.
+	CreatedAt *DateComparator `json:"createdAt,omitempty"`
+	// Comparator for the workflow state description.
+	Description *StringComparator `json:"description,omitempty"`
+	// Comparator for the identifier.
+	Id *IDComparator `json:"id,omitempty"`
+	// Filters that the workflow states issues must satisfy.
+	Issues *IssueCollectionFilter `json:"issues,omitempty"`
+	// Comparator for the workflow state name.
+	Name *StringComparator `json:"name,omitempty"`
+	// Compound filters, one of which need to be matched by the workflow state.
+	Or []*WorkflowStateFilter `json:"or,omitempty"`
+	// Comparator for the workflow state position.
+	Position *NumberComparator `json:"position,omitempty"`
+	// Filters that the workflow states team must satisfy.
+	Team *TeamFilter `json:"team,omitempty"`
+	// Comparator for the workflow state type. Possible values are "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type *StringComparator `json:"type,omitempty"`
+	// Comparator for the updated at date.
+	UpdatedAt *DateComparator `json:"updatedAt,omitempty"`
+}
+
+// GetAnd returns WorkflowStateFilter.And, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetAnd() []*WorkflowStateFilter { return v.And }
+
+// GetCreatedAt returns WorkflowStateFilter.CreatedAt, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetCreatedAt() *DateComparator { return v.CreatedAt }
+
+// GetDescription returns WorkflowStateFilter.Description, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetDescription() *StringComparator { return v.Description }
+
+// GetId returns WorkflowStateFilter.Id, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetId() *IDComparator { return v.Id }
+
+// GetIssues returns WorkflowStateFilter.Issues, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetIssues() *IssueCollectionFilter { return v.Issues }
+
+// GetName returns WorkflowStateFilter.Name, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetName() *StringComparator { return v.Name }
+
+// GetOr returns WorkflowStateFilter.Or, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetOr() []*WorkflowStateFilter { return v.Or }
+
+// GetPosition returns WorkflowStateFilter.Position, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetPosition() *NumberComparator { return v.Position }
+
+// GetTeam returns WorkflowStateFilter.Team, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetTeam() *TeamFilter { return v.Team }
+
+// GetType returns WorkflowStateFilter.Type, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetType() *StringComparator { return v.Type }
+
+// GetUpdatedAt returns WorkflowStateFilter.UpdatedAt, and is useful for accessing the field via an interface.
+func (v *WorkflowStateFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
+
 // __ActiveIssuesForCompletionInput is used internally by genqlient
 type __ActiveIssuesForCompletionInput struct {
 	First int `json:"first"`
@@ -1892,42 +6608,6 @@ type __GetUserByDisplayNameInput struct {
 // GetDisplayName returns __GetUserByDisplayNameInput.DisplayName, and is useful for accessing the field via an interface.
 func (v *__GetUserByDisplayNameInput) GetDisplayName() string { return v.DisplayName }
 
-// __ListAllUserIssuesByCycleInput is used internally by genqlient
-type __ListAllUserIssuesByCycleInput struct {
-	First        int     `json:"first"`
-	After        *string `json:"after"`
-	AssigneeName string  `json:"assigneeName"`
-	CycleNumber  float64 `json:"cycleNumber"`
-}
-
-// GetFirst returns __ListAllUserIssuesByCycleInput.First, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesByCycleInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListAllUserIssuesByCycleInput.After, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesByCycleInput) GetAfter() *string { return v.After }
-
-// GetAssigneeName returns __ListAllUserIssuesByCycleInput.AssigneeName, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesByCycleInput) GetAssigneeName() string { return v.AssigneeName }
-
-// GetCycleNumber returns __ListAllUserIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
-
-// __ListAllUserIssuesInput is used internally by genqlient
-type __ListAllUserIssuesInput struct {
-	First        int     `json:"first"`
-	After        *string `json:"after"`
-	AssigneeName string  `json:"assigneeName"`
-}
-
-// GetFirst returns __ListAllUserIssuesInput.First, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListAllUserIssuesInput.After, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesInput) GetAfter() *string { return v.After }
-
-// GetAssigneeName returns __ListAllUserIssuesInput.AssigneeName, and is useful for accessing the field via an interface.
-func (v *__ListAllUserIssuesInput) GetAssigneeName() string { return v.AssigneeName }
-
 // __ListCyclesInput is used internally by genqlient
 type __ListCyclesInput struct {
 	First int `json:"first"`
@@ -1936,97 +6616,37 @@ type __ListCyclesInput struct {
 // GetFirst returns __ListCyclesInput.First, and is useful for accessing the field via an interface.
 func (v *__ListCyclesInput) GetFirst() int { return v.First }
 
-// __ListMyActiveIssuesByCycleInput is used internally by genqlient
-type __ListMyActiveIssuesByCycleInput struct {
-	First       int     `json:"first"`
-	After       *string `json:"after"`
-	CycleNumber float64 `json:"cycleNumber"`
+// __ListIssuesInput is used internally by genqlient
+type __ListIssuesInput struct {
+	First  int          `json:"first"`
+	After  *string      `json:"after"`
+	Filter *IssueFilter `json:"filter,omitempty"`
 }
 
-// GetFirst returns __ListMyActiveIssuesByCycleInput.First, and is useful for accessing the field via an interface.
-func (v *__ListMyActiveIssuesByCycleInput) GetFirst() int { return v.First }
+// GetFirst returns __ListIssuesInput.First, and is useful for accessing the field via an interface.
+func (v *__ListIssuesInput) GetFirst() int { return v.First }
 
-// GetAfter returns __ListMyActiveIssuesByCycleInput.After, and is useful for accessing the field via an interface.
-func (v *__ListMyActiveIssuesByCycleInput) GetAfter() *string { return v.After }
+// GetAfter returns __ListIssuesInput.After, and is useful for accessing the field via an interface.
+func (v *__ListIssuesInput) GetAfter() *string { return v.After }
 
-// GetCycleNumber returns __ListMyActiveIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
-func (v *__ListMyActiveIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
+// GetFilter returns __ListIssuesInput.Filter, and is useful for accessing the field via an interface.
+func (v *__ListIssuesInput) GetFilter() *IssueFilter { return v.Filter }
 
-// __ListMyActiveIssuesInput is used internally by genqlient
-type __ListMyActiveIssuesInput struct {
-	First int     `json:"first"`
-	After *string `json:"after"`
+// __ListMyIssuesInput is used internally by genqlient
+type __ListMyIssuesInput struct {
+	First  int          `json:"first"`
+	After  *string      `json:"after"`
+	Filter *IssueFilter `json:"filter,omitempty"`
 }
 
-// GetFirst returns __ListMyActiveIssuesInput.First, and is useful for accessing the field via an interface.
-func (v *__ListMyActiveIssuesInput) GetFirst() int { return v.First }
+// GetFirst returns __ListMyIssuesInput.First, and is useful for accessing the field via an interface.
+func (v *__ListMyIssuesInput) GetFirst() int { return v.First }
 
-// GetAfter returns __ListMyActiveIssuesInput.After, and is useful for accessing the field via an interface.
-func (v *__ListMyActiveIssuesInput) GetAfter() *string { return v.After }
+// GetAfter returns __ListMyIssuesInput.After, and is useful for accessing the field via an interface.
+func (v *__ListMyIssuesInput) GetAfter() *string { return v.After }
 
-// __ListMyAllIssuesByCycleInput is used internally by genqlient
-type __ListMyAllIssuesByCycleInput struct {
-	First       int     `json:"first"`
-	After       *string `json:"after"`
-	CycleNumber float64 `json:"cycleNumber"`
-}
-
-// GetFirst returns __ListMyAllIssuesByCycleInput.First, and is useful for accessing the field via an interface.
-func (v *__ListMyAllIssuesByCycleInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListMyAllIssuesByCycleInput.After, and is useful for accessing the field via an interface.
-func (v *__ListMyAllIssuesByCycleInput) GetAfter() *string { return v.After }
-
-// GetCycleNumber returns __ListMyAllIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
-func (v *__ListMyAllIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
-
-// __ListMyAllIssuesInput is used internally by genqlient
-type __ListMyAllIssuesInput struct {
-	First int     `json:"first"`
-	After *string `json:"after"`
-}
-
-// GetFirst returns __ListMyAllIssuesInput.First, and is useful for accessing the field via an interface.
-func (v *__ListMyAllIssuesInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListMyAllIssuesInput.After, and is useful for accessing the field via an interface.
-func (v *__ListMyAllIssuesInput) GetAfter() *string { return v.After }
-
-// __ListUserIssuesByCycleInput is used internally by genqlient
-type __ListUserIssuesByCycleInput struct {
-	First        int     `json:"first"`
-	After        *string `json:"after"`
-	AssigneeName string  `json:"assigneeName"`
-	CycleNumber  float64 `json:"cycleNumber"`
-}
-
-// GetFirst returns __ListUserIssuesByCycleInput.First, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesByCycleInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListUserIssuesByCycleInput.After, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesByCycleInput) GetAfter() *string { return v.After }
-
-// GetAssigneeName returns __ListUserIssuesByCycleInput.AssigneeName, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesByCycleInput) GetAssigneeName() string { return v.AssigneeName }
-
-// GetCycleNumber returns __ListUserIssuesByCycleInput.CycleNumber, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesByCycleInput) GetCycleNumber() float64 { return v.CycleNumber }
-
-// __ListUserIssuesInput is used internally by genqlient
-type __ListUserIssuesInput struct {
-	First        int     `json:"first"`
-	After        *string `json:"after"`
-	AssigneeName string  `json:"assigneeName"`
-}
-
-// GetFirst returns __ListUserIssuesInput.First, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesInput) GetFirst() int { return v.First }
-
-// GetAfter returns __ListUserIssuesInput.After, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesInput) GetAfter() *string { return v.After }
-
-// GetAssigneeName returns __ListUserIssuesInput.AssigneeName, and is useful for accessing the field via an interface.
-func (v *__ListUserIssuesInput) GetAssigneeName() string { return v.AssigneeName }
+// GetFilter returns __ListMyIssuesInput.Filter, and is useful for accessing the field via an interface.
+func (v *__ListMyIssuesInput) GetFilter() *IssueFilter { return v.Filter }
 
 // __ListUsersInput is used internally by genqlient
 type __ListUsersInput struct {
@@ -2214,122 +6834,6 @@ func GetUserByDisplayName(
 	return data_, err_
 }
 
-// The query executed by ListAllUserIssues.
-const ListAllUserIssues_Operation = `
-query ListAllUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
-	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}}}) {
-		nodes {
-			id
-			identifier
-			title
-			state {
-				name
-				type
-			}
-			priority
-			updatedAt
-			labels {
-				nodes {
-					name
-				}
-			}
-		}
-		pageInfo {
-			hasNextPage
-			endCursor
-		}
-	}
-}
-`
-
-func ListAllUserIssues(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-	assigneeName string,
-) (data_ *ListAllUserIssuesResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListAllUserIssues",
-		Query:  ListAllUserIssues_Operation,
-		Variables: &__ListAllUserIssuesInput{
-			First:        first,
-			After:        after,
-			AssigneeName: assigneeName,
-		},
-	}
-
-	data_ = &ListAllUserIssuesResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
-// The query executed by ListAllUserIssuesByCycle.
-const ListAllUserIssuesByCycle_Operation = `
-query ListAllUserIssuesByCycle ($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
-	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},cycle:{number:{eq:$cycleNumber}}}) {
-		nodes {
-			id
-			identifier
-			title
-			state {
-				name
-				type
-			}
-			priority
-			updatedAt
-			labels {
-				nodes {
-					name
-				}
-			}
-		}
-		pageInfo {
-			hasNextPage
-			endCursor
-		}
-	}
-}
-`
-
-func ListAllUserIssuesByCycle(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-	assigneeName string,
-	cycleNumber float64,
-) (data_ *ListAllUserIssuesByCycleResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListAllUserIssuesByCycle",
-		Query:  ListAllUserIssuesByCycle_Operation,
-		Variables: &__ListAllUserIssuesByCycleInput{
-			First:        first,
-			After:        after,
-			AssigneeName: assigneeName,
-			CycleNumber:  cycleNumber,
-		},
-	}
-
-	data_ = &ListAllUserIssuesByCycleResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
 // The query executed by ListCycles.
 const ListCycles_Operation = `
 query ListCycles ($first: Int!) {
@@ -2375,242 +6879,10 @@ func ListCycles(
 	return data_, err_
 }
 
-// The query executed by ListMyActiveIssues.
-const ListMyActiveIssues_Operation = `
-query ListMyActiveIssues ($first: Int!, $after: String) {
-	viewer {
-		assignedIssues(first: $first, after: $after, filter: {state:{type:{nin:["completed","canceled"]}}}) {
-			nodes {
-				id
-				identifier
-				title
-				state {
-					name
-					type
-				}
-				priority
-				updatedAt
-				labels {
-					nodes {
-						name
-					}
-				}
-			}
-			pageInfo {
-				hasNextPage
-				endCursor
-			}
-		}
-	}
-}
-`
-
-func ListMyActiveIssues(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-) (data_ *ListMyActiveIssuesResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListMyActiveIssues",
-		Query:  ListMyActiveIssues_Operation,
-		Variables: &__ListMyActiveIssuesInput{
-			First: first,
-			After: after,
-		},
-	}
-
-	data_ = &ListMyActiveIssuesResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
-// The query executed by ListMyActiveIssuesByCycle.
-const ListMyActiveIssuesByCycle_Operation = `
-query ListMyActiveIssuesByCycle ($first: Int!, $after: String, $cycleNumber: Float!) {
-	viewer {
-		assignedIssues(first: $first, after: $after, filter: {state:{type:{nin:["completed","canceled"]}},cycle:{number:{eq:$cycleNumber}}}) {
-			nodes {
-				id
-				identifier
-				title
-				state {
-					name
-					type
-				}
-				priority
-				updatedAt
-				labels {
-					nodes {
-						name
-					}
-				}
-			}
-			pageInfo {
-				hasNextPage
-				endCursor
-			}
-		}
-	}
-}
-`
-
-func ListMyActiveIssuesByCycle(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-	cycleNumber float64,
-) (data_ *ListMyActiveIssuesByCycleResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListMyActiveIssuesByCycle",
-		Query:  ListMyActiveIssuesByCycle_Operation,
-		Variables: &__ListMyActiveIssuesByCycleInput{
-			First:       first,
-			After:       after,
-			CycleNumber: cycleNumber,
-		},
-	}
-
-	data_ = &ListMyActiveIssuesByCycleResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
-// The query executed by ListMyAllIssues.
-const ListMyAllIssues_Operation = `
-query ListMyAllIssues ($first: Int!, $after: String) {
-	viewer {
-		assignedIssues(first: $first, after: $after) {
-			nodes {
-				id
-				identifier
-				title
-				state {
-					name
-					type
-				}
-				priority
-				updatedAt
-				labels {
-					nodes {
-						name
-					}
-				}
-			}
-			pageInfo {
-				hasNextPage
-				endCursor
-			}
-		}
-	}
-}
-`
-
-func ListMyAllIssues(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-) (data_ *ListMyAllIssuesResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListMyAllIssues",
-		Query:  ListMyAllIssues_Operation,
-		Variables: &__ListMyAllIssuesInput{
-			First: first,
-			After: after,
-		},
-	}
-
-	data_ = &ListMyAllIssuesResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
-// The query executed by ListMyAllIssuesByCycle.
-const ListMyAllIssuesByCycle_Operation = `
-query ListMyAllIssuesByCycle ($first: Int!, $after: String, $cycleNumber: Float!) {
-	viewer {
-		assignedIssues(first: $first, after: $after, filter: {cycle:{number:{eq:$cycleNumber}}}) {
-			nodes {
-				id
-				identifier
-				title
-				state {
-					name
-					type
-				}
-				priority
-				updatedAt
-				labels {
-					nodes {
-						name
-					}
-				}
-			}
-			pageInfo {
-				hasNextPage
-				endCursor
-			}
-		}
-	}
-}
-`
-
-func ListMyAllIssuesByCycle(
-	ctx_ context.Context,
-	client_ graphql.Client,
-	first int,
-	after *string,
-	cycleNumber float64,
-) (data_ *ListMyAllIssuesByCycleResponse, err_ error) {
-	req_ := &graphql.Request{
-		OpName: "ListMyAllIssuesByCycle",
-		Query:  ListMyAllIssuesByCycle_Operation,
-		Variables: &__ListMyAllIssuesByCycleInput{
-			First:       first,
-			After:       after,
-			CycleNumber: cycleNumber,
-		},
-	}
-
-	data_ = &ListMyAllIssuesByCycleResponse{}
-	resp_ := &graphql.Response{Data: data_}
-
-	err_ = client_.MakeRequest(
-		ctx_,
-		req_,
-		resp_,
-	)
-
-	return data_, err_
-}
-
-// The query executed by ListUserIssues.
-const ListUserIssues_Operation = `
-query ListUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
-	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},state:{type:{nin:["completed","canceled"]}}}) {
+// The query executed by ListIssues.
+const ListIssues_Operation = `
+query ListIssues ($first: Int!, $after: String, $filter: IssueFilter) {
+	issues(first: $first, after: $after, filter: $filter) {
 		nodes {
 			id
 			identifier
@@ -2635,24 +6907,24 @@ query ListUserIssues ($first: Int!, $after: String, $assigneeName: String!) {
 }
 `
 
-func ListUserIssues(
+func ListIssues(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	first int,
 	after *string,
-	assigneeName string,
-) (data_ *ListUserIssuesResponse, err_ error) {
+	filter *IssueFilter,
+) (data_ *ListIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
-		OpName: "ListUserIssues",
-		Query:  ListUserIssues_Operation,
-		Variables: &__ListUserIssuesInput{
-			First:        first,
-			After:        after,
-			AssigneeName: assigneeName,
+		OpName: "ListIssues",
+		Query:  ListIssues_Operation,
+		Variables: &__ListIssuesInput{
+			First:  first,
+			After:  after,
+			Filter: filter,
 		},
 	}
 
-	data_ = &ListUserIssuesResponse{}
+	data_ = &ListIssuesResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(
@@ -2664,54 +6936,54 @@ func ListUserIssues(
 	return data_, err_
 }
 
-// The query executed by ListUserIssuesByCycle.
-const ListUserIssuesByCycle_Operation = `
-query ListUserIssuesByCycle ($first: Int!, $after: String, $assigneeName: String!, $cycleNumber: Float!) {
-	issues(first: $first, after: $after, filter: {assignee:{displayName:{eqIgnoreCase:$assigneeName}},state:{type:{nin:["completed","canceled"]}},cycle:{number:{eq:$cycleNumber}}}) {
-		nodes {
-			id
-			identifier
-			title
-			state {
-				name
-				type
-			}
-			priority
-			updatedAt
-			labels {
-				nodes {
+// The query executed by ListMyIssues.
+const ListMyIssues_Operation = `
+query ListMyIssues ($first: Int!, $after: String, $filter: IssueFilter) {
+	viewer {
+		assignedIssues(first: $first, after: $after, filter: $filter) {
+			nodes {
+				id
+				identifier
+				title
+				state {
 					name
+					type
+				}
+				priority
+				updatedAt
+				labels {
+					nodes {
+						name
+					}
 				}
 			}
-		}
-		pageInfo {
-			hasNextPage
-			endCursor
+			pageInfo {
+				hasNextPage
+				endCursor
+			}
 		}
 	}
 }
 `
 
-func ListUserIssuesByCycle(
+func ListMyIssues(
 	ctx_ context.Context,
 	client_ graphql.Client,
 	first int,
 	after *string,
-	assigneeName string,
-	cycleNumber float64,
-) (data_ *ListUserIssuesByCycleResponse, err_ error) {
+	filter *IssueFilter,
+) (data_ *ListMyIssuesResponse, err_ error) {
 	req_ := &graphql.Request{
-		OpName: "ListUserIssuesByCycle",
-		Query:  ListUserIssuesByCycle_Operation,
-		Variables: &__ListUserIssuesByCycleInput{
-			First:        first,
-			After:        after,
-			AssigneeName: assigneeName,
-			CycleNumber:  cycleNumber,
+		OpName: "ListMyIssues",
+		Query:  ListMyIssues_Operation,
+		Variables: &__ListMyIssuesInput{
+			First:  first,
+			After:  after,
+			Filter: filter,
 		},
 	}
 
-	data_ = &ListUserIssuesByCycleResponse{}
+	data_ = &ListMyIssuesResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

@@ -98,7 +98,7 @@ func TestFormatIssueList(t *testing.T) {
 
 	tests := []struct {
 		name   string
-		issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
+		issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
 		color  bool
 		checks func(t *testing.T, got string)
 	}{
@@ -129,12 +129,12 @@ func TestFormatIssueList(t *testing.T) {
 		},
 		{
 			name: "single issue without color",
-			issues: []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-123",
 					Title:      "Fix the bug",
 					Priority:   2,
-					State: &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
 						Name: "In Progress",
 						Type: "started",
 					},
@@ -159,12 +159,12 @@ func TestFormatIssueList(t *testing.T) {
 		},
 		{
 			name: "multiple issues",
-			issues: []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-1",
 					Title:      "First issue",
 					Priority:   1,
-					State: &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
 						Name: "Done",
 						Type: "completed",
 					},
@@ -173,7 +173,7 @@ func TestFormatIssueList(t *testing.T) {
 					Identifier: "ENG-2",
 					Title:      "Second issue",
 					Priority:   4,
-					State: &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
 						Name: "Backlog",
 						Type: "backlog",
 					},
@@ -203,7 +203,7 @@ func TestFormatIssueList(t *testing.T) {
 		},
 		{
 			name: "nil state handling",
-			issues: []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-99",
 					Title:      "No state",
@@ -224,12 +224,12 @@ func TestFormatIssueList(t *testing.T) {
 		},
 		{
 			name: "with color enabled",
-			issues: []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-10",
 					Title:      "Color test",
 					Priority:   1,
-					State: &api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
 						Name: "In Progress",
 						Type: "started",
 					},

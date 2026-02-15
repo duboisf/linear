@@ -139,7 +139,7 @@ func StateColor(stateType string) string {
 }
 
 // FormatIssueList formats a slice of issues as an aligned table for terminal output.
-func FormatIssueList(issues []*api.ListMyActiveIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
+func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
 	const gap = "  "
 
 	// Compute max visible widths per column.
