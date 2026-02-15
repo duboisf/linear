@@ -134,7 +134,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
-	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: current, next, previous, or a cycle number")
+	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: all, current, next, previous, or a cycle number (default: current)")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeCycleValues(cmd, opts)
 	})
@@ -143,9 +143,41 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	_ = cmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"status", "priority", "identifier", "title"}, cobra.ShellCompDirectiveNoFileComp
 	})
-	cmd.Flags().StringVarP(&statusFilter, "status", "S", "", "Filter by status type: all, or comma-separated list of started, unstarted, triage, backlog, completed, canceled")
+	cmd.Flags().StringVarP(&statusFilter, "status", "S", "", "Filter by status type: all, or comma-separated list (prefix with ! to exclude, e.g. !completed)")
 	_ = cmd.RegisterFlagCompletionFunc("status", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-		return []string{"all", "started", "unstarted", "triage", "backlog", "completed", "canceled"}, cobra.ShellCompDirectiveNoFileComp
+		allStatuses := []string{"started", "todo", "unstarted", "triage", "backlog", "completed", "canceled"}
+
+		parts := strings.Split(toComplete, ",")
+		partial := parts[len(parts)-1]
+		prefix := strings.Join(parts[:len(parts)-1], ",")
+
+		used := make(map[string]bool, len(parts))
+		for _, p := range parts[:len(parts)-1] {
+			_, bare, _ := parseNegation(strings.TrimSpace(p))
+			used[bare] = true
+		}
+
+		negPrefix, _, negated := parseNegation(partial)
+
+		var completions []string
+		// Offer "all" only as the sole value.
+		if prefix == "" && !negated {
+			completions = append(completions, "all")
+		}
+		for _, s := range allStatuses {
+			if used[s] {
+				continue
+			}
+			val := s
+			if negated {
+				val = negPrefix + s
+			}
+			if prefix != "" {
+				val = prefix + "," + val
+			}
+			completions = append(completions, val)
+		}
+		return completions, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
 	})
 	cmd.Flags().StringVarP(&user, "user", "u", "", "User whose issues to list")
 	_ = cmd.RegisterFlagCompletionFunc("user", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
@@ -153,6 +185,47 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	})
 
 	return cmd
+}
+
+// excludedStateTypes are always filtered out unless --status all is used.
+var excludedStateTypes = []string{"completed", "canceled"}
+
+// cutNegationPrefix strips a "!" or "\!" prefix from s.
+// The "\!" variant is needed because zsh's BANG_HIST option escapes "!" even
+// inside single quotes.
+func cutNegationPrefix(s string) (after string, ok bool) {
+	if after, ok = strings.CutPrefix(s, `\!`); ok {
+		return after, true
+	}
+	return strings.CutPrefix(s, "!")
+}
+
+// statusAliases maps convenience names to Linear workflow state types.
+var statusAliases = map[string]string{
+	"todo": "unstarted",
+}
+
+// resolveStatusAlias returns the canonical state type for a status value,
+// expanding known aliases (e.g. "todo" → "unstarted").
+func resolveStatusAlias(s string) string {
+	if canon, ok := statusAliases[s]; ok {
+		return canon
+	}
+	return s
+}
+
+// parseNegation splits a partial completion token into its negation prefix,
+// the bare value, and whether negation was present.
+// Examples: "!back" → ("!", "back", true),  "\!back" → ("\!", "back", true),
+// "started" → ("", "started", false).
+func parseNegation(s string) (prefix, bare string, negated bool) {
+	if after, ok := strings.CutPrefix(s, `\!`); ok {
+		return `\!`, after, true
+	}
+	if after, ok := strings.CutPrefix(s, "!"); ok {
+		return "!", after, true
+	}
+	return "", s, false
 }
 
 // buildIssueFilter constructs an IssueFilter from the flag values.
@@ -167,24 +240,34 @@ func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, cli
 		// No state filter — include everything.
 		filter = nil
 	case statusLower != "":
-		// Explicit status list → use "in" filter.
-		var types []string
+		// User takes full control: parse positive and !negated values.
+		var inTypes, ninTypes []string
 		for s := range strings.SplitSeq(statusLower, ",") {
 			s = strings.TrimSpace(s)
-			if s != "" {
-				types = append(types, s)
+			if s == "" {
+				continue
+			}
+			if after, ok := cutNegationPrefix(s); ok {
+				ninTypes = append(ninTypes, resolveStatusAlias(after))
+			} else {
+				inTypes = append(inTypes, resolveStatusAlias(s))
 			}
 		}
+		comp := &api.StringComparator{}
+		if len(inTypes) > 0 {
+			comp.In = inTypes
+		}
+		if len(ninTypes) > 0 {
+			comp.Nin = ninTypes
+		}
 		filter = &api.IssueFilter{
-			State: &api.WorkflowStateFilter{
-				Type: &api.StringComparator{In: types},
-			},
+			State: &api.WorkflowStateFilter{Type: comp},
 		}
 	default:
 		// Default: exclude completed and canceled.
 		filter = &api.IssueFilter{
 			State: &api.WorkflowStateFilter{
-				Type: &api.StringComparator{Nin: []string{"completed", "canceled"}},
+				Type: &api.StringComparator{Nin: excludedStateTypes},
 			},
 		}
 	}
@@ -199,19 +282,43 @@ func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, cli
 		}
 	}
 
-	// Cycle filter for --cycle flag.
+	// Cycle filter.
 	var resolvedCycle *cycleInfo
-	if cycle != "" {
+	cycleLower := strings.ToLower(strings.TrimSpace(cycle))
+	switch {
+	case cycleLower == "all":
+		// No cycle filter — include issues from all cycles.
+	case cycleLower != "":
+		// Explicit cycle value: resolve via API.
 		if filter == nil {
 			filter = &api.IssueFilter{}
 		}
-		ci, err := resolveCycle(ctx, client, c, cycle)
+		ci, err := resolveCycle(ctx, client, c, cycleLower)
 		if err != nil {
 			return nil, nil, err
 		}
 		resolvedCycle = &ci
 		filter.Cycle = &api.NullableCycleFilter{
 			Number: &api.NumberComparator{Eq: &ci.Number},
+		}
+	default:
+		// No --cycle flag: default to current cycle.
+		// Resolve via API to show the cycle header; fall back to IsActive
+		// filter if the resolution fails (e.g. no active cycle).
+		if filter == nil {
+			filter = &api.IssueFilter{}
+		}
+		ci, err := resolveCycle(ctx, client, c, "current")
+		if err == nil {
+			resolvedCycle = &ci
+			filter.Cycle = &api.NullableCycleFilter{
+				Number: &api.NumberComparator{Eq: &ci.Number},
+			}
+		} else {
+			trueVal := true
+			filter.Cycle = &api.NullableCycleFilter{
+				IsActive: &api.BooleanComparator{Eq: &trueVal},
+			}
 		}
 	}
 

@@ -1106,12 +1106,34 @@ func TestIssueList_StatusFilterMultiple(t *testing.T) {
 	}
 }
 
-func TestIssueList_StatusFilterNoMatch(t *testing.T) {
+func TestIssueList_StatusCompleted(t *testing.T) {
 	t.Parallel()
 
-	// Server returns empty when filtering for completed (no completed issues exist).
+	// --status completed gives user full control — no default Nin applied.
+	// Server returns completed issues.
+	completedResponse := `{
+		"data": {
+			"viewer": {
+				"assignedIssues": {
+					"nodes": [
+						{
+							"id": "id-done",
+							"identifier": "ENG-500",
+							"title": "Done task",
+							"state": {"name": "Done", "type": "completed"},
+							"priority": 1,
+							"updatedAt": "2025-01-01T00:00:00Z",
+							"labels": {"nodes": []}
+						}
+					],
+					"pageInfo": {"hasNextPage": false, "endCursor": null}
+				}
+			}
+		}
+	}`
+
 	server := newMockGraphQLServer(t, map[string]string{
-		"ListMyIssues": emptyListResponse,
+		"ListMyIssues": completedResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
@@ -1124,13 +1146,200 @@ func TestIssueList_StatusFilterNoMatch(t *testing.T) {
 	}
 
 	output := stdout.String()
-	// No completed issues, should have header only
-	if !strings.Contains(output, "IDENTIFIER") {
-		t.Error("expected header in output")
+	if !strings.Contains(output, "ENG-500") {
+		t.Error("expected output to contain ENG-500 (completed issue)")
 	}
-	lines := strings.Split(strings.TrimSpace(output), "\n")
-	if len(lines) != 1 {
-		t.Errorf("expected only header line, got %d lines", len(lines))
+}
+
+func TestIssueList_StatusCanceled(t *testing.T) {
+	t.Parallel()
+
+	canceledResponse := `{
+		"data": {
+			"viewer": {
+				"assignedIssues": {
+					"nodes": [
+						{
+							"id": "id-cancel",
+							"identifier": "ENG-501",
+							"title": "Canceled task",
+							"state": {"name": "Canceled", "type": "canceled"},
+							"priority": 1,
+							"updatedAt": "2025-01-01T00:00:00Z",
+							"labels": {"nodes": []}
+						}
+					],
+					"pageInfo": {"hasNextPage": false, "endCursor": null}
+				}
+			}
+		}
+	}`
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": canceledResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "canceled"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status canceled returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-501") {
+		t.Error("expected output to contain ENG-501 (canceled issue)")
+	}
+}
+
+func TestIssueList_StatusNegation(t *testing.T) {
+	t.Parallel()
+
+	// !backlog should exclude only backlog — no default Nin applied.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "!backlog"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status !backlog returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+}
+
+func TestIssueList_StatusNegationMultiple(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "!completed,!canceled"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status !completed,!canceled returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+}
+
+func TestIssueList_StatusMixedPositiveNegation(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "started,!canceled"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --status started,!canceled returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+}
+
+func TestIssueList_DefaultCurrentCycle(t *testing.T) {
+	t.Parallel()
+
+	// When no --cycle flag is provided, the default resolves the current
+	// cycle and shows the header, just like --cycle current.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list (default cycle) returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+	if !strings.Contains(output, "Cycle 11") {
+		t.Error("expected cycle header 'Cycle 11' for default current cycle")
+	}
+}
+
+func TestIssueList_DefaultCurrentCycle_Fallback(t *testing.T) {
+	t.Parallel()
+
+	// When the cycle resolution fails (e.g. no ListCycles handler),
+	// the default falls back to IsActive filter without a header.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list (default cycle fallback) returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+}
+
+func TestIssueList_CycleAll(t *testing.T) {
+	t.Parallel()
+
+	// --cycle all removes cycle filter entirely — no ListCycles call needed.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--cycle", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --cycle all returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+	if !strings.Contains(output, "ENG-102") {
+		t.Error("expected output to contain ENG-102")
+	}
+	// No cycle header.
+	if strings.Contains(output, "Cycle") {
+		t.Error("--cycle all should not print a cycle header")
 	}
 }
 

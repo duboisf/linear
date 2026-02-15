@@ -196,6 +196,7 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 
 	comps := cobra.AppendActiveHelp(nil, "Or use any cycle number directly")
 	comps = append(comps,
+		"all\tAll cycles (no cycle filter)",
 		"current\t"+currentDesc,
 		"next\t"+nextDesc,
 		"previous\t"+previousDesc,
@@ -239,6 +240,7 @@ func formatCycleDateRange(startsAt, endsAt string) string {
 
 func staticCycleCompletions() []string {
 	return []string{
+		"all\tAll cycles (no cycle filter)",
 		"current\tCurrent active cycle",
 		"next\tNext upcoming cycle",
 		"previous\tPrevious completed cycle",
