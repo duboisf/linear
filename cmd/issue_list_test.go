@@ -906,6 +906,10 @@ func TestIssueList_CycleNoCycleFound(t *testing.T) {
 func TestIssueList_CycleCacheHit(t *testing.T) {
 	t.Parallel()
 
+	frozenTime := func() time.Time {
+		return time.Date(2025, 1, 20, 0, 0, 0, 0, time.UTC)
+	}
+
 	// First call: server has both ListCycles and issue responses.
 	server := newMockGraphQLServer(t, map[string]string{
 		"ListCycles":   listCyclesResponse,
@@ -914,6 +918,7 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	opts.Cache = cache.New(t.TempDir(), 5*time.Minute)
+	opts.TimeNow = frozenTime
 
 	root := cmd.NewRootCmd(opts)
 	root.SetArgs([]string{"issue", "list", "-c", "current"})
@@ -931,6 +936,7 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 	})
 	opts2, stdout2, _ := testOptionsWithBuffers(t, server2)
 	opts2.Cache = opts.Cache // reuse the same cache
+	opts2.TimeNow = frozenTime
 
 	root2 := cmd.NewRootCmd(opts2)
 	root2.SetArgs([]string{"issue", "list", "-c", "current"})
@@ -945,6 +951,10 @@ func TestIssueList_CycleCacheHit(t *testing.T) {
 func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 	t.Parallel()
 
+	frozenTime := func() time.Time {
+		return time.Date(2025, 1, 20, 0, 0, 0, 0, time.UTC)
+	}
+
 	// First call: populate the cycle cache.
 	server1 := newMockGraphQLServer(t, map[string]string{
 		"ListCycles":   listCyclesResponse,
@@ -954,6 +964,7 @@ func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 	opts1, _, _ := testOptionsWithBuffers(t, server1)
 	c := cache.New(t.TempDir(), 24*time.Hour)
 	opts1.Cache = c
+	opts1.TimeNow = frozenTime
 
 	root1 := cmd.NewRootCmd(opts1)
 	root1.SetArgs([]string{"issue", "list", "-c", "current"})
@@ -970,12 +981,56 @@ func TestIssueList_RefreshBypassesCycleCache(t *testing.T) {
 	})
 	opts2, _, _ := testOptionsWithBuffers(t, server2)
 	opts2.Cache = c // reuse same cache
+	opts2.TimeNow = frozenTime
 
 	root2 := cmd.NewRootCmd(opts2)
 	root2.SetArgs([]string{"issue", "list", "--refresh", "-c", "current"})
 	err := root2.Execute()
 	if err == nil {
 		t.Fatal("expected error: --refresh should have cleared cache, forcing an API call")
+	}
+}
+
+func TestIssueList_CycleCacheInvalidatedAtBoundary(t *testing.T) {
+	t.Parallel()
+
+	sharedCache := cache.New(t.TempDir(), 24*time.Hour)
+
+	// First call: time is within the active cycle (Sprint 11: ends 2025-01-28).
+	server1 := newMockGraphQLServer(t, map[string]string{
+		"ListCycles":   listCyclesResponse,
+		"ListMyIssues": cycleIssuesResponse,
+	})
+	opts1, _, _ := testOptionsWithBuffers(t, server1)
+	opts1.Cache = sharedCache
+	opts1.TimeNow = func() time.Time {
+		return time.Date(2025, 1, 20, 0, 0, 0, 0, time.UTC)
+	}
+
+	root1 := cmd.NewRootCmd(opts1)
+	root1.SetArgs([]string{"issue", "list", "-c", "current"})
+	if err := root1.Execute(); err != nil {
+		t.Fatalf("first call: %v", err)
+	}
+
+	// Second call: time is past the cycle boundary.
+	// Cache should be invalidated because the active cycle ended.
+	// Server doesn't serve ListCycles, so the command must fail with an API error
+	// (proving the cache was not used).
+	server2 := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": cycleIssuesResponse,
+	})
+	opts2, _, _ := testOptionsWithBuffers(t, server2)
+	opts2.Cache = sharedCache
+	opts2.TimeNow = func() time.Time {
+		return time.Date(2025, 1, 29, 0, 0, 0, 0, time.UTC)
+	}
+
+	root2 := cmd.NewRootCmd(opts2)
+	root2.SetArgs([]string{"issue", "list", "-c", "current"})
+	err := root2.Execute()
+	if err == nil {
+		t.Fatal("expected error: cycle boundary crossed should have invalidated cache")
 	}
 }
 

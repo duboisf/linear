@@ -76,7 +76,11 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				return err
 			}
 
-			filter, ci, err := buildIssueFilter(statusFilter, user, cycle, cmd.Context(), client, opts.Cache)
+			timeNow := opts.TimeNow
+			if timeNow == nil {
+				timeNow = time.Now
+			}
+			filter, ci, err := buildIssueFilter(statusFilter, user, cycle, cmd.Context(), client, opts.Cache, timeNow)
 			if err != nil {
 				return err
 			}
@@ -230,7 +234,7 @@ func parseNegation(s string) (prefix, bare string, negated bool) {
 
 // buildIssueFilter constructs an IssueFilter from the flag values.
 // When cycle is set, the resolved cycleInfo is returned for header rendering.
-func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, client graphql.Client, c *cache.Cache) (*api.IssueFilter, *cycleInfo, error) {
+func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, client graphql.Client, c *cache.Cache, timeNow func() time.Time) (*api.IssueFilter, *cycleInfo, error) {
 	var filter *api.IssueFilter
 
 	// State filter based on --status flag.
@@ -293,7 +297,7 @@ func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, cli
 		if filter == nil {
 			filter = &api.IssueFilter{}
 		}
-		ci, err := resolveCycle(ctx, client, c, cycleLower)
+		ci, err := resolveCycle(ctx, client, c, timeNow, cycleLower)
 		if err != nil {
 			return nil, nil, err
 		}
@@ -308,7 +312,7 @@ func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, cli
 		if filter == nil {
 			filter = &api.IssueFilter{}
 		}
-		ci, err := resolveCycle(ctx, client, c, "current")
+		ci, err := resolveCycle(ctx, client, c, timeNow, "current")
 		if err == nil {
 			resolvedCycle = &ci
 			filter.Cycle = &api.NullableCycleFilter{
@@ -389,14 +393,39 @@ const (
 	_cycleCacheTTL = 24 * time.Hour
 )
 
+// cycleBoundaryCrossed reports whether the cached cycle data is stale because
+// a cycle boundary has been crossed. The boolean flags (IsActive, IsNext, etc.)
+// are point-in-time snapshots from the API, so they become wrong when the
+// active cycle ends or a new one starts.
+func cycleBoundaryCrossed(resp *api.ListCyclesResponse, now time.Time) bool {
+	if resp.Cycles == nil {
+		return true
+	}
+	for _, c := range resp.Cycles.Nodes {
+		if !c.IsActive {
+			continue
+		}
+		endsAt, err := time.Parse(time.RFC3339, c.EndsAt)
+		if err != nil {
+			return true
+		}
+		return now.After(endsAt)
+	}
+	// No active cycle in cached data; treat as stale so we re-fetch.
+	return true
+}
+
 // listCyclesCached returns cycle data, serving from cache when available.
-// The cycle list is cached for 24 hours since cycles rarely change.
-func listCyclesCached(ctx context.Context, client graphql.Client, c *cache.Cache) (*api.ListCyclesResponse, error) {
+// The cache is invalidated if a cycle boundary has been crossed since the
+// data was fetched, even if the TTL has not expired.
+func listCyclesCached(ctx context.Context, client graphql.Client, c *cache.Cache, timeNow func() time.Time) (*api.ListCyclesResponse, error) {
 	if c != nil {
 		if data, ok := c.GetWithTTL(_cycleCacheKey, _cycleCacheTTL); ok {
 			var resp api.ListCyclesResponse
 			if err := json.Unmarshal([]byte(data), &resp); err == nil {
-				return &resp, nil
+				if !cycleBoundaryCrossed(&resp, timeNow()) {
+					return &resp, nil
+				}
 			}
 		}
 	}
@@ -418,7 +447,7 @@ func listCyclesCached(ctx context.Context, client graphql.Client, c *cache.Cache
 // resolveCycle converts a cycle flag value to cycle info.
 // Named values (current, next, previous) are resolved via the ListCycles API;
 // numeric strings also query ListCycles to get the full metadata.
-func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, value string) (cycleInfo, error) {
+func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, timeNow func() time.Time, value string) (cycleInfo, error) {
 	isNumeric := false
 	var numericVal float64
 	if n, err := strconv.ParseFloat(value, 64); err == nil {
@@ -432,7 +461,7 @@ func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, va
 		}
 	}
 
-	resp, err := listCyclesCached(ctx, client, c)
+	resp, err := listCyclesCached(ctx, client, c, timeNow)
 	if err != nil {
 		return cycleInfo{}, fmt.Errorf("fetching cycles: %w", err)
 	}

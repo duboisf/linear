@@ -156,7 +156,11 @@ func completeCycleValues(cmd *cobra.Command, opts Options) ([]string, cobra.Shel
 	if err != nil {
 		return staticCycleCompletions(), dir
 	}
-	resp, err := listCyclesCached(cmd.Context(), client, opts.Cache)
+	timeNow := opts.TimeNow
+	if timeNow == nil {
+		timeNow = time.Now
+	}
+	resp, err := listCyclesCached(cmd.Context(), client, opts.Cache, timeNow)
 	if err != nil || resp.Cycles == nil {
 		return staticCycleCompletions(), dir
 	}

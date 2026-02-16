@@ -33,6 +33,8 @@ type Options struct {
 	GitWorktreeCreator GitWorktreeCreator
 	// Cache provides file-based caching for issue details.
 	Cache *cache.Cache
+	// TimeNow returns the current time. Defaults to time.Now.
+	TimeNow func() time.Time
 	// Stdin for interactive input.
 	Stdin io.Reader
 	// Stdout for command output.
@@ -138,6 +140,7 @@ func DefaultOptions() Options {
 		FileStore:          file,
 		GitWorktreeCreator: &execGitWorktreeCreator{ctx: context.Background()},
 		Cache:              cache.New(cacheDir, 5*time.Minute),
+		TimeNow:            time.Now,
 		Stdin:              os.Stdin,
 		Stdout:             os.Stdout,
 		Stderr:             os.Stderr,
