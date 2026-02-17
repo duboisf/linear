@@ -223,6 +223,66 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
+			name: "labels column shown when issues have labels",
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+				{
+					Identifier: "ENG-1",
+					Title:      "Labeled issue",
+					Priority:   2,
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+						Name: "In Progress",
+						Type: "started",
+					},
+					Labels: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
+						Nodes: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
+							{Name: "bug"},
+							{Name: "frontend"},
+						},
+					},
+				},
+				{
+					Identifier: "ENG-2",
+					Title:      "No labels",
+					Priority:   3,
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+						Name: "Todo",
+						Type: "unstarted",
+					},
+				},
+			},
+			color: false,
+			checks: func(t *testing.T, got string) {
+				t.Helper()
+				if !strings.Contains(got, "LABELS") {
+					t.Error("expected LABELS header when issues have labels")
+				}
+				if !strings.Contains(got, "bug, frontend") {
+					t.Error("expected 'bug, frontend' in output")
+				}
+			},
+		},
+		{
+			name: "labels column hidden when no issues have labels",
+			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+				{
+					Identifier: "ENG-1",
+					Title:      "No labels",
+					Priority:   2,
+					State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+						Name: "In Progress",
+						Type: "started",
+					},
+				},
+			},
+			color: false,
+			checks: func(t *testing.T, got string) {
+				t.Helper()
+				if strings.Contains(got, "LABELS") {
+					t.Error("expected no LABELS header when no issues have labels")
+				}
+			},
+		},
+		{
 			name: "with color enabled",
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{

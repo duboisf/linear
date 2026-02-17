@@ -1398,6 +1398,160 @@ func TestIssueList_CycleAll(t *testing.T) {
 	}
 }
 
+// --- --label flag tests ---
+
+const labeledIssuesResponse = `{
+	"data": {
+		"viewer": {
+			"assignedIssues": {
+				"nodes": [
+					{
+						"id": "id-1",
+						"identifier": "ENG-101",
+						"title": "Fix login bug",
+						"state": {"name": "In Progress", "type": "started"},
+						"priority": 1,
+						"updatedAt": "2025-01-01T00:00:00Z",
+						"labels": {"nodes": [{"name": "bug"}, {"name": "frontend"}]}
+					},
+					{
+						"id": "id-2",
+						"identifier": "ENG-102",
+						"title": "Add dark mode",
+						"state": {"name": "Backlog", "type": "backlog"},
+						"priority": 3,
+						"updatedAt": "2025-01-02T00:00:00Z",
+						"labels": {"nodes": [{"name": "enhancement"}]}
+					}
+				],
+				"pageInfo": {"hasNextPage": false, "endCursor": null}
+			}
+		}
+	}
+}`
+
+func TestIssueList_LabelFlag(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--label", "bug"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --label bug returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+	if !strings.Contains(output, "LABELS") {
+		t.Error("expected output to contain LABELS header")
+	}
+	if !strings.Contains(output, "bug") {
+		t.Error("expected output to contain label 'bug'")
+	}
+}
+
+func TestIssueList_LabelFlag_Short(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "-l", "enhancement"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list -l enhancement returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-102") {
+		t.Error("expected output to contain ENG-102")
+	}
+}
+
+func TestIssueList_LabelFlag_MultipleLabels(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--label", "bug,frontend"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --label bug,frontend returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101")
+	}
+}
+
+func TestIssueList_LabelsDisplayedInOutput(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "LABELS") {
+		t.Error("expected LABELS column header")
+	}
+	if !strings.Contains(output, "bug, frontend") {
+		t.Error("expected 'bug, frontend' labels in output")
+	}
+	if !strings.Contains(output, "enhancement") {
+		t.Error("expected 'enhancement' label in output")
+	}
+}
+
+func TestIssueList_NoLabelsColumn_WhenNoLabels(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if strings.Contains(output, "LABELS") {
+		t.Error("expected no LABELS column when no issues have labels")
+	}
+}
+
 func TestIssueList_InteractiveFlag_FzfNotAvailable(t *testing.T) {
 	getIssueResponse := `{
 		"data": {

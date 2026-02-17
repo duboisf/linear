@@ -2628,6 +2628,44 @@ type ListIssuesResponse struct {
 // GetIssues returns ListIssuesResponse.Issues, and is useful for accessing the field via an interface.
 func (v *ListIssuesResponse) GetIssues() *ListIssuesIssuesIssueConnection { return v.Issues }
 
+// ListLabelsIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
+type ListLabelsIssueLabelsIssueLabelConnection struct {
+	Nodes []*ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel `json:"nodes"`
+}
+
+// GetNodes returns ListLabelsIssueLabelsIssueLabelConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *ListLabelsIssueLabelsIssueLabelConnection) GetNodes() []*ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel {
+	return v.Nodes
+}
+
+// ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel includes the requested fields of the GraphQL type IssueLabel.
+// The GraphQL type's documentation follows.
+//
+// Labels that can be associated with issues.
+type ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// The label's name.
+	Name string `json:"name"`
+}
+
+// GetId returns ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel.Id, and is useful for accessing the field via an interface.
+func (v *ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel) GetId() string { return v.Id }
+
+// GetName returns ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel.Name, and is useful for accessing the field via an interface.
+func (v *ListLabelsIssueLabelsIssueLabelConnectionNodesIssueLabel) GetName() string { return v.Name }
+
+// ListLabelsResponse is returned by ListLabels on success.
+type ListLabelsResponse struct {
+	// All issue labels.
+	IssueLabels *ListLabelsIssueLabelsIssueLabelConnection `json:"issueLabels"`
+}
+
+// GetIssueLabels returns ListLabelsResponse.IssueLabels, and is useful for accessing the field via an interface.
+func (v *ListLabelsResponse) GetIssueLabels() *ListLabelsIssueLabelsIssueLabelConnection {
+	return v.IssueLabels
+}
+
 // ListMyIssuesResponse is returned by ListMyIssues on success.
 type ListMyIssuesResponse struct {
 	// The currently authenticated user.
@@ -6632,6 +6670,14 @@ func (v *__ListIssuesInput) GetAfter() *string { return v.After }
 // GetFilter returns __ListIssuesInput.Filter, and is useful for accessing the field via an interface.
 func (v *__ListIssuesInput) GetFilter() *IssueFilter { return v.Filter }
 
+// __ListLabelsInput is used internally by genqlient
+type __ListLabelsInput struct {
+	First int `json:"first"`
+}
+
+// GetFirst returns __ListLabelsInput.First, and is useful for accessing the field via an interface.
+func (v *__ListLabelsInput) GetFirst() int { return v.First }
+
 // __ListMyIssuesInput is used internally by genqlient
 type __ListMyIssuesInput struct {
 	First  int          `json:"first"`
@@ -6925,6 +6971,43 @@ func ListIssues(
 	}
 
 	data_ = &ListIssuesResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by ListLabels.
+const ListLabels_Operation = `
+query ListLabels ($first: Int!) {
+	issueLabels(first: $first, orderBy: updatedAt) {
+		nodes {
+			id
+			name
+		}
+	}
+}
+`
+
+func ListLabels(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+) (data_ *ListLabelsResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "ListLabels",
+		Query:  ListLabels_Operation,
+		Variables: &__ListLabelsInput{
+			First: first,
+		},
+	}
+
+	data_ = &ListLabelsResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

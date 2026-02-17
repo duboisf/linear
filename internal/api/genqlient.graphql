@@ -155,6 +155,15 @@ query ListCycles($first: Int!) {
 }
 
 
+query ListLabels($first: Int!) {
+  issueLabels(first: $first, orderBy: updatedAt) {
+    nodes {
+      id
+      name
+    }
+  }
+}
+
 query UsersForCompletion($first: Int!) {
   users(first: $first) {
     nodes {

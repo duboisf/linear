@@ -269,6 +269,72 @@ func completeUserNames(cmd *cobra.Command, opts Options) ([]string, cobra.ShellC
 	return comps, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
 }
 
+const (
+	_labelsCacheKey = "labels/completion"
+	_labelsCacheTTL = 24 * time.Hour
+)
+
+// labelsCached returns label data, serving from cache when available.
+func labelsCached(ctx context.Context, client graphql.Client, c *cache.Cache) (*api.ListLabelsResponse, error) {
+	if c != nil {
+		if data, ok := c.GetWithTTL(_labelsCacheKey, _labelsCacheTTL); ok {
+			var resp api.ListLabelsResponse
+			if err := json.Unmarshal([]byte(data), &resp); err == nil {
+				return &resp, nil
+			}
+		}
+	}
+
+	resp, err := api.ListLabels(ctx, client, 200)
+	if err != nil {
+		return nil, err
+	}
+
+	if c != nil {
+		if data, err := json.Marshal(resp); err == nil {
+			_ = c.Set(_labelsCacheKey, string(data))
+		}
+	}
+
+	return resp, nil
+}
+
+// completeLabelNames returns shell completions for the --label flag.
+// Supports comma-separated multi-value input.
+func completeLabelNames(cmd *cobra.Command, opts Options, toComplete string) ([]string, cobra.ShellCompDirective) {
+	dir := cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
+
+	client, err := resolveClient(cmd, opts)
+	if err != nil {
+		return nil, dir
+	}
+	resp, err := labelsCached(cmd.Context(), client, opts.Cache)
+	if err != nil || resp.IssueLabels == nil {
+		return nil, dir
+	}
+
+	// Parse already-selected labels from the comma-separated input.
+	parts := strings.Split(toComplete, ",")
+	prefix := strings.Join(parts[:len(parts)-1], ",")
+	used := make(map[string]bool, len(parts))
+	for _, p := range parts[:len(parts)-1] {
+		used[strings.ToLower(strings.TrimSpace(p))] = true
+	}
+
+	var comps []string
+	for _, l := range resp.IssueLabels.Nodes {
+		if used[strings.ToLower(l.Name)] {
+			continue
+		}
+		val := l.Name
+		if prefix != "" {
+			val = prefix + "," + val
+		}
+		comps = append(comps, val)
+	}
+	return comps, dir
+}
+
 // completeMyIssues fetches the current user's active issues and returns
 // formatted completion entries with status, priority, and title.
 func completeMyIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {

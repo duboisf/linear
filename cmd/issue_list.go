@@ -53,6 +53,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	var (
 		cycle        string
 		interactive  bool
+		labelFilter  string
 		limit        int
 		sortBy       string
 		statusFilter string
@@ -80,7 +81,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 			if timeNow == nil {
 				timeNow = time.Now
 			}
-			filter, ci, err := buildIssueFilter(statusFilter, user, cycle, cmd.Context(), client, opts.Cache, timeNow)
+			filter, ci, err := buildIssueFilter(statusFilter, labelFilter, user, cycle, cmd.Context(), client, opts.Cache, timeNow)
 			if err != nil {
 				return err
 			}
@@ -138,6 +139,10 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
+	cmd.Flags().StringVarP(&labelFilter, "label", "l", "", "Filter by label name (comma-separated for multiple, AND logic)")
+	_ = cmd.RegisterFlagCompletionFunc("label", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return completeLabelNames(cmd, opts, toComplete)
+	})
 	cmd.Flags().StringVarP(&cycle, "cycle", "c", "", "Filter by cycle: all, current, next, previous, or a cycle number (default: current)")
 	_ = cmd.RegisterFlagCompletionFunc("cycle", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeCycleValues(cmd, opts)
@@ -234,7 +239,7 @@ func parseNegation(s string) (prefix, bare string, negated bool) {
 
 // buildIssueFilter constructs an IssueFilter from the flag values.
 // When cycle is set, the resolved cycleInfo is returned for header rendering.
-func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, client graphql.Client, c *cache.Cache, timeNow func() time.Time) (*api.IssueFilter, *cycleInfo, error) {
+func buildIssueFilter(statusFilter, labelFilter, user, cycle string, ctx context.Context, client graphql.Client, c *cache.Cache, timeNow func() time.Time) (*api.IssueFilter, *cycleInfo, error) {
 	var filter *api.IssueFilter
 
 	// State filter based on --status flag.
@@ -283,6 +288,40 @@ func buildIssueFilter(statusFilter, user, cycle string, ctx context.Context, cli
 		}
 		filter.Assignee = &api.NullableUserFilter{
 			DisplayName: &api.StringComparator{EqIgnoreCase: &user},
+		}
+	}
+
+	// Label filter for --label flag.
+	labelLower := strings.ToLower(strings.TrimSpace(labelFilter))
+	if labelLower != "" {
+		if filter == nil {
+			filter = &api.IssueFilter{}
+		}
+		var labelFilters []*api.IssueLabelFilter
+		for l := range strings.SplitSeq(labelLower, ",") {
+			l = strings.TrimSpace(l)
+			if l == "" {
+				continue
+			}
+			labelFilters = append(labelFilters, &api.IssueLabelFilter{
+				Name: &api.StringComparator{EqIgnoreCase: &l},
+			})
+		}
+		if len(labelFilters) == 1 {
+			filter.Labels = &api.IssueLabelCollectionFilter{
+				Some: labelFilters[0],
+			}
+		} else if len(labelFilters) > 1 {
+			// Multiple labels: issue must have ALL of them (AND semantics).
+			var collectionFilters []*api.IssueLabelCollectionFilter
+			for _, lf := range labelFilters {
+				collectionFilters = append(collectionFilters, &api.IssueLabelCollectionFilter{
+					Some: lf,
+				})
+			}
+			filter.Labels = &api.IssueLabelCollectionFilter{
+				And: collectionFilters,
+			}
 		}
 	}
 

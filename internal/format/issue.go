@@ -138,14 +138,36 @@ func StateColor(stateType string) string {
 	}
 }
 
+// issueLabels returns a comma-separated label string for an issue.
+func issueLabels(issue *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue) string {
+	if issue.Labels == nil || len(issue.Labels.Nodes) == 0 {
+		return ""
+	}
+	names := make([]string, len(issue.Labels.Nodes))
+	for i, l := range issue.Labels.Nodes {
+		names[i] = l.Name
+	}
+	return strings.Join(names, ", ")
+}
+
 // FormatIssueList formats a slice of issues as an aligned table for terminal output.
 func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
 	const gap = "  "
+
+	// Check if any issues have labels.
+	hasLabels := false
+	for _, issue := range issues {
+		if issue.Labels != nil && len(issue.Labels.Nodes) > 0 {
+			hasLabels = true
+			break
+		}
+	}
 
 	// Compute max visible widths per column.
 	maxID := len("IDENTIFIER")
 	maxState := len("STATUS")
 	maxPri := len("PRIORITY")
+	maxLabels := len("LABELS")
 	for _, issue := range issues {
 		if len(issue.Identifier) > maxID {
 			maxID = len(issue.Identifier)
@@ -155,6 +177,11 @@ func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConn
 		}
 		if l := len(PriorityLabel(issue.Priority)); l > maxPri {
 			maxPri = l
+		}
+		if hasLabels {
+			if l := len(issueLabels(issue)); l > maxLabels {
+				maxLabels = l
+			}
 		}
 	}
 
@@ -167,6 +194,10 @@ func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConn
 	buf.WriteString(gap)
 	buf.WriteString(PadColor(color, Bold, "PRIORITY", maxPri))
 	buf.WriteString(gap)
+	if hasLabels {
+		buf.WriteString(PadColor(color, Bold, "LABELS", maxLabels))
+		buf.WriteString(gap)
+	}
 	buf.WriteString(Colorize(color, Bold, "TITLE"))
 	buf.WriteByte('\n')
 
@@ -185,6 +216,10 @@ func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConn
 		buf.WriteString(gap)
 		buf.WriteString(PadColor(color, PriorityColor(issue.Priority), PriorityLabel(issue.Priority), maxPri))
 		buf.WriteString(gap)
+		if hasLabels {
+			buf.WriteString(PadColor(color, Cyan, issueLabels(issue), maxLabels))
+			buf.WriteString(gap)
+		}
 		buf.WriteString(issue.Title)
 		buf.WriteByte('\n')
 	}
