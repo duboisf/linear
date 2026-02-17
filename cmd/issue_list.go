@@ -139,7 +139,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
-	cmd.Flags().StringVarP(&labelFilter, "label", "l", "", "Filter by label name (comma-separated for multiple, AND logic)")
+	cmd.Flags().StringVarP(&labelFilter, "label", "l", "", "Filter by label (comma=OR, plus=AND, e.g. bug,devex or bug+frontend)")
 	_ = cmd.RegisterFlagCompletionFunc("label", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return completeLabelNames(cmd, opts, toComplete)
 	})
@@ -292,37 +292,13 @@ func buildIssueFilter(statusFilter, labelFilter, user, cycle string, ctx context
 	}
 
 	// Label filter for --label flag.
+	// Comma = OR (bug,devex → bug OR devex), plus = AND (bug+devex → bug AND devex).
 	labelLower := strings.ToLower(strings.TrimSpace(labelFilter))
 	if labelLower != "" {
 		if filter == nil {
 			filter = &api.IssueFilter{}
 		}
-		var labelFilters []*api.IssueLabelFilter
-		for l := range strings.SplitSeq(labelLower, ",") {
-			l = strings.TrimSpace(l)
-			if l == "" {
-				continue
-			}
-			labelFilters = append(labelFilters, &api.IssueLabelFilter{
-				Name: &api.StringComparator{EqIgnoreCase: &l},
-			})
-		}
-		if len(labelFilters) == 1 {
-			filter.Labels = &api.IssueLabelCollectionFilter{
-				Some: labelFilters[0],
-			}
-		} else if len(labelFilters) > 1 {
-			// Multiple labels: issue must have ALL of them (AND semantics).
-			var collectionFilters []*api.IssueLabelCollectionFilter
-			for _, lf := range labelFilters {
-				collectionFilters = append(collectionFilters, &api.IssueLabelCollectionFilter{
-					Some: lf,
-				})
-			}
-			filter.Labels = &api.IssueLabelCollectionFilter{
-				And: collectionFilters,
-			}
-		}
+		filter.Labels = buildLabelFilter(labelLower)
 	}
 
 	// Cycle filter.
@@ -574,4 +550,61 @@ func sortIssues(nodes []*issueNode, sortBy string) {
 			return 0
 		}
 	})
+}
+
+// buildLabelFilter parses the label flag value into an IssueLabelCollectionFilter.
+// Comma separates OR groups, plus separates AND terms within a group.
+//
+//	"bug,devex"       → bug OR devex
+//	"bug+frontend"    → bug AND frontend
+//	"bug+frontend,devex" → (bug AND frontend) OR devex
+func buildLabelFilter(value string) *api.IssueLabelCollectionFilter {
+	labelFilter := func(name string) *api.IssueLabelFilter {
+		return &api.IssueLabelFilter{
+			Name: &api.StringComparator{EqIgnoreCase: &name},
+		}
+	}
+
+	// Parse OR groups (comma-separated).
+	var orGroups []*api.IssueLabelCollectionFilter
+	for group := range strings.SplitSeq(value, ",") {
+		group = strings.TrimSpace(group)
+		if group == "" {
+			continue
+		}
+
+		// Parse AND terms within a group (plus-separated).
+		var andTerms []*api.IssueLabelCollectionFilter
+		for term := range strings.SplitSeq(group, "+") {
+			term = strings.TrimSpace(term)
+			if term == "" {
+				continue
+			}
+			andTerms = append(andTerms, &api.IssueLabelCollectionFilter{
+				Some: labelFilter(term),
+			})
+		}
+
+		switch len(andTerms) {
+		case 0:
+			continue
+		case 1:
+			orGroups = append(orGroups, andTerms[0])
+		default:
+			orGroups = append(orGroups, &api.IssueLabelCollectionFilter{
+				And: andTerms,
+			})
+		}
+	}
+
+	switch len(orGroups) {
+	case 0:
+		return nil
+	case 1:
+		return orGroups[0]
+	default:
+		return &api.IssueLabelCollectionFilter{
+			Or: orGroups,
+		}
+	}
 }

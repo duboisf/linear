@@ -1480,25 +1480,52 @@ func TestIssueList_LabelFlag_Short(t *testing.T) {
 	}
 }
 
-func TestIssueList_LabelFlag_MultipleLabels(t *testing.T) {
+func TestIssueList_LabelFlag_OR(t *testing.T) {
 	t.Parallel()
 
+	// Comma = OR: --label bug,enhancement matches issues with either label.
 	server := newMockGraphQLServer(t, map[string]string{
 		"ListMyIssues": labeledIssuesResponse,
 	})
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "--label", "bug,frontend"})
+	root.SetArgs([]string{"issue", "list", "--label", "bug,enhancement"})
 
 	err := root.Execute()
 	if err != nil {
-		t.Fatalf("issue list --label bug,frontend returned error: %v", err)
+		t.Fatalf("issue list --label bug,enhancement returned error: %v", err)
 	}
 
 	output := stdout.String()
 	if !strings.Contains(output, "ENG-101") {
-		t.Error("expected output to contain ENG-101")
+		t.Error("expected output to contain ENG-101 (has bug)")
+	}
+	if !strings.Contains(output, "ENG-102") {
+		t.Error("expected output to contain ENG-102 (has enhancement)")
+	}
+}
+
+func TestIssueList_LabelFlag_AND(t *testing.T) {
+	t.Parallel()
+
+	// Plus = AND: --label bug+frontend matches issues with both labels.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--label", "bug+frontend"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --label bug+frontend returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected output to contain ENG-101 (has both bug and frontend)")
 	}
 }
 
