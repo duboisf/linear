@@ -85,8 +85,9 @@ func newIssueListCmd(opts Options) *cobra.Command {
 			if err != nil {
 				return err
 			}
+			var cycleHeader string
 			if ci != nil {
-				fmt.Fprintln(opts.Stdout, ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout())))
+				cycleHeader = ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout()))
 			}
 
 			var nodes []*issueNode
@@ -120,7 +121,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 
 			if interactive {
 				issues := issuesToCompletions(nodes)
-				selected, err := fzfBrowseIssues(cmd.Context(), client, issues, opts.Cache)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, issues, opts.Cache, cycleHeader)
 				if err != nil {
 					return err
 				}
@@ -128,6 +129,10 @@ func newIssueListCmd(opts Options) *cobra.Command {
 					fmt.Fprintln(opts.Stdout, selected)
 				}
 				return nil
+			}
+
+			if cycleHeader != "" {
+				fmt.Fprintln(opts.Stdout, cycleHeader)
 			}
 
 			out := format.FormatIssueList(nodes, format.ColorEnabled(cmd.OutOrStdout()))

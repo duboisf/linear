@@ -290,7 +290,7 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 // text (via glamour), and writes the result to cache files. fzf's --preview
 // uses cat to display the pre-rendered content.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueForCompletion, c *cache.Cache) (string, error) {
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueForCompletion, c *cache.Cache, cycleHeader string) (string, error) {
 	if len(issues) == 0 {
 		return "", fmt.Errorf("no issues to browse")
 	}
@@ -318,10 +318,15 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 	cacheFile := fmt.Sprintf("%s/issues/{1}", c.Dir)
 	previewCmd := fmt.Sprintf("cat '%s'", cacheFile)
 
+	fzfHeader := "ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
+	if cycleHeader != "" {
+		fzfHeader = cycleHeader + "\n" + fzfHeader
+	}
+
 	cmd := exec.Command("fzf",
 		"--ansi",
 		"--header-lines=1",
-		"--header", "ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel",
+		"--header", fzfHeader,
 		"--header-first",
 		"--no-sort",
 		"--layout=reverse",
