@@ -3,7 +3,9 @@ package cmd
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
+	"io"
 	"os/exec"
 	"slices"
 	"strings"
@@ -285,33 +287,51 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 	wg.Wait()
 }
 
-// fzfBrowseIssues launches fzf with a preview pane showing full issue details.
-// It pre-fetches details for all issues in parallel, renders them as ANSI-colored
-// text (via glamour), and writes the result to cache files. fzf's --preview
-// uses cat to display the pre-rendered content.
+// fzfBrowseIssues launches fzf immediately and fetches issues in the
+// background. fzf displays its built-in loading indicator while waiting for
+// data to arrive on stdin. Issue detail prefetching also runs concurrently so
+// previews populate as the user browses.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueForCompletion, c *cache.Cache, cycleHeader string) (string, error) {
-	if len(issues) == 0 {
-		return "", fmt.Errorf("no issues to browse")
-	}
-
-	sortCompletionIssues(issues)
-
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]issueForCompletion, error), c *cache.Cache, cycleHeader string) (string, error) {
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
 	// here (synchronously, before fzf) avoids concurrent queries whose
 	// responses would leak into the terminal as garbage characters.
 	_ = glamourStyle()
 
-	// Collect identifiers and pre-fetch details.
-	identifiers := make([]string, len(issues))
-	for i, iss := range issues {
-		identifiers[i] = iss.Identifier
-	}
-	prefetchIssueDetails(ctx, client, c, identifiers)
+	// Use a pipe so fzf starts immediately while issues are fetched.
+	pr, pw := io.Pipe()
+	fetchErrCh := make(chan error, 1)
 
-	header, lines := formatFzfLines(issues)
-	input := header + "\n" + strings.Join(lines, "\n") + "\n"
+	fetchCtx, fetchCancel := context.WithCancel(ctx)
+
+	go func() {
+		defer pw.Close()
+
+		issues, err := fetchIssues(fetchCtx)
+		if err != nil {
+			fetchErrCh <- err
+			return
+		}
+		if len(issues) == 0 {
+			fetchErrCh <- fmt.Errorf("no issues to browse")
+			return
+		}
+
+		sortCompletionIssues(issues)
+
+		// Start detail prefetch in background (don't block fzf input).
+		identifiers := make([]string, len(issues))
+		for i, iss := range issues {
+			identifiers[i] = iss.Identifier
+		}
+		go prefetchIssueDetails(ctx, client, c, identifiers)
+
+		header, lines := formatFzfLines(issues)
+		input := header + "\n" + strings.Join(lines, "\n") + "\n"
+		_, _ = io.WriteString(pw, input)
+		fetchErrCh <- nil
+	}()
 
 	// Cache already contains pre-rendered ANSI (either from glamour or the
 	// built-in formatter), so plain cat is sufficient.
@@ -335,17 +355,30 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 		"--bind", "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
 	)
-	cmd.Stdin = strings.NewReader(input)
+	cmd.Stdin = pr
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	cmd.Stderr = nil
 
-	if err := cmd.Run(); err != nil {
-		if fzfExitOK(err) {
+	runErr := cmd.Run()
+
+	// Cancel the fetch if still running (e.g. user pressed ESC early).
+	fetchCancel()
+
+	// Wait for the fetch goroutine to report its result. By this point the
+	// goroutine has either completed or will finish quickly via cancellation.
+	fetchErr := <-fetchErrCh
+
+	if runErr != nil {
+		// Surface fetch errors (e.g. API failure, empty list) over fzf errors.
+		if fetchErr != nil && !errors.Is(fetchErr, context.Canceled) {
+			return "", fetchErr
+		}
+		if fzfExitOK(runErr) {
 			return "", nil
 		}
-		return "", fmt.Errorf("running fzf: %w", err)
+		return "", fmt.Errorf("running fzf: %w", runErr)
 	}
 
 	return fzfSelectedID(out.String()), nil

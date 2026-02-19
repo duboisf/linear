@@ -90,38 +90,16 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				cycleHeader = ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout()))
 			}
 
-			var nodes []*issueNode
-
-			if user != "" {
-				resp, err := api.ListIssues(cmd.Context(), client, limit, nil, filter)
-				if err != nil {
-					return fmt.Errorf("listing issues: %w", err)
-				}
-				if resp.Issues == nil {
-					return fmt.Errorf("no issues data returned from API")
-				}
-				for _, n := range resp.Issues.Nodes {
-					nodes = append(nodes, convertListIssuesNode(n))
-				}
-			} else {
-				resp, err := api.ListMyIssues(cmd.Context(), client, limit, nil, filter)
-				if err != nil {
-					return fmt.Errorf("listing issues: %w", err)
-				}
-				if resp.Viewer == nil {
-					return fmt.Errorf("no viewer data returned from API")
-				}
-				if resp.Viewer.AssignedIssues == nil {
-					return fmt.Errorf("no assigned issues data returned from API")
-				}
-				nodes = resp.Viewer.AssignedIssues.Nodes
-			}
-
-			sortIssues(nodes, sortBy)
-
 			if interactive {
-				issues := issuesToCompletions(nodes)
-				selected, err := fzfBrowseIssues(cmd.Context(), client, issues, opts.Cache, cycleHeader)
+				fetchIssues := func(ctx context.Context) ([]issueForCompletion, error) {
+					nodes, err := fetchIssueNodes(ctx, client, user, limit, filter)
+					if err != nil {
+						return nil, err
+					}
+					sortIssues(nodes, sortBy)
+					return issuesToCompletions(nodes), nil
+				}
+				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader)
 				if err != nil {
 					return err
 				}
@@ -130,6 +108,13 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				}
 				return nil
 			}
+
+			nodes, err := fetchIssueNodes(cmd.Context(), client, user, limit, filter)
+			if err != nil {
+				return err
+			}
+
+			sortIssues(nodes, sortBy)
 
 			if cycleHeader != "" {
 				fmt.Fprintln(opts.Stdout, cycleHeader)
@@ -347,6 +332,36 @@ func buildIssueFilter(statusFilter, labelFilter, user, cycle string, ctx context
 	}
 
 	return filter, resolvedCycle, nil
+}
+
+// fetchIssueNodes fetches issue nodes using the appropriate query based on the
+// user flag. When user is non-empty, ListIssues is used; otherwise ListMyIssues.
+func fetchIssueNodes(ctx context.Context, client graphql.Client, user string, limit int, filter *api.IssueFilter) ([]*issueNode, error) {
+	if user != "" {
+		resp, err := api.ListIssues(ctx, client, limit, nil, filter)
+		if err != nil {
+			return nil, fmt.Errorf("listing issues: %w", err)
+		}
+		if resp.Issues == nil {
+			return nil, fmt.Errorf("no issues data returned from API")
+		}
+		var nodes []*issueNode
+		for _, n := range resp.Issues.Nodes {
+			nodes = append(nodes, convertListIssuesNode(n))
+		}
+		return nodes, nil
+	}
+	resp, err := api.ListMyIssues(ctx, client, limit, nil, filter)
+	if err != nil {
+		return nil, fmt.Errorf("listing issues: %w", err)
+	}
+	if resp.Viewer == nil {
+		return nil, fmt.Errorf("no viewer data returned from API")
+	}
+	if resp.Viewer.AssignedIssues == nil {
+		return nil, fmt.Errorf("no assigned issues data returned from API")
+	}
+	return resp.Viewer.AssignedIssues.Nodes, nil
 }
 
 // convertListIssuesNode converts a ListIssues node to the canonical issueNode type.
