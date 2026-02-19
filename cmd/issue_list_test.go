@@ -601,6 +601,53 @@ func TestIssueList_UserFlag_StatusAll_NilIssues(t *testing.T) {
 	}
 }
 
+func TestIssueList_UserAll(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListIssues": listUserIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --user all returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "TEAM-201") {
+		t.Error("expected output to contain TEAM-201")
+	}
+	if !strings.Contains(output, "TEAM-202") {
+		t.Error("expected output to contain TEAM-202")
+	}
+}
+
+func TestIssueList_UserAll_CaseInsensitive(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListIssues": listUserIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--user", "ALL"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --user ALL returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "TEAM-201") {
+		t.Error("expected output to contain TEAM-201")
+	}
+}
+
 func TestIssueList_SortByIdentifier(t *testing.T) {
 	t.Parallel()
 

@@ -137,6 +137,25 @@ query UserIssuesForCompletion($first: Int!, $assigneeName: String!) {
   }
 }
 
+query AllActiveIssuesForCompletion($first: Int!) {
+  issues(
+    first: $first
+    filter: {
+      state: { type: { nin: ["completed", "canceled"] } }
+    }
+  ) {
+    nodes {
+      identifier
+      title
+      state {
+        name
+        type
+      }
+      priority
+    }
+  }
+}
+
 query ListCycles($first: Int!) {
   cycles(first: $first, orderBy: createdAt) {
     nodes {

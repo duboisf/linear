@@ -182,6 +182,83 @@ func (v *ActivityFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
 // GetUser returns ActivityFilter.User, and is useful for accessing the field via an interface.
 func (v *ActivityFilter) GetUser() *UserFilter { return v.User }
 
+// AllActiveIssuesForCompletionIssuesIssueConnection includes the requested fields of the GraphQL type IssueConnection.
+type AllActiveIssuesForCompletionIssuesIssueConnection struct {
+	Nodes []*AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue `json:"nodes"`
+}
+
+// GetNodes returns AllActiveIssuesForCompletionIssuesIssueConnection.Nodes, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnection) GetNodes() []*AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue {
+	return v.Nodes
+}
+
+// AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue struct {
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+	// The workflow state that the issue is associated with.
+	State *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState `json:"state"`
+	// The priority of the issue. 0 = No priority, 1 = Urgent, 2 = High, 3 = Normal, 4 = Low.
+	Priority float64 `json:"priority"`
+}
+
+// GetIdentifier returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue) GetIdentifier() string {
+	return v.Identifier
+}
+
+// GetTitle returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue.Title, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue) GetTitle() string {
+	return v.Title
+}
+
+// GetState returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue.State, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue) GetState() *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState {
+	return v.State
+}
+
+// GetPriority returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue.Priority, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssue) GetPriority() float64 {
+	return v.Priority
+}
+
+// AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState includes the requested fields of the GraphQL type WorkflowState.
+// The GraphQL type's documentation follows.
+//
+// A state in a team workflow.
+type AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState struct {
+	// The state's name.
+	Name string `json:"name"`
+	// The type of the state. One of "triage", "backlog", "unstarted", "started", "completed", "canceled".
+	Type string `json:"type"`
+}
+
+// GetName returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState.Name, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState) GetName() string {
+	return v.Name
+}
+
+// GetType returns AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState.Type, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionIssuesIssueConnectionNodesIssueStateWorkflowState) GetType() string {
+	return v.Type
+}
+
+// AllActiveIssuesForCompletionResponse is returned by AllActiveIssuesForCompletion on success.
+type AllActiveIssuesForCompletionResponse struct {
+	// All issues.
+	Issues *AllActiveIssuesForCompletionIssuesIssueConnection `json:"issues"`
+}
+
+// GetIssues returns AllActiveIssuesForCompletionResponse.Issues, and is useful for accessing the field via an interface.
+func (v *AllActiveIssuesForCompletionResponse) GetIssues() *AllActiveIssuesForCompletionIssuesIssueConnection {
+	return v.Issues
+}
+
 // Attachment collection filtering options.
 type AttachmentCollectionFilter struct {
 	// Compound filters, all of which need to be matched by the attachment.
@@ -6630,6 +6707,14 @@ type __ActiveIssuesForCompletionInput struct {
 // GetFirst returns __ActiveIssuesForCompletionInput.First, and is useful for accessing the field via an interface.
 func (v *__ActiveIssuesForCompletionInput) GetFirst() int { return v.First }
 
+// __AllActiveIssuesForCompletionInput is used internally by genqlient
+type __AllActiveIssuesForCompletionInput struct {
+	First int `json:"first"`
+}
+
+// GetFirst returns __AllActiveIssuesForCompletionInput.First, and is useful for accessing the field via an interface.
+func (v *__AllActiveIssuesForCompletionInput) GetFirst() int { return v.First }
+
 // __GetIssueInput is used internally by genqlient
 type __GetIssueInput struct {
 	Id string `json:"id"`
@@ -6759,6 +6844,48 @@ func ActiveIssuesForCompletion(
 	}
 
 	data_ = &ActiveIssuesForCompletionResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The query executed by AllActiveIssuesForCompletion.
+const AllActiveIssuesForCompletion_Operation = `
+query AllActiveIssuesForCompletion ($first: Int!) {
+	issues(first: $first, filter: {state:{type:{nin:["completed","canceled"]}}}) {
+		nodes {
+			identifier
+			title
+			state {
+				name
+				type
+			}
+			priority
+		}
+	}
+}
+`
+
+func AllActiveIssuesForCompletion(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	first int,
+) (data_ *AllActiveIssuesForCompletionResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "AllActiveIssuesForCompletion",
+		Query:  AllActiveIssuesForCompletion_Operation,
+		Variables: &__AllActiveIssuesForCompletionInput{
+			First: first,
+		},
+	}
+
+	data_ = &AllActiveIssuesForCompletionResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

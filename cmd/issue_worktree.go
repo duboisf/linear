@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -25,7 +26,9 @@ func newIssueWorktreeCmd(opts Options) *cobra.Command {
 				identifier = args[0]
 			} else {
 				var issues []issueForCompletion
-				if user != "" {
+				if strings.EqualFold(user, "all") {
+					issues, err = fetchAllIssues(cmd.Context(), client)
+				} else if user != "" {
 					issues, err = fetchUserIssues(cmd.Context(), client, user)
 				} else {
 					issues, err = fetchMyIssues(cmd.Context(), client)
@@ -47,6 +50,9 @@ func newIssueWorktreeCmd(opts Options) *cobra.Command {
 		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 			if len(args) > 0 {
 				return nil, cobra.ShellCompDirectiveNoFileComp
+			}
+			if strings.EqualFold(user, "all") {
+				return completeAllIssues(cmd, opts)
 			}
 			if user != "" {
 				return completeUserIssues(cmd, opts, user)

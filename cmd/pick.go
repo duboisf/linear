@@ -70,6 +70,31 @@ func fetchUserIssues(ctx context.Context, client graphql.Client, userName string
 	return issues, nil
 }
 
+// fetchAllIssues returns active issues from all users.
+func fetchAllIssues(ctx context.Context, client graphql.Client) ([]issueForCompletion, error) {
+	resp, err := api.AllActiveIssuesForCompletion(ctx, client, 100)
+	if err != nil {
+		return nil, err
+	}
+	if resp.Issues == nil {
+		return nil, nil
+	}
+
+	issues := make([]issueForCompletion, len(resp.Issues.Nodes))
+	for i, n := range resp.Issues.Nodes {
+		issues[i] = issueForCompletion{
+			Identifier: n.Identifier,
+			Title:      n.Title,
+			Priority:   n.Priority,
+		}
+		if n.State != nil {
+			issues[i].StateName = n.State.Name
+			issues[i].StateType = n.State.Type
+		}
+	}
+	return issues, nil
+}
+
 // sortCompletionIssues sorts issues by state type (In Progress first, then
 // Todo, triage, backlog) with priority as tiebreaker within each state group.
 func sortCompletionIssues(issues []issueForCompletion) {

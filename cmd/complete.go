@@ -251,18 +251,19 @@ func staticCycleCompletions() []string {
 	}
 }
 
-// completeUserNames returns shell completions for the --user flag: team member
-// first names from the API (without the @my entry).
+// completeUserNames returns shell completions for the --user flag: "all" first,
+// then team member first names from the API.
 func completeUserNames(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {
 	client, err := resolveClient(cmd, opts)
 	if err != nil {
-		return nil, cobra.ShellCompDirectiveNoFileComp
+		return []string{"all\tAll users"}, cobra.ShellCompDirectiveNoFileComp
 	}
 	resp, err := usersForCompletionCached(cmd.Context(), client, opts.Cache)
 	if err != nil || resp.Users == nil {
-		return nil, cobra.ShellCompDirectiveNoFileComp
+		return []string{"all\tAll users"}, cobra.ShellCompDirectiveNoFileComp
 	}
-	comps := make([]string, 0, len(resp.Users.Nodes))
+	comps := make([]string, 0, len(resp.Users.Nodes)+1)
+	comps = append(comps, "all\tAll users")
 	for _, u := range resp.Users.Nodes {
 		comps = append(comps, userCompletionEntry(u.DisplayName, u.Name))
 	}
@@ -361,6 +362,23 @@ func completeUserIssues(cmd *cobra.Command, opts Options, userName string) ([]st
 	}
 
 	issues, err := fetchUserIssues(cmd.Context(), client, userName)
+	if err != nil || len(issues) == 0 {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	sortCompletionIssues(issues)
+	return formatIssueCompletions(issues), cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveKeepOrder
+}
+
+// completeAllIssues fetches active issues from all users and returns
+// formatted completion entries with status, priority, and title.
+func completeAllIssues(cmd *cobra.Command, opts Options) ([]string, cobra.ShellCompDirective) {
+	client, err := resolveClient(cmd, opts)
+	if err != nil {
+		return nil, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	issues, err := fetchAllIssues(cmd.Context(), client)
 	if err != nil || len(issues) == 0 {
 		return nil, cobra.ShellCompDirectiveNoFileComp
 	}

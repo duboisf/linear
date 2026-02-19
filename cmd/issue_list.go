@@ -272,7 +272,8 @@ func buildIssueFilter(statusFilter, labelFilter, user, cycle string, ctx context
 	}
 
 	// Assignee filter for --user flag (only used with ListIssues query).
-	if user != "" {
+	// "all" means no assignee filter — show issues from all users.
+	if user != "" && !strings.EqualFold(user, "all") {
 		if filter == nil {
 			filter = &api.IssueFilter{}
 		}
