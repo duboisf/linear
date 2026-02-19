@@ -75,6 +75,11 @@ func countFiles(entries []os.DirEntry, dir string) int {
 	return n
 }
 
+// Delete removes the cached value for key. It is a no-op if the key does not exist.
+func (c *Cache) Delete(key string) {
+	os.Remove(filepath.Join(c.Dir, key))
+}
+
 // Set atomically writes content to the cache file for key, creating parent
 // directories as needed. It writes to a temp file first then renames, so
 // concurrent readers never see a partial write.

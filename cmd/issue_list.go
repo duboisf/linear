@@ -371,8 +371,9 @@ func convertListIssuesNode(n *api.ListIssuesIssuesIssueConnectionNodesIssue) *is
 
 type issueNode = api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
 
-// cycleInfo holds resolved cycle metadata for display.
+// cycleInfo holds resolved cycle metadata for display and mutations.
 type cycleInfo struct {
+	Id       string
 	Number   float64
 	Name     string
 	StartsAt string
@@ -491,7 +492,7 @@ func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, ti
 				if c.Name != nil {
 					name = *c.Name
 				}
-				return cycleInfo{Number: c.Number, Name: name, StartsAt: c.StartsAt, EndsAt: c.EndsAt}, nil
+				return cycleInfo{Id: c.Id, Number: c.Number, Name: name, StartsAt: c.StartsAt, EndsAt: c.EndsAt}, nil
 			}
 			continue
 		}
@@ -509,7 +510,7 @@ func resolveCycle(ctx context.Context, client graphql.Client, c *cache.Cache, ti
 			if c.Name != nil {
 				name = *c.Name
 			}
-			return cycleInfo{Number: c.Number, Name: name, StartsAt: c.StartsAt, EndsAt: c.EndsAt}, nil
+			return cycleInfo{Id: c.Id, Number: c.Number, Name: name, StartsAt: c.StartsAt, EndsAt: c.EndsAt}, nil
 		}
 	}
 

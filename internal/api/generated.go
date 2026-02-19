@@ -955,6 +955,8 @@ type GetIssueIssue struct {
 	Assignee *GetIssueIssueAssigneeUser `json:"assignee"`
 	// The team that the issue is associated with.
 	Team *GetIssueIssueTeam `json:"team"`
+	// The cycle that the issue is associated with.
+	Cycle *GetIssueIssueCycle `json:"cycle"`
 	// The project that the issue is associated with.
 	Project *GetIssueIssueProject `json:"project"`
 	// Labels associated with this issue.
@@ -1005,6 +1007,9 @@ func (v *GetIssueIssue) GetAssignee() *GetIssueIssueAssigneeUser { return v.Assi
 // GetTeam returns GetIssueIssue.Team, and is useful for accessing the field via an interface.
 func (v *GetIssueIssue) GetTeam() *GetIssueIssueTeam { return v.Team }
 
+// GetCycle returns GetIssueIssue.Cycle, and is useful for accessing the field via an interface.
+func (v *GetIssueIssue) GetCycle() *GetIssueIssueCycle { return v.Cycle }
+
 // GetProject returns GetIssueIssue.Project, and is useful for accessing the field via an interface.
 func (v *GetIssueIssue) GetProject() *GetIssueIssueProject { return v.Project }
 
@@ -1030,6 +1035,33 @@ func (v *GetIssueIssueAssigneeUser) GetName() string { return v.Name }
 
 // GetEmail returns GetIssueIssueAssigneeUser.Email, and is useful for accessing the field via an interface.
 func (v *GetIssueIssueAssigneeUser) GetEmail() string { return v.Email }
+
+// GetIssueIssueCycle includes the requested fields of the GraphQL type Cycle.
+// The GraphQL type's documentation follows.
+//
+// A set of issues to be resolved in a specified amount of time.
+type GetIssueIssueCycle struct {
+	// The number of the cycle.
+	Number float64 `json:"number"`
+	// The custom name of the cycle.
+	Name *string `json:"name"`
+	// The start time of the cycle.
+	StartsAt string `json:"startsAt"`
+	// The end time of the cycle.
+	EndsAt string `json:"endsAt"`
+}
+
+// GetNumber returns GetIssueIssueCycle.Number, and is useful for accessing the field via an interface.
+func (v *GetIssueIssueCycle) GetNumber() float64 { return v.Number }
+
+// GetName returns GetIssueIssueCycle.Name, and is useful for accessing the field via an interface.
+func (v *GetIssueIssueCycle) GetName() *string { return v.Name }
+
+// GetStartsAt returns GetIssueIssueCycle.StartsAt, and is useful for accessing the field via an interface.
+func (v *GetIssueIssueCycle) GetStartsAt() string { return v.StartsAt }
+
+// GetEndsAt returns GetIssueIssueCycle.EndsAt, and is useful for accessing the field via an interface.
+func (v *GetIssueIssueCycle) GetEndsAt() string { return v.EndsAt }
 
 // GetIssueIssueLabelsIssueLabelConnection includes the requested fields of the GraphQL type IssueLabelConnection.
 type GetIssueIssueLabelsIssueLabelConnection struct {
@@ -6229,6 +6261,55 @@ func (v *TeamFilter) GetPrivate() *BooleanComparator { return v.Private }
 // GetUpdatedAt returns TeamFilter.UpdatedAt, and is useful for accessing the field via an interface.
 func (v *TeamFilter) GetUpdatedAt() *DateComparator { return v.UpdatedAt }
 
+// UpdateIssueCycleIssueUpdateIssuePayload includes the requested fields of the GraphQL type IssuePayload.
+type UpdateIssueCycleIssueUpdateIssuePayload struct {
+	// Whether the operation was successful.
+	Success bool `json:"success"`
+	// The issue that was created or updated.
+	Issue *UpdateIssueCycleIssueUpdateIssuePayloadIssue `json:"issue"`
+}
+
+// GetSuccess returns UpdateIssueCycleIssueUpdateIssuePayload.Success, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleIssueUpdateIssuePayload) GetSuccess() bool { return v.Success }
+
+// GetIssue returns UpdateIssueCycleIssueUpdateIssuePayload.Issue, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleIssueUpdateIssuePayload) GetIssue() *UpdateIssueCycleIssueUpdateIssuePayloadIssue {
+	return v.Issue
+}
+
+// UpdateIssueCycleIssueUpdateIssuePayloadIssue includes the requested fields of the GraphQL type Issue.
+// The GraphQL type's documentation follows.
+//
+// An issue.
+type UpdateIssueCycleIssueUpdateIssuePayloadIssue struct {
+	// The unique identifier of the entity.
+	Id string `json:"id"`
+	// Issue's human readable identifier (e.g. ENG-123).
+	Identifier string `json:"identifier"`
+	// The issue's title.
+	Title string `json:"title"`
+}
+
+// GetId returns UpdateIssueCycleIssueUpdateIssuePayloadIssue.Id, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleIssueUpdateIssuePayloadIssue) GetId() string { return v.Id }
+
+// GetIdentifier returns UpdateIssueCycleIssueUpdateIssuePayloadIssue.Identifier, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleIssueUpdateIssuePayloadIssue) GetIdentifier() string { return v.Identifier }
+
+// GetTitle returns UpdateIssueCycleIssueUpdateIssuePayloadIssue.Title, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleIssueUpdateIssuePayloadIssue) GetTitle() string { return v.Title }
+
+// UpdateIssueCycleResponse is returned by UpdateIssueCycle on success.
+type UpdateIssueCycleResponse struct {
+	// Updates an issue.
+	IssueUpdate *UpdateIssueCycleIssueUpdateIssuePayload `json:"issueUpdate"`
+}
+
+// GetIssueUpdate returns UpdateIssueCycleResponse.IssueUpdate, and is useful for accessing the field via an interface.
+func (v *UpdateIssueCycleResponse) GetIssueUpdate() *UpdateIssueCycleIssueUpdateIssuePayload {
+	return v.IssueUpdate
+}
+
 // User filtering options.
 type UserCollectionFilter struct {
 	// Comparator for the user's activity status.
@@ -6706,6 +6787,18 @@ func (v *__ListUsersInput) GetFirst() int { return v.First }
 // GetAfter returns __ListUsersInput.After, and is useful for accessing the field via an interface.
 func (v *__ListUsersInput) GetAfter() *string { return v.After }
 
+// __UpdateIssueCycleInput is used internally by genqlient
+type __UpdateIssueCycleInput struct {
+	Id      string `json:"id"`
+	CycleId string `json:"cycleId"`
+}
+
+// GetId returns __UpdateIssueCycleInput.Id, and is useful for accessing the field via an interface.
+func (v *__UpdateIssueCycleInput) GetId() string { return v.Id }
+
+// GetCycleId returns __UpdateIssueCycleInput.CycleId, and is useful for accessing the field via an interface.
+func (v *__UpdateIssueCycleInput) GetCycleId() string { return v.CycleId }
+
 // __UserIssuesForCompletionInput is used internally by genqlient
 type __UserIssuesForCompletionInput struct {
 	First        int    `json:"first"`
@@ -6796,6 +6889,12 @@ query GetIssue ($id: String!) {
 		team {
 			name
 			key
+		}
+		cycle {
+			number
+			name
+			startsAt
+			endsAt
 		}
 		project {
 			name
@@ -7115,6 +7214,47 @@ func ListUsers(
 	}
 
 	data_ = &ListUsersResponse{}
+	resp_ := &graphql.Response{Data: data_}
+
+	err_ = client_.MakeRequest(
+		ctx_,
+		req_,
+		resp_,
+	)
+
+	return data_, err_
+}
+
+// The mutation executed by UpdateIssueCycle.
+const UpdateIssueCycle_Operation = `
+mutation UpdateIssueCycle ($id: String!, $cycleId: String!) {
+	issueUpdate(id: $id, input: {cycleId:$cycleId}) {
+		success
+		issue {
+			id
+			identifier
+			title
+		}
+	}
+}
+`
+
+func UpdateIssueCycle(
+	ctx_ context.Context,
+	client_ graphql.Client,
+	id string,
+	cycleId string,
+) (data_ *UpdateIssueCycleResponse, err_ error) {
+	req_ := &graphql.Request{
+		OpName: "UpdateIssueCycle",
+		Query:  UpdateIssueCycle_Operation,
+		Variables: &__UpdateIssueCycleInput{
+			Id:      id,
+			CycleId: cycleId,
+		},
+	}
+
+	data_ = &UpdateIssueCycleResponse{}
 	resp_ := &graphql.Response{Data: data_}
 
 	err_ = client_.MakeRequest(

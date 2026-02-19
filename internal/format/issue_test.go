@@ -363,6 +363,12 @@ func TestFormatIssueDetail(t *testing.T) {
 			Name: "Engineering",
 			Key:  "ENG",
 		},
+		Cycle: &api.GetIssueIssueCycle{
+			Number:   11,
+			Name:     strPtr("Sprint 11"),
+			StartsAt: "2025-01-15T00:00:00Z",
+			EndsAt:   "2025-01-28T00:00:00Z",
+		},
 		Project: &api.GetIssueIssueProject{
 			Name: "Project Alpha",
 		},
@@ -388,6 +394,7 @@ func TestFormatIssueDetail(t *testing.T) {
 			"Priority":    "High",
 			"Assignee":    "Jane Doe",
 			"Team":        "Engineering",
+			"Cycle":       "11 - Sprint 11",
 			"Project":     "Project Alpha",
 			"Labels":      "bug, frontend",
 			"Due Date":    "2025-12-31",

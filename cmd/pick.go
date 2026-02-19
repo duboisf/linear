@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"os"
 	"os/exec"
 	"slices"
 	"strings"
@@ -223,10 +224,18 @@ var (
 	_glamourStyleOnce sync.Once
 )
 
+const _glamourStyleEnv = "LINEAR_GLAMOUR_STYLE"
+
 // glamourStyle returns "dark" or "light" based on the terminal background.
-// The detection runs once; subsequent calls return the cached value.
+// It first checks the LINEAR_GLAMOUR_STYLE environment variable (set by the
+// parent process when spawning subprocesses like fzf bindings), falling back
+// to terminal background detection. The result is cached per process.
 func glamourStyle() string {
 	_glamourStyleOnce.Do(func() {
+		if v := os.Getenv(_glamourStyleEnv); v == "dark" || v == "light" {
+			_glamourStyle = v
+			return
+		}
 		_glamourStyle = "dark"
 		if !termenv.HasDarkBackground() {
 			_glamourStyle = "light"
@@ -260,6 +269,15 @@ func formatIssueCache(issue *api.GetIssueIssue) string {
 		return rendered
 	}
 	return format.FormatIssueDetail(issue, true)
+}
+
+// refreshIssueCache re-fetches a single issue and updates its cached preview.
+func refreshIssueCache(ctx context.Context, client graphql.Client, c *cache.Cache, identifier string) {
+	resp, err := api.GetIssue(ctx, client, identifier)
+	if err != nil || resp.Issue == nil {
+		return
+	}
+	_ = c.Set("issues/"+identifier, formatIssueCache(resp.Issue))
 }
 
 // prefetchIssueDetails fetches full issue details in parallel and writes
@@ -315,13 +333,24 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 
 	// Cache already contains pre-rendered ANSI (either from glamour or the
 	// built-in formatter), so plain cat is sufficient.
+	self, _ := os.Executable()
 	cacheFile := fmt.Sprintf("%s/issues/{1}", c.Dir)
 	previewCmd := fmt.Sprintf("cat '%s'", cacheFile)
+
+	// Build ctrl-y binding to set the selected issue's cycle to the current cycle.
+	// 1. transform-header: runs the edit and shows the result in the fzf header.
+	//    The edit command also invalidates the cached preview for the issue.
+	// 2. refresh-preview: forces fzf to re-run the preview command (live fetch).
+	helpLine := `ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
+	setCycleBinding := fmt.Sprintf(
+		`transform-header(%s issue edit {1} --cycle current 2>&1; echo ""; echo "%s")+refresh-preview`,
+		self, helpLine,
+	)
 
 	cmd := exec.Command("fzf",
 		"--ansi",
 		"--header-lines=1",
-		"--header", "ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel",
+		"--header", "ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel",
 		"--header-first",
 		"--no-sort",
 		"--layout=reverse",
@@ -329,8 +358,10 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, issues []issueF
 		"--preview-window", "right:60%:wrap",
 		"--bind", "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
+		"--bind", "ctrl-y:"+setCycleBinding,
 	)
 	cmd.Stdin = strings.NewReader(input)
+	cmd.Env = append(os.Environ(), _glamourStyleEnv+"="+glamourStyle())
 
 	var out bytes.Buffer
 	cmd.Stdout = &out
