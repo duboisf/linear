@@ -1,2 +1,3 @@
 [tools]
+fzf = "latest"
 go = "1.25"
