@@ -480,6 +480,12 @@ func TestFormatIssueDetail(t *testing.T) {
 		if strings.Contains(got, "Parent") {
 			t.Error("expected no Parent field when parent is nil")
 		}
+		// Empty-value fields should be omitted.
+		for _, absent := range []string{"State", "Team", "Cycle", "Project", "Labels", "Due Date", "Estimate"} {
+			if strings.Contains(got, absent) {
+				t.Errorf("expected no %s field when value is empty", absent)
+			}
+		}
 	})
 
 	t.Run("empty description omitted", func(t *testing.T) {
@@ -557,8 +563,8 @@ func TestFormatIssueDetail(t *testing.T) {
 		if !hasField(got, "Priority", "Low") {
 			t.Error("expected Priority: Low for 4")
 		}
-		if !strings.Contains(got, "Labels") {
-			t.Error("expected Labels field")
+		if strings.Contains(got, "Labels") {
+			t.Error("expected no Labels field when labels are empty")
 		}
 	})
 }

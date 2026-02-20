@@ -33,6 +33,9 @@ func extractIssueFields(issue *api.GetIssueIssue) []issueField {
 	var fields []issueField
 
 	add := func(label, value, color string) {
+		if value == "" {
+			return
+		}
 		fields = append(fields, issueField{Label: label, Value: value, Color: color})
 	}
 
