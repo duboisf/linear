@@ -377,10 +377,14 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	}()
 
 	// Cache already contains pre-rendered ANSI (either from glamour or the
-	// built-in formatter), so plain cat is sufficient.
+	// built-in formatter), so plain cat is sufficient. The fallback handles
+	// the race where fzf previews an issue before prefetch has written it.
 	self, _ := os.Executable()
 	cacheFile := fmt.Sprintf("%s/issues/{1}", c.Dir)
-	previewCmd := fmt.Sprintf("cat '%s'", cacheFile)
+	previewCmd := fmt.Sprintf(
+		"for _ in $(seq 1 50); do [ -f '%s' ] && cat '%s' && exit 0; sleep 0.1; done; printf '\\033[2mFailed to load preview\\033[0m'",
+		cacheFile, cacheFile,
+	)
 
 	// Build ctrl-y binding to set the selected issue's cycle to the current cycle.
 	// 1. transform-header: runs the edit and shows the result in the fzf header.
