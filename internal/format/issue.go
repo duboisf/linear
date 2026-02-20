@@ -175,36 +175,25 @@ func issueLabels(issue *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionN
 }
 
 // FormatIssueList formats a slice of issues as an aligned table for terminal output.
-func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool) string {
+// The columns parameter specifies which columns to display and in what order.
+func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue, color bool, columns []string) string {
 	const gap = "  "
 
-	// Check if any issues have labels.
-	hasLabels := false
-	for _, issue := range issues {
-		if issue.Labels != nil && len(issue.Labels.Nodes) > 0 {
-			hasLabels = true
-			break
-		}
+	// Look up column definitions.
+	cols := make([]ColumnDef, len(columns))
+	for i, name := range columns {
+		cols[i] = _columnRegistry[name]
 	}
 
 	// Compute max visible widths per column.
-	maxID := len("IDENTIFIER")
-	maxState := len("STATUS")
-	maxPri := len("PRIORITY")
-	maxLabels := len("LABELS")
+	widths := make([]int, len(cols))
+	for i, col := range cols {
+		widths[i] = len(col.Header)
+	}
 	for _, issue := range issues {
-		if len(issue.Identifier) > maxID {
-			maxID = len(issue.Identifier)
-		}
-		if issue.State != nil && len(issue.State.Name) > maxState {
-			maxState = len(issue.State.Name)
-		}
-		if l := len(PriorityLabel(issue.Priority)); l > maxPri {
-			maxPri = l
-		}
-		if hasLabels {
-			if l := len(issueLabels(issue)); l > maxLabels {
-				maxLabels = l
+		for i, col := range cols {
+			if l := len(col.Value(issue)); l > widths[i] {
+				widths[i] = l
 			}
 		}
 	}
@@ -212,39 +201,32 @@ func FormatIssueList(issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConn
 	var buf strings.Builder
 
 	// Header
-	buf.WriteString(PadColor(color, Bold, "IDENTIFIER", maxID))
-	buf.WriteString(gap)
-	buf.WriteString(PadColor(color, Bold, "STATUS", maxState))
-	buf.WriteString(gap)
-	buf.WriteString(PadColor(color, Bold, "PRIORITY", maxPri))
-	buf.WriteString(gap)
-	if hasLabels {
-		buf.WriteString(PadColor(color, Bold, "LABELS", maxLabels))
-		buf.WriteString(gap)
+	for i, col := range cols {
+		if i > 0 {
+			buf.WriteString(gap)
+		}
+		if i == len(cols)-1 {
+			buf.WriteString(Colorize(color, Bold, col.Header))
+		} else {
+			buf.WriteString(PadColor(color, Bold, col.Header, widths[i]))
+		}
 	}
-	buf.WriteString(Colorize(color, Bold, "TITLE"))
 	buf.WriteByte('\n')
 
 	// Rows
 	for _, issue := range issues {
-		stateName := ""
-		stateType := ""
-		if issue.State != nil {
-			stateName = issue.State.Name
-			stateType = issue.State.Type
+		for i, col := range cols {
+			if i > 0 {
+				buf.WriteString(gap)
+			}
+			value := col.Value(issue)
+			colorCode := col.Color(issue)
+			if i == len(cols)-1 {
+				buf.WriteString(Colorize(color, colorCode, value))
+			} else {
+				buf.WriteString(PadColor(color, colorCode, value, widths[i]))
+			}
 		}
-
-		buf.WriteString(fmt.Sprintf("%-*s", maxID, issue.Identifier))
-		buf.WriteString(gap)
-		buf.WriteString(PadColor(color, StateColor(stateType), stateName, maxState))
-		buf.WriteString(gap)
-		buf.WriteString(PadColor(color, PriorityColor(issue.Priority), PriorityLabel(issue.Priority), maxPri))
-		buf.WriteString(gap)
-		if hasLabels {
-			buf.WriteString(PadColor(color, Cyan, issueLabels(issue), maxLabels))
-			buf.WriteString(gap)
-		}
-		buf.WriteString(issue.Title)
 		buf.WriteByte('\n')
 	}
 

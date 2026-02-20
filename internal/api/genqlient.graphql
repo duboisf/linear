@@ -18,7 +18,20 @@ query ListMyIssues($first: Int!, $after: String, $filter: IssueFilter) {
           type
         }
         priority
+        createdAt
         updatedAt
+        dueDate
+        estimate
+        assignee {
+          name
+        }
+        cycle {
+          number
+          name
+        }
+        project {
+          name
+        }
         labels {
           nodes {
             name
@@ -109,7 +122,20 @@ query ListIssues($first: Int!, $after: String, $filter: IssueFilter) {
         type
       }
       priority
+      createdAt
       updatedAt
+      dueDate
+      estimate
+      assignee {
+        name
+      }
+      cycle {
+        number
+        name
+      }
+      project {
+        name
+      }
       labels {
         nodes {
           name
