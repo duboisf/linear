@@ -342,7 +342,7 @@ func TestIssueList_SortByPriority(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "-s", "priority"})
+	root.SetArgs([]string{"issue", "list", "-S", "priority"})
 
 	err := root.Execute()
 	if err != nil {
@@ -374,7 +374,7 @@ func TestIssueList_SortByTitle(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "-s", "title"})
+	root.SetArgs([]string{"issue", "list", "-S", "title"})
 
 	err := root.Execute()
 	if err != nil {
@@ -1142,7 +1142,7 @@ func TestIssueList_StatusFilterMultiple(t *testing.T) {
 
 	opts, stdout, _ := testOptionsWithBuffers(t, server)
 	root := cmd.NewRootCmd(opts)
-	root.SetArgs([]string{"issue", "list", "-S", "started,backlog"})
+	root.SetArgs([]string{"issue", "list", "-s", "started,backlog"})
 
 	err := root.Execute()
 	if err != nil {
@@ -1636,5 +1636,160 @@ func TestIssueList_InteractiveFlag_EmptyResult(t *testing.T) {
 	}
 	if !strings.Contains(err.Error(), "no issues to browse") {
 		t.Errorf("error %q should contain 'no issues to browse'", err.Error())
+	}
+}
+
+// --- --column flag tests ---
+
+func TestIssueList_ColumnFlag_Replacement(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--column", "id,title", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --column id,title returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "IDENTIFIER") {
+		t.Error("expected IDENTIFIER header")
+	}
+	if !strings.Contains(output, "TITLE") {
+		t.Error("expected TITLE header")
+	}
+	if strings.Contains(output, "STATUS") {
+		t.Error("should not contain STATUS header with --column=id,title")
+	}
+	if strings.Contains(output, "PRIORITY") {
+		t.Error("should not contain PRIORITY header with --column=id,title")
+	}
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected ENG-101 in output")
+	}
+}
+
+func TestIssueList_ColumnFlag_Additive(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--column", "+updated", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --column +updated returned error: %v", err)
+	}
+
+	output := stdout.String()
+	if !strings.Contains(output, "UPDATED") {
+		t.Error("expected UPDATED header with --column=+updated")
+	}
+	if !strings.Contains(output, "IDENTIFIER") {
+		t.Error("expected IDENTIFIER header (default column)")
+	}
+	if !strings.Contains(output, "2025-01-01") {
+		t.Error("expected formatted date in output")
+	}
+}
+
+func TestIssueList_ColumnFlag_AdditiveWithPosition(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--column", "+updated:2", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --column +updated:2 returned error: %v", err)
+	}
+
+	output := stdout.String()
+	lines := strings.Split(strings.TrimSpace(output), "\n")
+	if len(lines) < 1 {
+		t.Fatal("expected at least header line")
+	}
+	header := lines[0]
+
+	// UPDATED should appear between IDENTIFIER and STATUS
+	idIdx := strings.Index(header, "IDENTIFIER")
+	updIdx := strings.Index(header, "UPDATED")
+	statusIdx := strings.Index(header, "STATUS")
+	if idIdx < 0 || updIdx < 0 || statusIdx < 0 {
+		t.Fatalf("missing headers: id=%d upd=%d status=%d", idIdx, updIdx, statusIdx)
+	}
+	if !(idIdx < updIdx && updIdx < statusIdx) {
+		t.Errorf("expected IDENTIFIER < UPDATED < STATUS, got %d, %d, %d", idIdx, updIdx, statusIdx)
+	}
+}
+
+func TestIssueList_ColumnFlag_Invalid(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, _, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--column", "bogus", "--status", "all"})
+
+	err := root.Execute()
+	if err == nil {
+		t.Fatal("expected error for unknown column")
+	}
+	if !strings.Contains(err.Error(), "unknown column") {
+		t.Errorf("error %q should contain 'unknown column'", err.Error())
+	}
+}
+
+func TestIssueList_ColumnFlag_DefaultBehaviorUnchanged(t *testing.T) {
+	t.Parallel()
+
+	// Without --column flag, output should match the existing default behavior.
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": labeledIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--status", "all"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list returned error: %v", err)
+	}
+
+	output := stdout.String()
+	// Labels should auto-appear because labeledIssuesResponse has labels.
+	if !strings.Contains(output, "LABELS") {
+		t.Error("expected LABELS header (auto-detected)")
+	}
+	if !strings.Contains(output, "IDENTIFIER") {
+		t.Error("expected IDENTIFIER header")
+	}
+	if !strings.Contains(output, "STATUS") {
+		t.Error("expected STATUS header")
+	}
+	if !strings.Contains(output, "PRIORITY") {
+		t.Error("expected PRIORITY header")
+	}
+	if !strings.Contains(output, "TITLE") {
+		t.Error("expected TITLE header")
 	}
 }

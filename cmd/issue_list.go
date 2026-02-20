@@ -51,6 +51,7 @@ func issuePriorityRank(p float64) float64 {
 // assigned to the authenticated user.
 func newIssueListCmd(opts Options) *cobra.Command {
 	var (
+		columnFlag   string
 		cycle        string
 		interactive  bool
 		labelFilter  string
@@ -130,13 +131,57 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				return nil
 			}
 
-			out := format.FormatIssueList(nodes, format.ColorEnabled(cmd.OutOrStdout()))
+			var columns []string
+			if columnFlag != "" {
+				columns, err = format.ParseColumns(columnFlag)
+				if err != nil {
+					return err
+				}
+			} else {
+				columns = format.DefaultColumns(nodes)
+			}
+
+			out := format.FormatIssueList(nodes, format.ColorEnabled(cmd.OutOrStdout()), columns)
 			fmt.Fprint(opts.Stdout, out)
 
 			return nil
 		},
 	}
 
+	cmd.Flags().StringVarP(&columnFlag, "column", "C", "", `Columns to display (e.g. "id,status,title" or "+updated" or "+updated:2")`)
+	_ = cmd.RegisterFlagCompletionFunc("column", func(_ *cobra.Command, _ []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		parts := strings.Split(toComplete, ",")
+		partial := parts[len(parts)-1]
+		prefix := strings.Join(parts[:len(parts)-1], ",")
+
+		used := make(map[string]bool)
+		for _, p := range parts[:len(parts)-1] {
+			p = strings.TrimSpace(p)
+			p = strings.TrimPrefix(p, "+")
+			if name, _, ok := strings.Cut(p, ":"); ok {
+				p = name
+			}
+			used[strings.ToLower(p)] = true
+		}
+
+		addPrefix := ""
+		if strings.HasPrefix(partial, "+") {
+			addPrefix = "+"
+		}
+
+		var completions []string
+		for _, col := range format.ColumnNames {
+			if used[col] {
+				continue
+			}
+			val := addPrefix + col
+			if prefix != "" {
+				val = prefix + "," + val
+			}
+			completions = append(completions, val)
+		}
+		return completions, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
+	})
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
 	cmd.Flags().StringVarP(&labelFilter, "label", "l", "", "Filter by label (comma=OR, plus=AND, e.g. bug,devex or bug+frontend)")
@@ -148,11 +193,11 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		return completeCycleValues(cmd, opts)
 	})
 	cmd.Flags().IntVarP(&limit, "limit", "n", 50, "Maximum number of issues to return")
-	cmd.Flags().StringVarP(&sortBy, "sort", "s", "status", "Sort by column: status, priority, identifier, title")
+	cmd.Flags().StringVarP(&sortBy, "sort", "S", "status", "Sort by column: status, priority, identifier, title")
 	_ = cmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"status", "priority", "identifier", "title"}, cobra.ShellCompDirectiveNoFileComp
 	})
-	cmd.Flags().StringVarP(&statusFilter, "status", "S", "", "Filter by status type: all, or comma-separated list (prefix with ! to exclude, e.g. !completed)")
+	cmd.Flags().StringVarP(&statusFilter, "status", "s", "", "Filter by status type: all, or comma-separated list (prefix with ! to exclude, e.g. !completed)")
 	_ = cmd.RegisterFlagCompletionFunc("status", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		allStatuses := []string{"started", "todo", "unstarted", "triage", "backlog", "completed", "canceled"}
 
@@ -358,13 +403,38 @@ func convertListIssuesNode(n *api.ListIssuesIssuesIssueConnectionNodesIssue) *is
 			Nodes: convertedNodes,
 		}
 	}
+	var assignee *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueAssigneeUser
+	if n.Assignee != nil {
+		assignee = &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueAssigneeUser{
+			Name: n.Assignee.Name,
+		}
+	}
+	var cycle *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueCycle
+	if n.Cycle != nil {
+		cycle = &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueCycle{
+			Number: n.Cycle.Number,
+			Name:   n.Cycle.Name,
+		}
+	}
+	var project *api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueProject
+	if n.Project != nil {
+		project = &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueProject{
+			Name: n.Project.Name,
+		}
+	}
 	return &issueNode{
 		Id:         n.Id,
 		Identifier: n.Identifier,
 		Title:      n.Title,
 		State:      (*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState)(n.State),
 		Priority:   n.Priority,
+		CreatedAt:  n.CreatedAt,
 		UpdatedAt:  n.UpdatedAt,
+		DueDate:    n.DueDate,
+		Estimate:   n.Estimate,
+		Assignee:   assignee,
+		Cycle:      cycle,
+		Project:    project,
 		Labels:     labels,
 	}
 }

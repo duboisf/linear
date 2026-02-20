@@ -96,16 +96,21 @@ func TestStateColor(t *testing.T) {
 func TestFormatIssueList(t *testing.T) {
 	t.Parallel()
 
+	defaultCols := []string{"id", "status", "priority", "title"}
+	defaultColsWithLabels := []string{"id", "status", "priority", "labels", "title"}
+
 	tests := []struct {
-		name   string
-		issues []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
-		color  bool
-		checks func(t *testing.T, got string)
+		name    string
+		issues  []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue
+		color   bool
+		columns []string
+		checks  func(t *testing.T, got string)
 	}{
 		{
-			name:   "empty list shows header only",
-			issues: nil,
-			color:  false,
+			name:    "empty list shows header only",
+			issues:  nil,
+			color:   false,
+			columns: defaultCols,
 			checks: func(t *testing.T, got string) {
 				t.Helper()
 				if !strings.Contains(got, "IDENTIFIER") {
@@ -128,7 +133,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "single issue without color",
+			name:    "single issue without color",
+			columns: defaultCols,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-123",
@@ -158,7 +164,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "multiple issues",
+			name:    "multiple issues",
+			columns: defaultCols,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-1",
@@ -202,7 +209,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "nil state handling",
+			name:    "nil state handling",
+			columns: defaultCols,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-99",
@@ -223,7 +231,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "labels column shown when issues have labels",
+			name:    "labels column shown when issues have labels",
+			columns: defaultColsWithLabels,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-1",
@@ -262,7 +271,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "labels column hidden when no issues have labels",
+			name:    "labels column hidden when no issues have labels",
+			columns: defaultCols,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-1",
@@ -283,7 +293,8 @@ func TestFormatIssueList(t *testing.T) {
 			},
 		},
 		{
-			name: "with color enabled",
+			name:    "with color enabled",
+			columns: defaultCols,
 			issues: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
 				{
 					Identifier: "ENG-10",
@@ -317,7 +328,7 @@ func TestFormatIssueList(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
-			got := format.FormatIssueList(tt.issues, tt.color)
+			got := format.FormatIssueList(tt.issues, tt.color, tt.columns)
 			tt.checks(t, got)
 		})
 	}
