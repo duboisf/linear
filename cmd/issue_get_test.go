@@ -33,6 +33,12 @@ const getIssueResponse = `{
 				"name": "Engineering",
 				"key": "ENG"
 			},
+			"cycle": {
+				"number": 11,
+				"name": "Sprint 11",
+				"startsAt": "2025-01-15T00:00:00Z",
+				"endsAt": "2025-01-28T00:00:00Z"
+			},
 			"project": {
 				"name": "Project Alpha"
 			},
@@ -93,6 +99,7 @@ func TestIssueGet_Success(t *testing.T) {
 		"High",
 		"Jane Doe",
 		"Engineering",
+		"Sprint 11",
 		"Project Alpha",
 		"bug, frontend",
 		"2025-12-31",

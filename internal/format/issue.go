@@ -4,9 +4,19 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/duboisf/linear/internal/api"
 )
+
+// formatShortDate extracts "Jan _2" from an ISO timestamp.
+func formatShortDate(ts string) string {
+	t, err := time.Parse(time.RFC3339, ts)
+	if err != nil {
+		return ""
+	}
+	return t.Format("Jan _2")
+}
 
 // issueField holds a single key-value pair for issue detail rendering.
 type issueField struct {
@@ -49,6 +59,20 @@ func extractIssueFields(issue *api.GetIssueIssue) []issueField {
 		team = issue.Team.Name
 	}
 	add("Team", team, "")
+
+	cycle := ""
+	if issue.Cycle != nil {
+		cycle = fmt.Sprintf("%.0f", issue.Cycle.Number)
+		if issue.Cycle.Name != nil && *issue.Cycle.Name != "" {
+			cycle += " - " + *issue.Cycle.Name
+		}
+		start := formatShortDate(issue.Cycle.StartsAt)
+		end := formatShortDate(issue.Cycle.EndsAt)
+		if start != "" && end != "" {
+			cycle += fmt.Sprintf(" (%s – %s)", start, end)
+		}
+	}
+	add("Cycle", cycle, Cyan)
 
 	project := ""
 	if issue.Project != nil {
@@ -307,6 +331,7 @@ type issueDetailJSON struct {
 	Priority    string   `json:"priority"`
 	Assignee    string   `json:"assignee"`
 	Team        string   `json:"team"`
+	Cycle       string   `json:"cycle,omitempty"`
 	Project     string   `json:"project"`
 	Labels      []string `json:"labels"`
 	DueDate     string   `json:"due_date,omitempty"`
@@ -337,6 +362,12 @@ func newIssueDetailJSON(issue *api.GetIssueIssue) issueDetailJSON {
 	}
 	if issue.Team != nil {
 		d.Team = issue.Team.Name
+	}
+	if issue.Cycle != nil {
+		d.Cycle = fmt.Sprintf("%.0f", issue.Cycle.Number)
+		if issue.Cycle.Name != nil && *issue.Cycle.Name != "" {
+			d.Cycle += " - " + *issue.Cycle.Name
+		}
 	}
 	if issue.Project != nil {
 		d.Project = issue.Project.Name
@@ -391,6 +422,9 @@ func FormatIssueDetailYAML(issue *api.GetIssueIssue) string {
 	yamlStr("priority", d.Priority)
 	yamlStr("assignee", d.Assignee)
 	yamlStr("team", d.Team)
+	if d.Cycle != "" {
+		yamlStr("cycle", d.Cycle)
+	}
 	yamlStr("project", d.Project)
 
 	if len(d.Labels) == 0 {

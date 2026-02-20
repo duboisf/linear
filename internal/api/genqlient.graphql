@@ -58,6 +58,12 @@ query GetIssue($id: String!) {
       name
       key
     }
+    cycle {
+      number
+      name
+      startsAt
+      endsAt
+    }
     project {
       name
     }
@@ -207,6 +213,17 @@ query ListUsers($first: Int!, $after: String) {
     pageInfo {
       hasNextPage
       endCursor
+    }
+  }
+}
+
+mutation UpdateIssueCycle($id: String!, $cycleId: String!) {
+  issueUpdate(id: $id, input: { cycleId: $cycleId }) {
+    success
+    issue {
+      id
+      identifier
+      title
     }
   }
 }
