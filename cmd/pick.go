@@ -405,7 +405,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		"--no-sort",
 		"--layout=reverse",
 		"--preview", previewCmd,
-		"--preview-window", "right:60%:wrap",
+		"--preview-window", "bottom:60%:wrap",
 		"--bind", "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
 		"--bind", "ctrl-y:"+setCycleBinding,
