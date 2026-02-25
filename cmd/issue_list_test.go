@@ -1867,7 +1867,7 @@ func TestBuildFzfReloadCmd(t *testing.T) {
 	t.Parallel()
 
 	t.Run("defaults", func(t *testing.T) {
-		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "", "", "", "", "status", 50)
+		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "", "", "", "", "status", "", 50)
 		if !strings.Contains(got, "issue list --fzf-data") {
 			t.Errorf("expected --fzf-data in reload cmd, got %q", got)
 		}
@@ -1878,10 +1878,13 @@ func TestBuildFzfReloadCmd(t *testing.T) {
 		if strings.Contains(got, "--limit") {
 			t.Errorf("default limit should not appear in reload cmd, got %q", got)
 		}
+		if strings.Contains(got, "--column") {
+			t.Errorf("empty column should not appear in reload cmd, got %q", got)
+		}
 	})
 
 	t.Run("with flags", func(t *testing.T) {
-		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "current", "!completed", "bug", "jane", "priority", 100)
+		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "current", "!completed", "bug", "jane", "priority", "id,status,title", 100)
 		if !strings.Contains(got, "--cycle 'current'") {
 			t.Errorf("expected --cycle in reload cmd, got %q", got)
 		}
@@ -1896,6 +1899,9 @@ func TestBuildFzfReloadCmd(t *testing.T) {
 		}
 		if !strings.Contains(got, "--sort 'priority'") {
 			t.Errorf("expected --sort in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--column 'id,status,title'") {
+			t.Errorf("expected --column in reload cmd, got %q", got)
 		}
 		if !strings.Contains(got, "--limit 100") {
 			t.Errorf("expected --limit in reload cmd, got %q", got)

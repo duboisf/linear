@@ -6,6 +6,6 @@ func ShellQuote(s string) string {
 }
 
 // BuildFzfReloadCmd is an exported wrapper for testing.
-func BuildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy string, limit int) string {
-	return buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, limit)
+func BuildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, columnFlag string, limit int) string {
+	return buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, columnFlag, limit)
 }

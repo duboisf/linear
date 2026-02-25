@@ -12,7 +12,6 @@ import (
 
 	"github.com/Khan/genqlient/graphql"
 
-	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
 )
 
@@ -181,54 +180,6 @@ func TestFetchUserIssues_NilIssues(t *testing.T) {
 	}
 	if issues != nil {
 		t.Errorf("expected nil issues, got %v", issues)
-	}
-}
-
-func TestIssuesToCompletions(t *testing.T) {
-	t.Parallel()
-
-	nodes := []*issueNode{
-		{
-			Identifier: "ENG-1",
-			Title:      "First",
-			Priority:   2,
-			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
-				Name: "In Progress",
-				Type: "started",
-			},
-		},
-		{
-			Identifier: "ENG-2",
-			Title:      "Second",
-			Priority:   0,
-		},
-	}
-
-	result := issuesToCompletions(nodes)
-
-	if len(result) != 2 {
-		t.Fatalf("expected 2 completions, got %d", len(result))
-	}
-
-	if result[0].Identifier != "ENG-1" {
-		t.Errorf("expected ENG-1, got %q", result[0].Identifier)
-	}
-	if result[0].StateName != "In Progress" {
-		t.Errorf("expected state 'In Progress', got %q", result[0].StateName)
-	}
-	if result[0].StateType != "started" {
-		t.Errorf("expected state type 'started', got %q", result[0].StateType)
-	}
-	if result[0].Priority != 2 {
-		t.Errorf("expected priority 2, got %f", result[0].Priority)
-	}
-
-	// Nil state should produce empty state fields.
-	if result[1].StateName != "" {
-		t.Errorf("expected empty state name, got %q", result[1].StateName)
-	}
-	if result[1].StateType != "" {
-		t.Errorf("expected empty state type, got %q", result[1].StateType)
 	}
 }
 

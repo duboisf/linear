@@ -1,6 +1,7 @@
 package format_test
 
 import (
+	"regexp"
 	"slices"
 	"strings"
 	"testing"
@@ -8,6 +9,12 @@ import (
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/format"
 )
+
+var _ansiRe = regexp.MustCompile(`\x1b\[[0-9;]*[a-zA-Z]`)
+
+func stripANSI(s string) string {
+	return _ansiRe.ReplaceAllString(s, "")
+}
 
 func TestDefaultColumns_WithLabels(t *testing.T) {
 	t.Parallel()
@@ -463,5 +470,174 @@ func TestParseColumns_NewColumns(t *testing.T) {
 				t.Errorf("ParseColumns(%q) = %v, want %v", tt.spec, got, tt.want)
 			}
 		})
+	}
+}
+
+func TestFormatFzfLines_Empty(t *testing.T) {
+	t.Parallel()
+
+	header, lines := format.FormatFzfLines(nil, []string{"id", "status", "title"})
+	if header != "" {
+		t.Errorf("expected empty header for nil input, got %q", header)
+	}
+	if lines != nil {
+		t.Errorf("expected nil lines for nil input, got %v", lines)
+	}
+}
+
+func TestFormatFzfLines_DefaultColumns(t *testing.T) {
+	t.Parallel()
+
+	issues := []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		{
+			Identifier: "ENG-1",
+			Title:      "First issue",
+			Priority:   2,
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+				Name: "In Progress",
+				Type: "started",
+			},
+		},
+		{
+			Identifier: "ENG-2",
+			Title:      "Second issue",
+			Priority:   3,
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+				Name: "Todo",
+				Type: "unstarted",
+			},
+		},
+	}
+
+	header, lines := format.FormatFzfLines(issues, []string{"id", "status", "priority", "title"})
+
+	for _, col := range []string{"IDENTIFIER", "STATUS", "PRIORITY", "TITLE"} {
+		if !strings.Contains(header, col) {
+			t.Errorf("header should contain %q, got %q", col, header)
+		}
+	}
+
+	if len(lines) != 2 {
+		t.Fatalf("expected 2 lines, got %d", len(lines))
+	}
+
+	if !strings.Contains(lines[0], "ENG-1") {
+		t.Errorf("line 0 should contain ENG-1, got %q", lines[0])
+	}
+	if !strings.Contains(lines[0], "First issue") {
+		t.Errorf("line 0 should contain title, got %q", lines[0])
+	}
+	if !strings.Contains(lines[0], "High") {
+		t.Errorf("line 0 should contain priority 'High', got %q", lines[0])
+	}
+}
+
+func TestFormatFzfLines_CustomColumns(t *testing.T) {
+	t.Parallel()
+
+	issues := []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		{
+			Identifier: "ENG-1",
+			Title:      "Test issue",
+			Priority:   2,
+			UpdatedAt:  "2025-06-15T10:00:00Z",
+			Assignee: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueAssigneeUser{
+				Name: "Alice",
+			},
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+				Name: "In Progress",
+				Type: "started",
+			},
+		},
+	}
+
+	header, lines := format.FormatFzfLines(issues, []string{"id", "assignee", "updated", "title"})
+
+	if !strings.Contains(header, "ASSIGNEE") {
+		t.Errorf("header should contain ASSIGNEE, got %q", header)
+	}
+	if !strings.Contains(header, "UPDATED") {
+		t.Errorf("header should contain UPDATED, got %q", header)
+	}
+	if strings.Contains(header, "PRIORITY") {
+		t.Error("header should not contain PRIORITY when not in columns")
+	}
+	if len(lines) != 1 {
+		t.Fatalf("expected 1 line, got %d", len(lines))
+	}
+	plain := stripANSI(lines[0])
+	if !strings.Contains(plain, "Alice") {
+		t.Errorf("line should contain assignee 'Alice', got %q", plain)
+	}
+	if !strings.Contains(plain, "2025-06-15") {
+		t.Errorf("line should contain date, got %q", plain)
+	}
+}
+
+func TestFormatFzfLines_Alignment(t *testing.T) {
+	t.Parallel()
+
+	issues := []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		{
+			Identifier: "ENG-1",
+			Title:      "Short",
+			Priority:   2,
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+				Name: "In Progress",
+				Type: "started",
+			},
+		},
+		{
+			Identifier: "ENG-200",
+			Title:      "Longer title",
+			Priority:   4,
+			State: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueStateWorkflowState{
+				Name: "Todo",
+				Type: "unstarted",
+			},
+		},
+	}
+
+	_, lines := format.FormatFzfLines(issues, []string{"id", "status", "priority", "title"})
+
+	plain0 := stripANSI(lines[0])
+	plain1 := stripANSI(lines[1])
+
+	titleIdx0 := strings.Index(plain0, "Short")
+	titleIdx1 := strings.Index(plain1, "Longer title")
+	if titleIdx0 != titleIdx1 {
+		t.Errorf("titles should be aligned: 'Short' at %d, 'Longer title' at %d\nline0: %q\nline1: %q",
+			titleIdx0, titleIdx1, plain0, plain1)
+	}
+}
+
+func TestFormatFzfLines_Labels(t *testing.T) {
+	t.Parallel()
+
+	issues := []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssue{
+		{
+			Identifier: "ENG-1",
+			Title:      "Bug fix",
+			Priority:   2,
+			Labels: &api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnection{
+				Nodes: []*api.ListMyIssuesViewerUserAssignedIssuesIssueConnectionNodesIssueLabelsIssueLabelConnectionNodesIssueLabel{
+					{Name: "bug"},
+					{Name: "frontend"},
+				},
+			},
+		},
+	}
+
+	header, lines := format.FormatFzfLines(issues, []string{"id", "labels", "title"})
+
+	if !strings.Contains(header, "LABELS") {
+		t.Errorf("header should contain LABELS, got %q", header)
+	}
+	if len(lines) != 1 {
+		t.Fatalf("expected 1 line, got %d", len(lines))
+	}
+	plain := stripANSI(lines[0])
+	if !strings.Contains(plain, "bug, frontend") {
+		t.Errorf("line should contain labels, got %q", plain)
 	}
 }

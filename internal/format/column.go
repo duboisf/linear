@@ -207,6 +207,70 @@ func parseReplacementColumns(parts []string) ([]string, error) {
 	return columns, nil
 }
 
+// FormatFzfLines formats issues into aligned, ANSI-colored lines for fzf,
+// including a header line. Returns the header and the data lines separately.
+// This reuses the column registry so interactive mode supports the same columns
+// as non-interactive mode.
+func FormatFzfLines(issues []*issueListNode, columns []string) (header string, lines []string) {
+	if len(issues) == 0 {
+		return "", nil
+	}
+
+	const gap = "  "
+
+	cols := make([]ColumnDef, len(columns))
+	for i, name := range columns {
+		cols[i] = _columnRegistry[name]
+	}
+
+	// Compute max visible widths per column.
+	widths := make([]int, len(cols))
+	for i, col := range cols {
+		widths[i] = len(col.Header)
+	}
+	for _, issue := range issues {
+		for i, col := range cols {
+			if l := len(col.Value(issue)); l > widths[i] {
+				widths[i] = l
+			}
+		}
+	}
+
+	// Header
+	var hdr strings.Builder
+	for i, col := range cols {
+		if i > 0 {
+			hdr.WriteString(gap)
+		}
+		if i == len(cols)-1 {
+			hdr.WriteString(col.Header)
+		} else {
+			fmt.Fprintf(&hdr, "%-*s", widths[i], col.Header)
+		}
+	}
+	header = hdr.String()
+
+	// Rows
+	lines = make([]string, len(issues))
+	for r, issue := range issues {
+		var buf strings.Builder
+		for i, col := range cols {
+			if i > 0 {
+				buf.WriteString(gap)
+			}
+			value := col.Value(issue)
+			colorCode := col.Color(issue)
+			if i == len(cols)-1 {
+				buf.WriteString(Colorize(true, colorCode, value))
+			} else {
+				buf.WriteString(PadColor(true, colorCode, value, widths[i]))
+			}
+		}
+		lines[r] = buf.String()
+	}
+	return header, lines
+}
+
 func parseAdditiveColumns(parts []string) ([]string, error) {
 	columns := make([]string, len(_defaultColumnNames))
 	copy(columns, _defaultColumnNames)

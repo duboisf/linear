@@ -226,23 +226,6 @@ func fzfPickIssue(issues []issueForCompletion) (string, error) {
 	return fzfSelectedID(out.String()), nil
 }
 
-// issuesToCompletions converts issueNode slice to issueForCompletion slice.
-func issuesToCompletions(nodes []*issueNode) []issueForCompletion {
-	result := make([]issueForCompletion, len(nodes))
-	for i, n := range nodes {
-		result[i] = issueForCompletion{
-			Identifier: n.Identifier,
-			Title:      n.Title,
-			Priority:   n.Priority,
-		}
-		if n.State != nil {
-			result[i].StateName = n.State.Name
-			result[i].StateType = n.State.Type
-		}
-	}
-	return result
-}
-
 // _glamourStyle caches the detected terminal background style so that
 // termenv.HasDarkBackground (which sends OSC 11 queries) is called at most
 // once per process. Concurrent goroutines reuse the cached result.
@@ -334,8 +317,9 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 // background. fzf displays its built-in loading indicator while waiting for
 // data to arrive on stdin. Issue detail prefetching also runs concurrently so
 // previews populate as the user browses.
+// columns controls which columns are displayed; nil means use defaults.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]issueForCompletion, error), c *cache.Cache, cycleHeader string, reloadCmd string) (string, error) {
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]*issueNode, error), c *cache.Cache, cycleHeader string, reloadCmd string, columns []string) (string, error) {
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
 	// here (synchronously, before fzf) avoids concurrent queries whose
@@ -351,26 +335,28 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	go func() {
 		defer pw.Close()
 
-		issues, err := fetchIssues(fetchCtx)
+		nodes, err := fetchIssues(fetchCtx)
 		if err != nil {
 			fetchErrCh <- err
 			return
 		}
-		if len(issues) == 0 {
+		if len(nodes) == 0 {
 			fetchErrCh <- fmt.Errorf("no issues to browse")
 			return
 		}
 
-		sortCompletionIssues(issues)
-
 		// Start detail prefetch in background (don't block fzf input).
-		identifiers := make([]string, len(issues))
-		for i, iss := range issues {
-			identifiers[i] = iss.Identifier
+		identifiers := make([]string, len(nodes))
+		for i, n := range nodes {
+			identifiers[i] = n.Identifier
 		}
 		go prefetchIssueDetails(ctx, client, c, identifiers)
 
-		header, lines := formatFzfLines(issues)
+		cols := columns
+		if cols == nil {
+			cols = format.DefaultColumns(nodes)
+		}
+		header, lines := format.FormatFzfLines(nodes, cols)
 		input := header + "\n" + strings.Join(lines, "\n") + "\n"
 		_, _ = io.WriteString(pw, input)
 		fetchErrCh <- nil

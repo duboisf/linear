@@ -94,22 +94,31 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				cycleHeader = ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout()))
 			}
 
+			// Parse --column flag early so it applies to all output modes.
+			var columns []string
+			if columnFlag != "" {
+				columns, err = format.ParseColumns(columnFlag)
+				if err != nil {
+					return err
+				}
+			}
+
 			if fzfData {
-				return outputFzfData(cmd.Context(), client, user, limit, filter, sortBy, opts.Stdout)
+				return outputFzfData(cmd.Context(), client, user, limit, filter, sortBy, columns, opts.Stdout)
 			}
 
 			if interactive {
-				fetchIssues := func(ctx context.Context) ([]issueForCompletion, error) {
+				fetchIssues := func(ctx context.Context) ([]*issueNode, error) {
 					nodes, err := fetchIssueNodes(ctx, client, user, limit, filter)
 					if err != nil {
 						return nil, err
 					}
 					sortIssues(nodes, sortBy)
-					return issuesToCompletions(nodes), nil
+					return nodes, nil
 				}
 				self, _ := os.Executable()
-				reloadCmd := buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, limit)
-				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, reloadCmd)
+				reloadCmd := buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, columnFlag, limit)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, reloadCmd, columns)
 				if err != nil {
 					return err
 				}
@@ -130,13 +139,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				fmt.Fprintln(opts.Stdout, cycleHeader)
 			}
 
-			var columns []string
-			if columnFlag != "" {
-				columns, err = format.ParseColumns(columnFlag)
-				if err != nil {
-					return err
-				}
-			} else {
+			if columns == nil {
 				columns = format.DefaultColumns(nodes)
 			}
 
@@ -657,15 +660,17 @@ func sortIssues(nodes []*issueNode, sortBy string) {
 
 // outputFzfData fetches, sorts, and prints fzf-formatted issue data to w.
 // Used by the hidden --fzf-data flag for fzf's reload() action.
-func outputFzfData(ctx context.Context, client graphql.Client, user string, limit int, filter *api.IssueFilter, sortBy string, w io.Writer) error {
+// columns controls which columns are displayed; nil means use defaults.
+func outputFzfData(ctx context.Context, client graphql.Client, user string, limit int, filter *api.IssueFilter, sortBy string, columns []string, w io.Writer) error {
 	nodes, err := fetchIssueNodes(ctx, client, user, limit, filter)
 	if err != nil {
 		return err
 	}
 	sortIssues(nodes, sortBy)
-	issues := issuesToCompletions(nodes)
-	sortCompletionIssues(issues)
-	header, lines := formatFzfLines(issues)
+	if columns == nil {
+		columns = format.DefaultColumns(nodes)
+	}
+	header, lines := format.FormatFzfLines(nodes, columns)
 	if header == "" {
 		return nil
 	}
@@ -683,7 +688,7 @@ func shellQuote(s string) string {
 
 // buildFzfReloadCmd constructs the shell command for fzf's reload() action
 // to refresh the issue list after an edit.
-func buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy string, limit int) string {
+func buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, columnFlag string, limit int) string {
 	args := []string{shellQuote(self), "issue", "list", "--fzf-data"}
 	if cycle != "" {
 		args = append(args, "--cycle", shellQuote(cycle))
@@ -699,6 +704,9 @@ func buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy stri
 	}
 	if sortBy != "" && sortBy != "status" {
 		args = append(args, "--sort", shellQuote(sortBy))
+	}
+	if columnFlag != "" {
+		args = append(args, "--column", shellQuote(columnFlag))
 	}
 	if limit != 50 {
 		args = append(args, "--limit", strconv.Itoa(limit))
