@@ -33,3 +33,6 @@ func (s NullableStringComparator) MarshalJSON() ([]byte, error) { return marshal
 func (n NumberComparator) MarshalJSON() ([]byte, error)         { return marshalOmitZero(n) }
 func (n NullableNumberComparator) MarshalJSON() ([]byte, error) { return marshalOmitZero(n) }
 func (b BooleanComparator) MarshalJSON() ([]byte, error)        { return marshalOmitZero(b) }
+// IssueUpdateInput uses pointer fields: nil = omit from payload,
+// non-nil empty string = unset the field on the server.
+func (i IssueUpdateInput) MarshalJSON() ([]byte, error) { return marshalOmitZero(i) }

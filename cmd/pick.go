@@ -335,7 +335,7 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 // data to arrive on stdin. Issue detail prefetching also runs concurrently so
 // previews populate as the user browses.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]issueForCompletion, error), c *cache.Cache, cycleHeader string) (string, error) {
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]issueForCompletion, error), c *cache.Cache, cycleHeader string, reloadCmd string) (string, error) {
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
 	// here (synchronously, before fzf) avoids concurrent queries whose
@@ -390,13 +390,27 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	// 1. transform-header: runs the edit and shows the result in the fzf header.
 	//    The edit command also invalidates the cached preview for the issue.
 	// 2. refresh-preview: forces fzf to re-run the preview command (live fetch).
-	helpLine := `ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
+	helpLine := `ctrl-e: edit  ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
+	reloadAction := ""
+	if reloadCmd != "" {
+		reloadAction = "+reload(" + reloadCmd + ")"
+	}
+
 	setCycleBinding := fmt.Sprintf(
-		`transform-header(%s issue edit {1} --cycle current 2>&1; echo ""; echo "%s")+refresh-preview`,
-		self, helpLine,
+		`transform-header(%s issue edit {1} --cycle current 2>&1; echo ""; echo "%s")%s+refresh-preview`,
+		self, helpLine, reloadAction,
 	)
 
-	fzfHeader := "ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
+	// Build ctrl-e binding to interactively edit the selected issue.
+	// execute() runs the command with the terminal, allowing nested fzf pickers.
+	// reload refreshes the issue list to reflect the edit.
+	// refresh-preview re-renders the preview from the updated cache.
+	editBinding := fmt.Sprintf(
+		`execute(%s issue edit-interactive {1})%s+refresh-preview`,
+		self, reloadAction,
+	)
+
+	fzfHeader := "ctrl-e: edit  ctrl-y: set current cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
 	if cycleHeader != "" {
 		fzfHeader = cycleHeader + "\n" + fzfHeader
 	}
@@ -413,6 +427,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		"--bind", "ctrl-d:preview-half-page-down,ctrl-u:preview-half-page-up",
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
 		"--bind", "ctrl-y:"+setCycleBinding,
+		"--bind", "ctrl-e:"+editBinding,
 	)
 	cmd.Stdin = pr
 	cmd.Env = append(os.Environ(), _glamourStyleEnv+"="+glamourStyle())

@@ -14,6 +14,7 @@ func newIssueCmd(opts Options) *cobra.Command {
 	}
 	cmd.AddCommand(
 		newIssueEditCmd(opts),
+		newIssueEditInteractiveCmd(opts),
 		newIssueGetCmd(opts),
 		newIssueListCmd(opts),
 		newIssueWorktreeCmd(opts),

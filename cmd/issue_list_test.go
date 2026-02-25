@@ -1840,3 +1840,95 @@ func TestIssueList_ColumnFlag_DefaultBehaviorUnchanged(t *testing.T) {
 		t.Error("expected TITLE header")
 	}
 }
+
+func TestShellQuote(t *testing.T) {
+	t.Parallel()
+
+	tests := []struct {
+		input string
+		want  string
+	}{
+		{"simple", "'simple'"},
+		{"with spaces", "'with spaces'"},
+		{"it's", `'it'\''s'`},
+		{"", "''"},
+		{"!completed", "'!completed'"},
+		{"bug,frontend", "'bug,frontend'"},
+	}
+	for _, tt := range tests {
+		got := cmd.ShellQuote(tt.input)
+		if got != tt.want {
+			t.Errorf("ShellQuote(%q) = %q, want %q", tt.input, got, tt.want)
+		}
+	}
+}
+
+func TestBuildFzfReloadCmd(t *testing.T) {
+	t.Parallel()
+
+	t.Run("defaults", func(t *testing.T) {
+		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "", "", "", "", "status", 50)
+		if !strings.Contains(got, "issue list --fzf-data") {
+			t.Errorf("expected --fzf-data in reload cmd, got %q", got)
+		}
+		// Default sort and limit should not appear.
+		if strings.Contains(got, "--sort") {
+			t.Errorf("default sort should not appear in reload cmd, got %q", got)
+		}
+		if strings.Contains(got, "--limit") {
+			t.Errorf("default limit should not appear in reload cmd, got %q", got)
+		}
+	})
+
+	t.Run("with flags", func(t *testing.T) {
+		got := cmd.BuildFzfReloadCmd("/usr/bin/linear", "current", "!completed", "bug", "jane", "priority", 100)
+		if !strings.Contains(got, "--cycle 'current'") {
+			t.Errorf("expected --cycle in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--status '!completed'") {
+			t.Errorf("expected --status in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--label 'bug'") {
+			t.Errorf("expected --label in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--user 'jane'") {
+			t.Errorf("expected --user in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--sort 'priority'") {
+			t.Errorf("expected --sort in reload cmd, got %q", got)
+		}
+		if !strings.Contains(got, "--limit 100") {
+			t.Errorf("expected --limit in reload cmd, got %q", got)
+		}
+	})
+}
+
+func TestIssueList_FzfData(t *testing.T) {
+	t.Parallel()
+
+	server := newMockGraphQLServer(t, map[string]string{
+		"ListMyIssues": listMyIssuesResponse,
+	})
+
+	opts, stdout, _ := testOptionsWithBuffers(t, server)
+	root := cmd.NewRootCmd(opts)
+	root.SetArgs([]string{"issue", "list", "--fzf-data"})
+
+	err := root.Execute()
+	if err != nil {
+		t.Fatalf("issue list --fzf-data returned error: %v", err)
+	}
+
+	output := stdout.String()
+	// Should contain the header line.
+	if !strings.Contains(output, "IDENTIFIER") {
+		t.Error("expected IDENTIFIER header in fzf-data output")
+	}
+	// Should contain issue data.
+	if !strings.Contains(output, "ENG-101") {
+		t.Error("expected ENG-101 in fzf-data output")
+	}
+	if !strings.Contains(output, "ENG-102") {
+		t.Error("expected ENG-102 in fzf-data output")
+	}
+}

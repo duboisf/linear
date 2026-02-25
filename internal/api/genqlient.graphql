@@ -60,28 +60,34 @@ query GetIssue($id: String!) {
     updatedAt
     branchName
     state {
+      id
       name
       type
     }
     assignee {
+      id
       name
       email
     }
     team {
+      id
       name
       key
     }
     cycle {
+      id
       number
       name
       startsAt
       endsAt
     }
     project {
+      id
       name
     }
     labels {
       nodes {
+        id
         name
       }
     }
@@ -267,6 +273,37 @@ query GetUserByDisplayName($displayName: String!) {
       active
       admin
       isMe
+    }
+  }
+}
+
+query ListWorkflowStates($first: Int!, $teamId: ID!) {
+  workflowStates(first: $first, filter: { team: { id: { eq: $teamId } } }, orderBy: createdAt) {
+    nodes {
+      id
+      name
+      type
+      position
+    }
+  }
+}
+
+mutation UpdateIssue($id: String!, $input: IssueUpdateInput!) {
+  issueUpdate(id: $id, input: $input) {
+    success
+    issue {
+      id
+      identifier
+      title
+    }
+  }
+}
+
+query ListProjects($first: Int!) {
+  projects(first: $first, orderBy: updatedAt) {
+    nodes {
+      id
+      name
     }
   }
 }

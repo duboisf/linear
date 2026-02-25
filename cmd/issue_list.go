@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
 	"slices"
 	"strconv"
 	"strings"
@@ -53,6 +55,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 	var (
 		columnFlag   string
 		cycle        string
+		fzfData      bool
 		interactive  bool
 		labelFilter  string
 		limit        int
@@ -91,6 +94,10 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				cycleHeader = ci.formatHeader(format.ColorEnabled(cmd.OutOrStdout()))
 			}
 
+			if fzfData {
+				return outputFzfData(cmd.Context(), client, user, limit, filter, sortBy, opts.Stdout)
+			}
+
 			if interactive {
 				fetchIssues := func(ctx context.Context) ([]issueForCompletion, error) {
 					nodes, err := fetchIssueNodes(ctx, client, user, limit, filter)
@@ -100,7 +107,9 @@ func newIssueListCmd(opts Options) *cobra.Command {
 					sortIssues(nodes, sortBy)
 					return issuesToCompletions(nodes), nil
 				}
-				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader)
+				self, _ := os.Executable()
+				reloadCmd := buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, limit)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, reloadCmd)
 				if err != nil {
 					return err
 				}
@@ -172,6 +181,8 @@ func newIssueListCmd(opts Options) *cobra.Command {
 		}
 		return completions, cobra.ShellCompDirectiveNoFileComp | cobra.ShellCompDirectiveNoSpace
 	})
+	cmd.Flags().BoolVar(&fzfData, "fzf-data", false, "")
+	_ = cmd.Flags().MarkHidden("fzf-data")
 	cmd.Flags().BoolVarP(&interactive, "interactive", "i", false, "Browse issues interactively with fzf preview")
 	_ = cmd.RegisterFlagCompletionFunc("interactive", cobra.NoFileCompletions)
 	cmd.Flags().StringVarP(&labelFilter, "label", "l", "", "Filter by label (comma=OR, plus=AND, e.g. bug,devex or bug+frontend)")
@@ -642,6 +653,57 @@ func sortIssues(nodes []*issueNode, sortBy string) {
 			return 0
 		}
 	})
+}
+
+// outputFzfData fetches, sorts, and prints fzf-formatted issue data to w.
+// Used by the hidden --fzf-data flag for fzf's reload() action.
+func outputFzfData(ctx context.Context, client graphql.Client, user string, limit int, filter *api.IssueFilter, sortBy string, w io.Writer) error {
+	nodes, err := fetchIssueNodes(ctx, client, user, limit, filter)
+	if err != nil {
+		return err
+	}
+	sortIssues(nodes, sortBy)
+	issues := issuesToCompletions(nodes)
+	sortCompletionIssues(issues)
+	header, lines := formatFzfLines(issues)
+	if header == "" {
+		return nil
+	}
+	fmt.Fprintln(w, header)
+	for _, line := range lines {
+		fmt.Fprintln(w, line)
+	}
+	return nil
+}
+
+// shellQuote wraps s in single quotes with embedded single quotes escaped.
+func shellQuote(s string) string {
+	return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'"
+}
+
+// buildFzfReloadCmd constructs the shell command for fzf's reload() action
+// to refresh the issue list after an edit.
+func buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy string, limit int) string {
+	args := []string{shellQuote(self), "issue", "list", "--fzf-data"}
+	if cycle != "" {
+		args = append(args, "--cycle", shellQuote(cycle))
+	}
+	if statusFilter != "" {
+		args = append(args, "--status", shellQuote(statusFilter))
+	}
+	if labelFilter != "" {
+		args = append(args, "--label", shellQuote(labelFilter))
+	}
+	if user != "" {
+		args = append(args, "--user", shellQuote(user))
+	}
+	if sortBy != "" && sortBy != "status" {
+		args = append(args, "--sort", shellQuote(sortBy))
+	}
+	if limit != 50 {
+		args = append(args, "--limit", strconv.Itoa(limit))
+	}
+	return strings.Join(args, " ")
 }
 
 // buildLabelFilter parses the label flag value into an IssueLabelCollectionFilter.
