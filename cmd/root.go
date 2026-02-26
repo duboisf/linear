@@ -14,6 +14,7 @@ import (
 
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
+	"github.com/duboisf/linear/internal/config"
 	"github.com/duboisf/linear/internal/keyring"
 )
 
@@ -43,6 +44,8 @@ type Options struct {
 	Stdout io.Writer
 	// Stderr for error output.
 	Stderr io.Writer
+	// Config holds user configuration loaded from config.yaml.
+	Config *config.Config
 }
 
 // NewRootCmd creates the root cobra command with all subcommands wired up.
@@ -129,6 +132,7 @@ func DefaultOptions() Options {
 	if d, err := os.UserCacheDir(); err == nil {
 		cacheDir = filepath.Join(d, "linear")
 	}
+	cfg, _ := config.Load(nil)
 	return Options{
 		NewAPIClient: func(apiKey string) graphql.Client {
 			return api.NewClient(apiKey, "")
@@ -150,6 +154,7 @@ func DefaultOptions() Options {
 		Stdin:              os.Stdin,
 		Stdout:             os.Stdout,
 		Stderr:             os.Stderr,
+		Config:             cfg,
 	}
 }
 

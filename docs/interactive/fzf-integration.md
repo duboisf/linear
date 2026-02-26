@@ -42,6 +42,17 @@ The state file mechanism ensures all subsequent reloads (both ctrl-y and ctrl-e)
 
 Runs `linear issue edit-interactive {1}` via `execute()`, which hands the terminal to the subprocess. This enables **nested fzf pickers**: the user picks a field (Status, Priority, Cycle, Assignee, Project, Labels-Add, Labels-Remove, Title, Description), then picks or edits the value. After the edit, fzf reloads the list and refreshes the preview.
 
+### ctrl-w: Launch Claude
+
+Uses fzf's `become()` action to replace fzf with `claude`, giving it full terminal control. The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). `{identifier}` is replaced with the selected issue's identifier at runtime. The prompt is shell-quoted via `shellQuote()` to handle embedded single quotes.
+
+Customizable via `~/.config/linear/config.yaml`:
+
+```yaml
+interactive:
+  claude_prompt: "Let's work on linear issue {identifier}"
+```
+
 ### Scroll bindings
 
 - `ctrl-d` / `ctrl-u`: half-page scroll in preview

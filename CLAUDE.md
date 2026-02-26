@@ -53,6 +53,6 @@ Every command must have shell completions and tests. Tests run with `-race`.
 
 ## Configuration
 
-All runtime behavior controlled via environment variables.
+Runtime behavior controlled via environment variables and an optional YAML config file.
 
-- [Configuration](docs/configuration/README.md) — environment variables.
+- [Configuration](docs/configuration/README.md) — environment variables, config file.

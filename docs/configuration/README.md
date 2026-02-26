@@ -11,3 +11,4 @@ Environment variables and runtime configuration.
 ## Contents
 
 - [Environment Variables](environment-variables.md) — all environment variables and their effects.
+- [Config File](config-file.md) — YAML config file format and fields.

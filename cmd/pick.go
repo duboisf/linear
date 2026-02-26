@@ -18,6 +18,7 @@ import (
 
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
+	"github.com/duboisf/linear/internal/config"
 	"github.com/duboisf/linear/internal/format"
 )
 
@@ -321,7 +322,7 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 // cycleStateFile is the path to a temp file holding the current cycle filter
 // value; it enables the ctrl-y cycle switching binding.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]*issueNode, error), c *cache.Cache, cycleHeader string, reloadCmd string, columns []string, cycleStateFile string) (string, error) {
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]*issueNode, error), c *cache.Cache, cycleHeader string, reloadCmd string, columns []string, cycleStateFile string, claudePrompt string) (string, error) {
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
 	// here (synchronously, before fzf) avoids concurrent queries whose
@@ -375,7 +376,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	)
 
 	// Help line shown in the fzf header.
-	helpLine := `ctrl-e: edit  ctrl-y: switch cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
+	helpLine := `ctrl-e: edit  ctrl-y: switch cycle  ctrl-w: claude  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
 	reloadAction := ""
 	if reloadCmd != "" {
 		reloadAction = "+reload(" + reloadCmd + ")"
@@ -401,10 +402,28 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		self, reloadAction,
 	)
 
-	fzfHeader := "ctrl-e: edit  ctrl-y: switch cycle  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
+	fzfHeader := "ctrl-e: edit  ctrl-y: switch cycle  ctrl-w: claude  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
 	if cycleHeader != "" {
 		fzfHeader = cycleHeader + "\n" + fzfHeader
 	}
+
+	// Build ctrl-w binding to launch claude with a prompt template.
+	// become() replaces fzf with the claude process, giving it full terminal control.
+	// {identifier} in the prompt is replaced with {1} (fzf's first field = issue ID).
+	// Redirect stdin and stdout from /dev/tty because fzf's stdin is a pipe
+	// (issue data stream) and stdout is a pipe (Go captures the selected line).
+	// Without this, claude inherits both pipes and runs non-interactively.
+	// stderr is already the terminal (inherited from parent).
+	configPath := config.FilePath()
+	configHint := ""
+	if configPath != "" {
+		configHint = fmt.Sprintf(`\033[2mCustomize the prompt via interactive.claude_prompt in %s\033[0m\n`, configPath)
+	}
+	claudeBinding := fmt.Sprintf(
+		`become(printf '\033[2mLaunching Claude...\033[0m\n%s' >/dev/tty; exec claude %s </dev/tty >/dev/tty)`,
+		configHint,
+		shellQuote(strings.ReplaceAll(claudePrompt, "{identifier}", "{1}")),
+	)
 
 	cmd := exec.Command("fzf",
 		"--ansi",
@@ -419,6 +438,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
 		"--bind", "ctrl-y:"+switchCycleBinding,
 		"--bind", "ctrl-e:"+editBinding,
+		"--bind", "ctrl-w:"+claudeBinding,
 	)
 	cmd.Stdin = pr
 	cmd.Env = append(os.Environ(), _glamourStyleEnv+"="+glamourStyle())
