@@ -28,3 +28,8 @@ func (p *EnvProvider) GetAPIKey() (string, error) {
 func (p *EnvProvider) StoreAPIKey(_ string) error {
 	return errors.New("cannot store API key in environment variable")
 }
+
+// DeleteAPIKey is not supported for environment variables.
+func (p *EnvProvider) DeleteAPIKey() error {
+	return errors.New("cannot delete API key from environment variable")
+}

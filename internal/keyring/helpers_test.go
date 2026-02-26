@@ -39,10 +39,11 @@ func fakeCommandRunner(stdout string, exitCode int) func(string, ...string) *exe
 // --- Mock provider for testing ChainProvider and Resolve ---
 
 type mockProvider struct {
-	getKey   string
-	getErr   error
-	storeErr error
-	stored   string
+	getKey    string
+	getErr    error
+	storeErr  error
+	deleteErr error
+	stored    string
 }
 
 func (m *mockProvider) GetAPIKey() (string, error) {
@@ -52,6 +53,10 @@ func (m *mockProvider) GetAPIKey() (string, error) {
 func (m *mockProvider) StoreAPIKey(key string) error {
 	m.stored = key
 	return m.storeErr
+}
+
+func (m *mockProvider) DeleteAPIKey() error {
+	return m.deleteErr
 }
 
 var _ keyring.Provider = (*mockProvider)(nil)

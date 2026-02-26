@@ -13,6 +13,7 @@ type FileSystem interface {
 	ReadFile(name string) ([]byte, error)
 	WriteFile(name string, data []byte, perm os.FileMode) error
 	MkdirAll(path string, perm os.FileMode) error
+	Remove(name string) error
 }
 
 // osFileSystem implements FileSystem using the real filesystem.
@@ -23,6 +24,7 @@ var _ FileSystem = osFileSystem{}
 func (osFileSystem) ReadFile(name string) ([]byte, error)                       { return os.ReadFile(name) }
 func (osFileSystem) WriteFile(name string, data []byte, perm os.FileMode) error { return os.WriteFile(name, data, perm) }
 func (osFileSystem) MkdirAll(path string, perm os.FileMode) error              { return os.MkdirAll(path, perm) }
+func (osFileSystem) Remove(name string) error                                   { return os.Remove(name) }
 
 // FileProvider stores the API key in a file under the user's config directory.
 // The file is created with 0600 permissions (owner read/write only).
@@ -70,6 +72,21 @@ func (p *FileProvider) GetAPIKey() (string, error) {
 		return "", ErrNoAPIKey
 	}
 	return key, nil
+}
+
+// DeleteAPIKey removes the credentials file.
+func (p *FileProvider) DeleteAPIKey() error {
+	path, err := p.credentialPath()
+	if err != nil {
+		return err
+	}
+	if err := p.fs().Remove(path); err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return ErrNoAPIKey
+		}
+		return fmt.Errorf("removing credentials file: %w", err)
+	}
+	return nil
 }
 
 // StoreAPIKey writes the API key to the credentials file with 0600 permissions.

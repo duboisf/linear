@@ -11,6 +11,8 @@ type Provider interface {
 	GetAPIKey() (string, error)
 	// StoreAPIKey persists the given API key.
 	StoreAPIKey(key string) error
+	// DeleteAPIKey removes the stored API key.
+	DeleteAPIKey() error
 }
 
 // Prompter handles interactive user prompts for API key setup.

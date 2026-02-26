@@ -37,6 +37,18 @@ func (p *KeychainProvider) GetAPIKey() (string, error) {
 	return key, nil
 }
 
+// DeleteAPIKey removes the API key from the macOS Keychain via the security CLI.
+func (p *KeychainProvider) DeleteAPIKey() error {
+	cmd := p.commandRunner()("security", "delete-generic-password", "-s", "linear", "-a", "default")
+	if err := cmd.Run(); err != nil {
+		if errors.Is(err, exec.ErrNotFound) {
+			return fmt.Errorf("%w: security", ErrToolNotFound)
+		}
+		return fmt.Errorf("security delete-generic-password failed: %w", err)
+	}
+	return nil
+}
+
 // StoreAPIKey stores the API key in the macOS Keychain via the security CLI.
 // The -U flag updates the entry if it already exists.
 func (p *KeychainProvider) StoreAPIKey(key string) error {

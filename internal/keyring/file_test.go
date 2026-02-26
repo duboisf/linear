@@ -12,14 +12,16 @@ import (
 // --- memFS for FileProvider testing ---
 
 type memFS struct {
-	files    map[string][]byte
-	readErr  error
-	writeErr error
-	mkdirErr error
+	files     map[string][]byte
+	readErr   error
+	writeErr  error
+	mkdirErr  error
+	removeErr error
 
 	writtenPath string
 	writtenData []byte
 	writtenPerm os.FileMode
+	removedPath string
 }
 
 var _ keyring.FileSystem = (*memFS)(nil)
@@ -47,6 +49,20 @@ func (m *memFS) WriteFile(name string, data []byte, perm os.FileMode) error {
 
 func (m *memFS) MkdirAll(path string, perm os.FileMode) error {
 	return m.mkdirErr
+}
+
+func (m *memFS) Remove(name string) error {
+	if m.removeErr != nil {
+		return m.removeErr
+	}
+	if m.files != nil {
+		if _, ok := m.files[name]; ok {
+			m.removedPath = name
+			delete(m.files, name)
+			return nil
+		}
+	}
+	return os.ErrNotExist
 }
 
 // --- FileProvider Tests ---

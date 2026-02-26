@@ -29,6 +29,10 @@ func (p *staticProvider) StoreAPIKey(_ string) error {
 	return nil
 }
 
+func (p *staticProvider) DeleteAPIKey() error {
+	return nil
+}
+
 // errorProvider always returns an error from GetAPIKey and StoreAPIKey.
 type errorProvider struct {
 	err error
@@ -39,6 +43,10 @@ func (p *errorProvider) GetAPIKey() (string, error) {
 }
 
 func (p *errorProvider) StoreAPIKey(_ string) error {
+	return p.err
+}
+
+func (p *errorProvider) DeleteAPIKey() error {
 	return p.err
 }
 
@@ -180,11 +188,13 @@ func (m *mockKeyReader) ReadAPIKey(_ io.Writer) (string, error) {
 // --- Recording keyring provider ---
 
 type recordingProvider struct {
-	getKey      string
-	getErr      error
-	storeErr    error
-	stored      string
-	storeCalled bool
+	getKey       string
+	getErr       error
+	storeErr     error
+	deleteErr    error
+	stored       string
+	storeCalled  bool
+	deleteCalled bool
 }
 
 func (p *recordingProvider) GetAPIKey() (string, error) {
@@ -195,6 +205,11 @@ func (p *recordingProvider) StoreAPIKey(key string) error {
 	p.storeCalled = true
 	p.stored = key
 	return p.storeErr
+}
+
+func (p *recordingProvider) DeleteAPIKey() error {
+	p.deleteCalled = true
+	return p.deleteErr
 }
 
 // --- Mock GitWorktreeCreator ---

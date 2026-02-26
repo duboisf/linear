@@ -27,3 +27,14 @@ func (p *ChainProvider) StoreAPIKey(key string) error {
 	}
 	return errors.New("no provider could store the API key")
 }
+
+// DeleteAPIKey deletes the key from all providers that have it.
+func (p *ChainProvider) DeleteAPIKey() error {
+	var lastErr error
+	for _, provider := range p.Providers {
+		if err := provider.DeleteAPIKey(); err != nil {
+			lastErr = err
+		}
+	}
+	return lastErr
+}

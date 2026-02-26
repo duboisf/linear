@@ -235,6 +235,75 @@ func TestAuthSetup_NullViewer_DoesNotStore(t *testing.T) {
 	}
 }
 
+// --- auth delete tests ---
+
+func TestAuthDelete_Success(t *testing.T) {
+	t.Parallel()
+	native := &recordingProvider{getKey: "test-key"}
+	file := &recordingProvider{getKey: "test-key"}
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	opts := cmd.Options{
+		KeyringProvider: &staticProvider{key: "test-key"},
+		NativeStore:     native,
+		FileStore:       file,
+		Stdout:          stdout,
+		Stderr:          stderr,
+	}
+	root := cmd.NewRootCmd(opts)
+	_, _, err := executeCommand(root, "auth", "delete")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if !strings.Contains(stdout.String(), "API key deleted") {
+		t.Errorf("expected 'API key deleted' output, got: %s", stdout.String())
+	}
+	if !native.deleteCalled {
+		t.Error("expected DeleteAPIKey to be called on native store")
+	}
+	if !file.deleteCalled {
+		t.Error("expected DeleteAPIKey to be called on file store")
+	}
+}
+
+func TestAuthDelete_NoKey(t *testing.T) {
+	t.Parallel()
+	opts, _, _ := testOptionsKeyringError(t)
+	root := cmd.NewRootCmd(opts)
+	_, _, err := executeCommand(root, "auth", "delete")
+	if err == nil {
+		t.Fatal("expected error when no key configured")
+	}
+	if !strings.Contains(err.Error(), "no API key configured") {
+		t.Errorf("expected 'no API key configured' error, got: %v", err)
+	}
+}
+
+func TestAuthDelete_DeleteFails(t *testing.T) {
+	t.Parallel()
+	native := &recordingProvider{getKey: "test-key", deleteErr: fmt.Errorf("delete failed")}
+	file := &recordingProvider{getKey: "test-key", deleteErr: fmt.Errorf("delete failed")}
+	stdout := &bytes.Buffer{}
+	stderr := &bytes.Buffer{}
+	opts := cmd.Options{
+		KeyringProvider: &staticProvider{key: "test-key"},
+		NativeStore:     native,
+		FileStore:       file,
+		Stdout:          stdout,
+		Stderr:          stderr,
+	}
+	root := cmd.NewRootCmd(opts)
+	_, _, err := executeCommand(root, "auth", "delete")
+	if err == nil {
+		t.Fatal("expected error when delete fails")
+	}
+	if !strings.Contains(err.Error(), "failed to delete") {
+		t.Errorf("expected 'failed to delete' error, got: %v", err)
+	}
+}
+
+// --- auth setup tests (continued) ---
+
 func TestAuthSetup_PromptFails(t *testing.T) {
 	t.Parallel()
 	stdout := &bytes.Buffer{}

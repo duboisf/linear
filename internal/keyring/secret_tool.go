@@ -38,6 +38,18 @@ func (p *SecretToolProvider) GetAPIKey() (string, error) {
 	return key, nil
 }
 
+// DeleteAPIKey removes the API key from the GNOME keyring via secret-tool.
+func (p *SecretToolProvider) DeleteAPIKey() error {
+	cmd := p.commandRunner()("secret-tool", "clear", "service", "linear", "account", "default")
+	if err := cmd.Run(); err != nil {
+		if errors.Is(err, exec.ErrNotFound) {
+			return fmt.Errorf("%w: secret-tool", ErrToolNotFound)
+		}
+		return fmt.Errorf("secret-tool clear failed: %w", err)
+	}
+	return nil
+}
+
 // StoreAPIKey stores the API key in the GNOME keyring via secret-tool.
 // The key is passed via stdin to avoid exposing it in process arguments.
 func (p *SecretToolProvider) StoreAPIKey(key string) error {
