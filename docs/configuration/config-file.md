@@ -19,6 +19,10 @@ The prompt template sent to `claude` when pressing `ctrl-w` in interactive mode.
 
 **Default:** `Let's work on linear issue {identifier}`
 
+## Editing
+
+Run `linear config edit` to open the config file in your `$VISUAL` or `$EDITOR` (falls back to `vi`). If the file doesn't exist, it is created with default values before opening.
+
 ## Loading Behavior
 
 - Missing file: defaults returned (not an error).

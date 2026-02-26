@@ -89,6 +89,8 @@ func NewRootCmd(opts Options) *cobra.Command {
 	authCmd.GroupID = "setup"
 	cacheCmd := newCacheCmd(opts)
 	cacheCmd.GroupID = "setup"
+	configCmd := newConfigCmd(opts)
+	configCmd.GroupID = "setup"
 	completionCmd := newCompletionCmd()
 	completionCmd.GroupID = "setup"
 	versionCmd := newVersionCmd()
@@ -101,6 +103,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 		userCmd,
 		authCmd,
 		cacheCmd,
+		configCmd,
 		completionCmd,
 		versionCmd,
 	)
