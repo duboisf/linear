@@ -32,9 +32,11 @@ Each issue preview is pre-rendered to ANSI text via glamour (markdown) and store
 
 ## fzf Keybindings
 
-### ctrl-y: Set Current Cycle
+### ctrl-y: Switch Cycle
 
-Runs `linear issue edit {1} --cycle current` via `transform-header`. The result message replaces the fzf header. If a reload command is configured, fzf also calls `reload()` to refresh the issue list, plus `refresh-preview` to update the detail pane.
+Opens a nested fzf picker (`linear issue pick-cycle --state-file <path>`) to switch the cycle filter. The picker shows active, next, previous, and upcoming cycles, plus an "All cycles" option. On selection, the cycle number (or `all`) is written to a temp state file, and a colorized header is written to a companion `.header` file. fzf then reloads the issue list (reading the new cycle from the state file) and updates its header via `transform-header`.
+
+The state file mechanism ensures all subsequent reloads (both ctrl-y and ctrl-e) use the switched cycle. `buildFzfDynamicReloadCmd` constructs a reload command with `--cycle "$(cat '<stateFile>')"` instead of a fixed value.
 
 ### ctrl-e: Interactive Edit
 
@@ -56,7 +58,9 @@ Runs `linear issue edit-interactive {1}` via `execute()`, which hands the termin
 
 ## Reload Mechanism
 
-`buildFzfReloadCmd` constructs a shell command (`linear issue list --fzf-data ...`) that fzf calls via `reload()` after edits. The `--fzf-data` hidden flag outputs header + data lines in fzf's expected format, preserving all active filters (cycle, status, label, user, sort, column, limit).
+`buildFzfDynamicReloadCmd` constructs a shell command (`linear issue list --fzf-data ...`) that fzf calls via `reload()` after edits. The `--cycle` flag reads its value from a temp state file via `$(cat '<stateFile>')`, so reloads always use the current cycle filter (which may have been changed by ctrl-y). The `--fzf-data` hidden flag outputs header + data lines in fzf's expected format, preserving all active filters (status, label, user, sort, column, limit).
+
+`buildFzfReloadCmd` (the static version) is still available for non-interactive use cases.
 
 ## Key Files
 
@@ -64,4 +68,5 @@ Runs `linear issue edit-interactive {1}` via `execute()`, which hands the termin
 |------|---------|
 | `cmd/pick.go` | `fzfBrowseIssues`, prefetch, preview cache, glamour rendering |
 | `cmd/issue_edit_interactive.go` | Hidden edit command, field/value pickers |
-| `cmd/issue_list.go` | `--interactive` flag, reload command builder |
+| `cmd/issue_pick_cycle.go` | Hidden cycle picker command for ctrl-y binding |
+| `cmd/issue_list.go` | `--interactive` flag, reload command builders (static + dynamic) |

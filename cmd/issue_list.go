@@ -117,8 +117,37 @@ func newIssueListCmd(opts Options) *cobra.Command {
 					return nodes, nil
 				}
 				self, _ := os.Executable()
-				reloadCmd := buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, columnFlag, limit)
-				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, reloadCmd, columns)
+
+				// Create a temp state file for cycle switching.
+				// The file holds the current cycle filter value;
+				// fzf reload commands read it via shell substitution.
+				stateFile, err := os.CreateTemp("", "linear-cycle-*")
+				if err != nil {
+					return fmt.Errorf("creating cycle state file: %w", err)
+				}
+				stateFilePath := stateFile.Name()
+				defer os.Remove(stateFilePath)
+				defer os.Remove(stateFilePath + ".header")
+
+				// Write initial cycle value. Default to "current" when the
+				// flag is empty (which is the default filter behavior).
+				initialCycle := cycle
+				if initialCycle == "" {
+					initialCycle = "current"
+				}
+				if _, err := stateFile.WriteString(initialCycle); err != nil {
+					stateFile.Close()
+					return fmt.Errorf("writing cycle state file: %w", err)
+				}
+				stateFile.Close()
+
+				// Write initial header to the header companion file.
+				if err := os.WriteFile(stateFilePath+".header", []byte(cycleHeader), 0o644); err != nil {
+					return fmt.Errorf("writing cycle header file: %w", err)
+				}
+
+				dynamicReloadCmd := buildFzfDynamicReloadCmd(self, stateFilePath, statusFilter, labelFilter, user, sortBy, columnFlag, limit)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, dynamicReloadCmd, columns, stateFilePath)
 				if err != nil {
 					return err
 				}
@@ -693,6 +722,34 @@ func buildFzfReloadCmd(self, cycle, statusFilter, labelFilter, user, sortBy, col
 	if cycle != "" {
 		args = append(args, "--cycle", shellQuote(cycle))
 	}
+	if statusFilter != "" {
+		args = append(args, "--status", shellQuote(statusFilter))
+	}
+	if labelFilter != "" {
+		args = append(args, "--label", shellQuote(labelFilter))
+	}
+	if user != "" {
+		args = append(args, "--user", shellQuote(user))
+	}
+	if sortBy != "" && sortBy != "status" {
+		args = append(args, "--sort", shellQuote(sortBy))
+	}
+	if columnFlag != "" {
+		args = append(args, "--column", shellQuote(columnFlag))
+	}
+	if limit != 50 {
+		args = append(args, "--limit", strconv.Itoa(limit))
+	}
+	return strings.Join(args, " ")
+}
+
+// buildFzfDynamicReloadCmd constructs a reload command that reads the cycle
+// value from a state file via shell substitution instead of a fixed flag value.
+// This ensures reloads after cycle switching use the newly selected cycle.
+func buildFzfDynamicReloadCmd(self, stateFile, statusFilter, labelFilter, user, sortBy, columnFlag string, limit int) string {
+	args := []string{shellQuote(self), "issue", "list", "--fzf-data"}
+	// Read cycle from state file via shell substitution.
+	args = append(args, "--cycle", "\"$(cat '"+stateFile+"')\"")
 	if statusFilter != "" {
 		args = append(args, "--status", shellQuote(statusFilter))
 	}

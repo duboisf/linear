@@ -17,6 +17,7 @@ func newIssueCmd(opts Options) *cobra.Command {
 		newIssueEditInteractiveCmd(opts),
 		newIssueGetCmd(opts),
 		newIssueListCmd(opts),
+		newIssuePickCycleCmd(opts),
 		newIssueWorktreeCmd(opts),
 	)
 	return cmd
