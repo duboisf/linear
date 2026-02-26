@@ -9,6 +9,10 @@ If the file does not exist, all settings use their default values.
 ```yaml
 interactive:
   claude_prompt: "Let's work on linear issue {identifier}"
+  claude_modes:
+    - label: "Claude"
+    - label: "Claude (skip permissions)"
+      args: "--dangerously-skip-permissions"
 ```
 
 ## Fields
@@ -18,6 +22,19 @@ interactive:
 The prompt template sent to `claude` when pressing `ctrl-w` in interactive mode. The placeholder `{identifier}` is replaced with the selected issue's identifier (e.g., `AIS-123`).
 
 **Default:** `Let's work on linear issue {identifier}`
+
+### `interactive.claude_modes`
+
+A list of named launch modes for `claude`. Each mode has a `label` (shown in the picker) and optional `args` (extra CLI flags passed to `claude`). When pressing `ctrl-w`, a nested fzf picker lets you choose which mode to use. If only one mode is configured, the picker is skipped.
+
+**Default:**
+
+```yaml
+claude_modes:
+  - label: "Claude"
+  - label: "Claude (skip permissions)"
+    args: "--dangerously-skip-permissions"
+```
 
 ## Editing
 

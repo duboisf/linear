@@ -44,13 +44,21 @@ Runs `linear issue edit-interactive {1}` via `execute()`, which hands the termin
 
 ### ctrl-w: Launch Claude
 
-Uses fzf's `become()` action to replace fzf with `claude`, giving it full terminal control. The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). `{identifier}` is replaced with the selected issue's identifier at runtime. The prompt is shell-quoted via `shellQuote()` to handle embedded single quotes.
+Uses fzf's `execute()` action to run `linear issue pick-claude-mode`, a hidden command that presents a nested fzf picker of configurable launch modes, then execs into `claude`. When claude exits, fzf resumes (the issue list reloads and the preview refreshes).
+
+If only one mode is configured, the picker is skipped and claude launches directly.
+
+The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). `{identifier}` is replaced with the selected issue's identifier at runtime.
 
 Customizable via `~/.config/linear/config.yaml`:
 
 ```yaml
 interactive:
   claude_prompt: "Let's work on linear issue {identifier}"
+  claude_modes:
+    - label: "Claude"
+    - label: "Claude (skip permissions)"
+      args: "--dangerously-skip-permissions"
 ```
 
 ### Scroll bindings
@@ -79,5 +87,6 @@ interactive:
 |------|---------|
 | `cmd/pick.go` | `fzfBrowseIssues`, prefetch, preview cache, glamour rendering |
 | `cmd/issue_edit_interactive.go` | Hidden edit command, field/value pickers |
+| `cmd/issue_pick_claude_mode.go` | Hidden claude mode picker for ctrl-w binding |
 | `cmd/issue_pick_cycle.go` | Hidden cycle picker command for ctrl-y binding |
 | `cmd/issue_list.go` | `--interactive` flag, reload command builders (static + dynamic) |

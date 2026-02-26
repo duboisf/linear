@@ -18,7 +18,6 @@ import (
 
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
-	"github.com/duboisf/linear/internal/config"
 	"github.com/duboisf/linear/internal/format"
 )
 
@@ -407,22 +406,15 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		fzfHeader = cycleHeader + "\n" + fzfHeader
 	}
 
-	// Build ctrl-w binding to launch claude with a prompt template.
-	// become() replaces fzf with the claude process, giving it full terminal control.
-	// {identifier} in the prompt is replaced with {1} (fzf's first field = issue ID).
-	// Redirect stdin and stdout from /dev/tty because fzf's stdin is a pipe
-	// (issue data stream) and stdout is a pipe (Go captures the selected line).
-	// Without this, claude inherits both pipes and runs non-interactively.
-	// stderr is already the terminal (inherited from parent).
-	configPath := config.FilePath()
-	configHint := ""
-	if configPath != "" {
-		configHint = fmt.Sprintf(`\033[2mCustomize the prompt via interactive.claude_prompt in %s\033[0m\n`, configPath)
-	}
+	// Build ctrl-w binding to launch claude via the pick-claude-mode hidden command.
+	// execute() suspends fzf and gives the subprocess terminal control for nested
+	// fzf pickers. The hidden command shows a mode picker (if multiple modes are
+	// configured), then execs into claude. When claude exits, fzf resumes.
 	claudeBinding := fmt.Sprintf(
-		`become(printf '\033[2mLaunching Claude...\033[0m\n%s' >/dev/tty; exec claude %s </dev/tty >/dev/tty)`,
-		configHint,
+		`execute(%s issue pick-claude-mode --prompt %s)%s+refresh-preview`,
+		self,
 		shellQuote(strings.ReplaceAll(claudePrompt, "{identifier}", "{1}")),
+		reloadAction,
 	)
 
 	cmd := exec.Command("fzf",

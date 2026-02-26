@@ -13,6 +13,18 @@ import (
 // {identifier} is replaced with the selected issue's identifier at runtime.
 const DefaultClaudePrompt = "Let's work on linear issue {identifier}"
 
+// ClaudeMode defines a named way to launch claude with specific CLI arguments.
+type ClaudeMode struct {
+	Label string `yaml:"label"`
+	Args  string `yaml:"args"`
+}
+
+// DefaultClaudeModes is used when no custom modes are configured.
+var DefaultClaudeModes = []ClaudeMode{
+	{Label: "Claude"},
+	{Label: "Claude (skip permissions)", Args: "--dangerously-skip-permissions"},
+}
+
 // Config holds all user configuration loaded from config.yaml.
 type Config struct {
 	Interactive InteractiveConfig `yaml:"interactive"`
@@ -20,7 +32,8 @@ type Config struct {
 
 // InteractiveConfig holds settings for interactive (fzf) mode.
 type InteractiveConfig struct {
-	ClaudePrompt string `yaml:"claude_prompt"`
+	ClaudePrompt string      `yaml:"claude_prompt"`
+	ClaudeModes  []ClaudeMode `yaml:"claude_modes"`
 }
 
 // Load reads config from $XDG_CONFIG_HOME/linear/config.yaml.
@@ -51,6 +64,9 @@ func Load(configDir func() (string, error)) (*Config, error) {
 	if cfg.Interactive.ClaudePrompt == "" {
 		cfg.Interactive.ClaudePrompt = DefaultClaudePrompt
 	}
+	if len(cfg.Interactive.ClaudeModes) == 0 {
+		cfg.Interactive.ClaudeModes = DefaultClaudeModes
+	}
 
 	return &cfg, nil
 }
@@ -69,6 +85,7 @@ func defaults() *Config {
 	return &Config{
 		Interactive: InteractiveConfig{
 			ClaudePrompt: DefaultClaudePrompt,
+			ClaudeModes:  DefaultClaudeModes,
 		},
 	}
 }
