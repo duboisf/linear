@@ -1,23 +1,22 @@
 # Linear CLI - Project Rules
 
-## Shell Completions
+## Documentation
 
-Every command and subcommand MUST provide shell completions for all arguments and flag values:
+This file is a table of contents. Detailed rules live under `docs/`.
 
-- **Positional arguments**: Use `ValidArgsFunction` to provide dynamic completions (e.g., user names, issue identifiers from the API).
-- **Flag values**: Use `cmd.RegisterFlagCompletionFunc` for any flag that accepts a fixed set of values (e.g., `--sort`, `--format`).
-- **File suppression**: Return `cobra.ShellCompDirectiveNoFileComp` when completions should not fall back to file paths.
+### Maintenance Rules
 
-When adding a new command, verify completions work by running:
-```
-linear completion zsh | source /dev/stdin
-linear <command> <TAB>
-```
+- CLAUDE.md links to each `docs/` subdirectory's `README.md`.
+- Each `docs/` subdirectory has a `README.md` with a brief description and links to all files in it.
+- Every file under `docs/` **must** be reachable from CLAUDE.md via markdown links.
+- When adding a new doc, add a link to its directory's `README.md`.
+- When adding a new `docs/` subdirectory, create a `README.md` in it and link it from CLAUDE.md.
+- When removing a doc file, remove its link too.
+- Keep individual doc files focused on one topic. If a file covers multiple distinct topics or exceeds 100 lines, split it.
+- Run `make lint-docs` to validate all links and structure.
 
-## Testing
+## Development
 
-- Every command must have corresponding tests in `cmd/<command>_test.go`.
-- Tests use an external test package (`package cmd_test`).
-- Use the mock GraphQL server from `helpers_test.go` (`newMockGraphQLServer`).
-- Use dependency injection via `Options` struct for testability (e.g., `GitWorktreeCreator`).
-- All tests must run with `-race` flag.
+Every command must have shell completions and tests. Tests run with `-race`.
+
+- [Development](docs/development/README.md) — shell completions, testing conventions.

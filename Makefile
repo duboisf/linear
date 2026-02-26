@@ -25,6 +25,10 @@ install: generate
 test:
 	go test -race ./...
 
+.PHONY: lint-docs
+lint-docs:
+	go run scripts/lint-docs.go
+
 .PHONY: cover
 cover:
 	go test -race -coverprofile=coverage.raw.out ./...
