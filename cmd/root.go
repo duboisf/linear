@@ -25,6 +25,8 @@ type Options struct {
 	KeyringProvider keyring.Provider
 	// Prompter handles interactive API key prompts.
 	Prompter keyring.Prompter
+	// KeyReader reads an API key from the terminal without preamble.
+	KeyReader keyring.KeyReader
 	// NativeStore is the platform-specific credential store.
 	NativeStore keyring.Provider
 	// FileStore is the file-based fallback credential store.
@@ -80,6 +82,8 @@ func NewRootCmd(opts Options) *cobra.Command {
 	userCmd := newUserCmd(opts)
 	userCmd.GroupID = "core"
 
+	authCmd := newAuthCmd(opts)
+	authCmd.GroupID = "setup"
 	cacheCmd := newCacheCmd(opts)
 	cacheCmd.GroupID = "setup"
 	completionCmd := newCompletionCmd()
@@ -92,6 +96,7 @@ func NewRootCmd(opts Options) *cobra.Command {
 	root.AddCommand(
 		issueCmd,
 		userCmd,
+		authCmd,
 		cacheCmd,
 		completionCmd,
 		versionCmd,
@@ -136,6 +141,7 @@ func DefaultOptions() Options {
 			},
 		},
 		Prompter:           &keyring.InteractivePrompter{},
+		KeyReader:          &keyring.InteractivePrompter{},
 		NativeStore:        native,
 		FileStore:          file,
 		GitWorktreeCreator: &execGitWorktreeCreator{ctx: context.Background()},
@@ -148,17 +154,12 @@ func DefaultOptions() Options {
 }
 
 // resolveClient resolves an API key and returns an authenticated GraphQL client.
+// It tries the configured keyring providers but does not prompt interactively.
+// If no key is found, it returns a user-friendly error pointing to 'auth setup'.
 func resolveClient(cmd *cobra.Command, opts Options) (graphql.Client, error) {
-	apiKey, err := keyring.Resolve(keyring.ResolveOptions{
-		Provider:    opts.KeyringProvider,
-		Prompter:    opts.Prompter,
-		NativeStore: opts.NativeStore,
-		FileStore:   opts.FileStore,
-		Stdin:       opts.Stdin,
-		MsgWriter:   opts.Stderr,
-	})
+	apiKey, err := opts.KeyringProvider.GetAPIKey()
 	if err != nil {
-		return nil, fmt.Errorf("resolving API key: %w", err)
+		return nil, fmt.Errorf("not authenticated. Run 'linear auth setup' to configure your API key")
 	}
 	return opts.NewAPIClient(apiKey), nil
 }

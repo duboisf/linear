@@ -58,12 +58,14 @@ func Resolve(opts ResolveOptions) (string, error) {
 		return "", fmt.Errorf("prompting for API key: %w", err)
 	}
 
-	storeKey(key, opts)
+	StoreKey(key, opts)
 
 	return key, nil
 }
 
-func storeKey(key string, opts ResolveOptions) {
+// StoreKey persists the given API key. It tries the native keyring first;
+// if that fails, it falls back to file storage with user confirmation.
+func StoreKey(key string, opts ResolveOptions) {
 	// Try native keyring first.
 	if opts.NativeStore != nil {
 		if err := opts.NativeStore.StoreAPIKey(key); err == nil {

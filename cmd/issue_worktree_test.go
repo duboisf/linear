@@ -392,8 +392,8 @@ func TestIssueWorktree_ResolveClientError(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected error when resolveClient fails")
 	}
-	if !strings.Contains(err.Error(), "resolving API key") {
-		t.Errorf("error %q should contain 'resolving API key'", err.Error())
+	if !strings.Contains(err.Error(), "not authenticated") {
+		t.Errorf("error %q should contain 'not authenticated'", err.Error())
 	}
 }
 

@@ -19,6 +19,12 @@ type Prompter interface {
 	PromptForAPIKey(stdin io.Reader, stdout io.Writer) (string, error)
 }
 
+// KeyReader reads an API key from the terminal without printing preamble messages.
+type KeyReader interface {
+	// ReadAPIKey prompts "Enter your Linear API key: " and reads the key without echo.
+	ReadAPIKey(msgWriter io.Writer) (string, error)
+}
+
 // ErrNoAPIKey is returned when no API key is found.
 var ErrNoAPIKey = errors.New("no API key found")
 

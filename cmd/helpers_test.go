@@ -166,6 +166,37 @@ func testOptionsKeyringError(t *testing.T) (cmd.Options, *bytes.Buffer, *bytes.B
 	return opts, stdout, stderr
 }
 
+// --- Mock KeyReader ---
+
+type mockKeyReader struct {
+	key string
+	err error
+}
+
+func (m *mockKeyReader) ReadAPIKey(_ io.Writer) (string, error) {
+	return m.key, m.err
+}
+
+// --- Recording keyring provider ---
+
+type recordingProvider struct {
+	getKey      string
+	getErr      error
+	storeErr    error
+	stored      string
+	storeCalled bool
+}
+
+func (p *recordingProvider) GetAPIKey() (string, error) {
+	return p.getKey, p.getErr
+}
+
+func (p *recordingProvider) StoreAPIKey(key string) error {
+	p.storeCalled = true
+	p.stored = key
+	return p.storeErr
+}
+
 // --- Mock GitWorktreeCreator ---
 
 type fetchCall struct {

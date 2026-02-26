@@ -23,6 +23,12 @@ type InteractivePrompter struct {
 func (p *InteractivePrompter) PromptForAPIKey(_ io.Reader, msgWriter io.Writer) (string, error) {
 	fmt.Fprintln(msgWriter, "No Linear API key found.")
 	fmt.Fprintln(msgWriter, "Create one at: https://linear.app/settings/api")
+	return p.ReadAPIKey(msgWriter)
+}
+
+// ReadAPIKey prompts "Enter your Linear API key: " and reads the key without
+// terminal echo. Unlike PromptForAPIKey, it does not print any preamble.
+func (p *InteractivePrompter) ReadAPIKey(msgWriter io.Writer) (string, error) {
 	fmt.Fprint(msgWriter, "Enter your Linear API key: ")
 
 	readPassword := p.ReadPassword
