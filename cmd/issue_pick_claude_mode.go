@@ -6,6 +6,7 @@ import (
 	"os/exec"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/spf13/cobra"
 
@@ -17,12 +18,26 @@ import (
 // nested fzf (if multiple modes are configured), then execs into claude.
 func newIssuePickClaudeModeCmd(opts Options) *cobra.Command {
 	var prompt string
+	var promptFile string
 
 	cmd := &cobra.Command{
 		Use:    "pick-claude-mode",
 		Short:  "Pick a claude launch mode (used by fzf binding)",
 		Hidden: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// Read pre-rendered prompt from cache file, waiting briefly
+			// for prefetch to populate it if needed.
+			if promptFile != "" {
+				for range 20 {
+					data, err := os.ReadFile(promptFile)
+					if err == nil && len(data) > 0 {
+						prompt = strings.TrimRight(string(data), "\n")
+						break
+					}
+					time.Sleep(100 * time.Millisecond)
+				}
+			}
+
 			modes := config.DefaultClaudeModes
 			if opts.Config != nil && len(opts.Config.Interactive.ClaudeModes) > 0 {
 				modes = opts.Config.Interactive.ClaudeModes
@@ -54,7 +69,8 @@ func newIssuePickClaudeModeCmd(opts Options) *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&prompt, "prompt", "", "Resolved prompt to pass to claude")
+	cmd.Flags().StringVar(&prompt, "prompt", "", "Fallback prompt to pass to claude")
+	cmd.Flags().StringVar(&promptFile, "prompt-file", "", "Path to cached pre-rendered prompt file")
 
 	return cmd
 }

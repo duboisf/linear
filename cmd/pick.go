@@ -19,6 +19,7 @@ import (
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
 	"github.com/duboisf/linear/internal/format"
+	"github.com/duboisf/linear/internal/prompt"
 )
 
 // fetchMyIssues returns the current user's active issues.
@@ -292,7 +293,9 @@ func refreshIssueCache(ctx context.Context, client graphql.Client, c *cache.Cach
 
 // prefetchIssueDetails fetches full issue details in parallel and writes
 // formatted output to the cache. Already-cached issues are skipped.
-func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.Cache, identifiers []string) {
+// When claudePrompt is non-empty, the prompt is also rendered for each issue
+// and cached at claude-prompt/<IDENTIFIER>.
+func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.Cache, identifiers []string, claudePrompt string) {
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, 5)
 	for _, id := range identifiers {
@@ -308,6 +311,12 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 			}
 			content := formatIssueCache(resp.Issue)
 			_ = c.Set("issues/"+id, content)
+			if claudePrompt != "" {
+				rendered, err := prompt.Render(claudePrompt, prompt.NewIssueData(resp.Issue))
+				if err == nil {
+					_ = c.Set("claude-prompt/"+id, rendered)
+				}
+			}
 		})
 	}
 	wg.Wait()
@@ -352,7 +361,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		for i, n := range nodes {
 			identifiers[i] = n.Identifier
 		}
-		go prefetchIssueDetails(ctx, client, c, identifiers)
+		go prefetchIssueDetails(ctx, client, c, identifiers, claudePrompt)
 
 		cols := columns
 		if cols == nil {
@@ -410,10 +419,14 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	// execute() suspends fzf and gives the subprocess terminal control for nested
 	// fzf pickers. The hidden command shows a mode picker (if multiple modes are
 	// configured), then execs into claude. When claude exits, fzf resumes.
+	// The prompt is pre-rendered during prefetch and cached at claude-prompt/<ID>.
+	// pick-claude-mode reads it via --prompt-file, falling back to --prompt if
+	// the file doesn't exist (prefetch hasn't completed yet).
+	promptFile := fmt.Sprintf("%s/claude-prompt/{1}", c.Dir)
+	fallbackPrompt := shellQuote("Let's work on linear issue {1}")
 	claudeBinding := fmt.Sprintf(
-		`execute(%s issue pick-claude-mode --prompt %s)%s+refresh-preview`,
-		self,
-		shellQuote(strings.ReplaceAll(claudePrompt, "{identifier}", "{1}")),
+		`execute(%s issue pick-claude-mode --prompt-file '%s' --prompt %s)%s+refresh-preview`,
+		self, promptFile, fallbackPrompt,
 		reloadAction,
 	)
 

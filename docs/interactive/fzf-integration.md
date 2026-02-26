@@ -44,22 +44,11 @@ Runs `linear issue edit-interactive {1}` via `execute()`, which hands the termin
 
 ### ctrl-w: Launch Claude
 
-Uses fzf's `execute()` action to run `linear issue pick-claude-mode`, a hidden command that presents a nested fzf picker of configurable launch modes, then execs into `claude`. When claude exits, fzf resumes (the issue list reloads and the preview refreshes).
+Uses fzf's `execute()` action to run `linear issue pick-claude-mode`, a hidden command that presents a nested fzf picker of configurable launch modes, then execs into `claude`. When claude exits, fzf resumes (the issue list reloads and the preview refreshes). If only one mode is configured, the picker is skipped.
 
-If only one mode is configured, the picker is skipped and claude launches directly.
+The prompt is pre-rendered during issue prefetch and cached at `claude-prompt/<IDENTIFIER>`. The binding passes `--prompt-file` pointing to the cache; `pick-claude-mode` reads it directly (no shell expansion). Falls back to `--prompt` if the cache file doesn't exist yet.
 
-The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). `{identifier}` is replaced with the selected issue's identifier at runtime.
-
-Customizable via `~/.config/linear/config.yaml`:
-
-```yaml
-interactive:
-  claude_prompt: "Let's work on linear issue {identifier}"
-  claude_modes:
-    - label: "Claude"
-    - label: "Claude (skip permissions)"
-      args: "--dangerously-skip-permissions"
-```
+The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). Supports both legacy `{identifier}` placeholders and Go template syntax (`{{.Title}}`, `{{.State}}`, etc.). See [config-file.md](../configuration/config-file.md) for available template fields.
 
 ### Scroll bindings
 
