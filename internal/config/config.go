@@ -10,8 +10,8 @@ import (
 )
 
 // DefaultClaudePrompt is the prompt template used when no custom prompt is configured.
-// {identifier} is replaced with the selected issue's identifier at runtime.
-const DefaultClaudePrompt = "Let's work on linear issue {identifier}"
+// Uses Go template syntax; see internal/prompt for available fields.
+const DefaultClaudePrompt = "Let's work on linear issue {{.Identifier}}: {{.Title}}"
 
 // ClaudeMode defines a named way to launch claude with specific CLI arguments.
 type ClaudeMode struct {

@@ -8,7 +8,7 @@ If the file does not exist, all settings use their default values.
 
 ```yaml
 interactive:
-  claude_prompt: "Let's work on linear issue {identifier}"
+  claude_prompt: "Let's work on linear issue {{.Identifier}}: {{.Title}}"
   claude_modes:
     - label: "Claude"
     - label: "Claude (skip permissions)"
@@ -21,7 +21,7 @@ interactive:
 
 The prompt template sent to `claude` when pressing `ctrl-w` in interactive mode.
 
-**Default:** `Let's work on linear issue {identifier}`
+**Default:** `Let's work on linear issue {{.Identifier}}: {{.Title}}`
 
 #### Legacy syntax
 

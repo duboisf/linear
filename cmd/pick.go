@@ -423,6 +423,8 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	// pick-claude-mode reads it via --prompt-file, falling back to --prompt if
 	// the file doesn't exist (prefetch hasn't completed yet).
 	promptFile := fmt.Sprintf("%s/claude-prompt/{1}", c.Dir)
+	// Fallback uses fzf's {1} placeholder directly since Go templates can't
+	// be rendered without issue data (which isn't available if prefetch missed).
 	fallbackPrompt := shellQuote("Let's work on linear issue {1}")
 	claudeBinding := fmt.Sprintf(
 		`execute(%s issue pick-claude-mode --prompt-file '%s' --prompt %s)%s+refresh-preview`,
