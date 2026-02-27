@@ -62,16 +62,28 @@ func newIssueRunCommandCmd(opts Options) *cobra.Command {
 			}
 
 			// Read issue data from cache file, polling briefly for prefetch.
+			// Write progress to /dev/tty so the user sees feedback while
+			// waiting inside fzf's execute().
 			var issueData prompt.IssueData
 			if issueDataFile != "" {
-				for range 20 {
+				tty, _ := os.OpenFile("/dev/tty", os.O_WRONLY, 0)
+				for i := range 20 {
 					data, err := os.ReadFile(issueDataFile)
 					if err == nil && len(data) > 0 {
 						if err := json.Unmarshal(data, &issueData); err == nil {
+							if tty != nil {
+								fmt.Fprint(tty, "\r\033[K")
+							}
 							break
 						}
 					}
+					if i == 0 && tty != nil {
+						fmt.Fprint(tty, "\033[2mLoading issue data...\033[0m")
+					}
 					time.Sleep(100 * time.Millisecond)
+				}
+				if tty != nil {
+					tty.Close()
 				}
 			}
 
@@ -101,6 +113,14 @@ func newIssueRunCommandCmd(opts Options) *cobra.Command {
 			rendered, err := prompt.Render(selected.Command, issueData)
 			if err != nil {
 				return fmt.Errorf("rendering command template: %w", err)
+			}
+
+			// Show what we're about to run so the user isn't staring at a
+			// blank screen while the subprocess starts.
+			tty, _ := os.OpenFile("/dev/tty", os.O_WRONLY, 0)
+			if tty != nil {
+				fmt.Fprintf(tty, "\033[2mRunning %s...\033[0m\n", selected.Name)
+				tty.Close()
 			}
 
 			shPath := "/bin/sh"
