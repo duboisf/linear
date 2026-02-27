@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 	"syscall"
 	"time"
@@ -20,6 +21,7 @@ import (
 func newIssueRunCommandCmd(opts Options) *cobra.Command {
 	var issueDataFile string
 	var identifier string
+	var execFile string
 
 	cmd := &cobra.Command{
 		Use:    "run-command",
@@ -103,6 +105,27 @@ func newIssueRunCommandCmd(opts Options) *cobra.Command {
 				return fmt.Errorf("rendering command template: %w", err)
 			}
 
+			// For exec commands, atomically write the rendered command to a
+			// file so the caller can exec it after fzf exits.
+			if selected.Exec && execFile != "" {
+				tmp, err := os.CreateTemp(filepath.Dir(execFile), ".exec-*")
+				if err != nil {
+					return fmt.Errorf("creating temp exec file: %w", err)
+				}
+				if _, err := tmp.WriteString(rendered); err != nil {
+					tmp.Close()
+					os.Remove(tmp.Name())
+					return fmt.Errorf("writing exec file: %w", err)
+				}
+				tmp.Close()
+				return os.Rename(tmp.Name(), execFile)
+			}
+
+			// Remove stale exec file from a previous invocation.
+			if execFile != "" {
+				os.Remove(execFile)
+			}
+
 			shPath := "/bin/sh"
 			return syscall.Exec(shPath, []string{"sh", "-c", rendered}, os.Environ())
 		},
@@ -113,6 +136,7 @@ func newIssueRunCommandCmd(opts Options) *cobra.Command {
 
 	cmd.Flags().StringVar(&issueDataFile, "issue-data-file", "", "Path to cached issue data JSON file")
 	cmd.Flags().StringVar(&identifier, "identifier", "", "Fallback issue identifier")
+	cmd.Flags().StringVar(&execFile, "exec-file", "", "Path to write rendered command for deferred exec")
 
 	return cmd
 }

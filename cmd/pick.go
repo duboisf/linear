@@ -12,6 +12,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"syscall"
 
 	"github.com/Khan/genqlient/graphql"
 	"github.com/charmbracelet/glamour"
@@ -422,12 +423,19 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	// execute() suspends fzf and gives the subprocess terminal control for nested
 	// fzf pickers. The hidden command shows a command picker (if multiple commands
 	// are configured), renders the selected command template, then execs it via sh.
+	// Commands with exec: true write to execFile instead of running inline;
+	// transform() then aborts fzf so the caller can exec the command.
 	// Issue data is pre-cached during prefetch at issue-data/<ID>.
 	issueDataFile := fmt.Sprintf("%s/issue-data/{1}", c.Dir)
+	execFile := fmt.Sprintf("%s/exec-command", c.Dir)
+	os.Remove(execFile) // clean up stale exec file from crashed sessions
+	afterActions := "refresh-preview"
+	if reloadAction != "" {
+		afterActions = strings.TrimPrefix(reloadAction, "+") + "+refresh-preview"
+	}
 	commandBinding := fmt.Sprintf(
-		`execute(%s issue run-command --issue-data-file '%s' --identifier {1})%s+refresh-preview`,
-		self, issueDataFile,
-		reloadAction,
+		`execute(%s issue run-command --exec-file '%s' --issue-data-file '%s' --identifier {1})+transform([ -f '%s' ] && echo abort || echo '%s')`,
+		self, execFile, issueDataFile, execFile, afterActions,
 	)
 
 	cmd := exec.Command("fzf",
@@ -460,6 +468,13 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	// Wait for the fetch goroutine to report its result. By this point the
 	// goroutine has either completed or will finish quickly via cancellation.
 	fetchErr := <-fetchErrCh
+
+	// Check if an exec command was triggered (run-command wrote the rendered
+	// command to execFile and fzf was aborted via transform).
+	if data, err := os.ReadFile(execFile); err == nil {
+		os.Remove(execFile)
+		return "", syscall.Exec("/bin/sh", []string{"sh", "-c", string(data)}, os.Environ())
+	}
 
 	if runErr != nil {
 		// Surface fetch errors (e.g. API failure, empty list) over fzf errors.

