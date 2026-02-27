@@ -29,36 +29,9 @@ func newConfigEditCmd(opts Options) *cobra.Command {
 				return fmt.Errorf("creating config directory: %w", err)
 			}
 
-			// Create the file with a commented-out example if it doesn't exist.
+			// Seed an empty config file if it doesn't exist yet.
 			if _, err := os.Stat(path); os.IsNotExist(err) {
-				defaultContent := []byte(`# Linear CLI configuration
-# See: linear config edit
-#
-# interactive:
-#   commands:
-#     - name: "Claude"
-#       command: "claude \"Work on {{.Identifier}}: {{.Title}}\""
-#     - name: "Open in browser"
-#       command: "xdg-open {{.URL}}"
-#
-# Available template fields:
-#   {{.Identifier}}  - Issue ID (e.g. AIS-123)
-#   {{.Title}}       - Issue title
-#   {{.Description}} - Markdown description
-#   {{.URL}}         - Linear URL
-#   {{.BranchName}}  - Suggested git branch
-#   {{.State}}       - Workflow state name
-#   {{.Priority}}    - Priority label
-#   {{.Assignee}}    - Assigned user name
-#   {{.Team}}        - Team name
-#   {{.TeamKey}}     - Team key prefix
-#   {{.Cycle}}       - Cycle name
-#   {{.Project}}     - Project name
-#   {{.Labels}}      - Label names (slice)
-#   {{.DueDate}}     - Due date string
-#   {{.Parent}}      - Parent issue identifier
-`)
-				if err := os.WriteFile(path, defaultContent, 0o644); err != nil {
+				if err := os.WriteFile(path, config.DefaultConfigContent, 0o644); err != nil {
 					return fmt.Errorf("creating config file: %w", err)
 				}
 			}

@@ -136,6 +136,7 @@ func DefaultOptions() Options {
 		cacheDir = filepath.Join(d, "linear")
 	}
 	cfg, _ := config.Load(nil)
+	_ = config.EnsureExampleFile(nil)
 	return Options{
 		NewAPIClient: func(apiKey string) graphql.Client {
 			return api.NewClient(apiKey, "")

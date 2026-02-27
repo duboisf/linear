@@ -13,6 +13,7 @@ import (
 type Command struct {
 	Name    string `yaml:"name"`
 	Command string `yaml:"command"`
+	Exec    bool   `yaml:"exec"`
 }
 
 // Config holds all user configuration loaded from config.yaml.

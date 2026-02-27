@@ -36,9 +36,8 @@ func TestConfigEdit_CreatesFileAndOpensEditor(t *testing.T) {
 		t.Error("config file should contain default content")
 	}
 
-	got := string(data)
-	if !bytes.Contains(data, []byte("commands")) {
-		t.Errorf("expected default config to contain commands, got: %s", got)
+	if !bytes.Contains(data, []byte("config.example.yaml")) {
+		t.Errorf("expected default config to reference example file, got: %s", data)
 	}
 
 	if stderrStr := stderr.String(); stderrStr == "" {

@@ -17,6 +17,7 @@ import (
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
 	"github.com/duboisf/linear/internal/format"
+	"github.com/duboisf/linear/internal/prompt"
 )
 
 // stateTypeOrder maps Linear workflow state types to a sort rank.
@@ -713,7 +714,7 @@ func outputFzfData(ctx context.Context, client graphql.Client, user string, limi
 
 // shellQuote wraps s in single quotes with embedded single quotes escaped.
 func shellQuote(s string) string {
-	return "'" + strings.ReplaceAll(s, "'", `'\''`) + "'"
+	return prompt.ShellQuote(s)
 }
 
 // buildFzfReloadCmd constructs the shell command for fzf's reload() action
