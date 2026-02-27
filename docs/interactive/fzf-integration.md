@@ -22,6 +22,8 @@ Each issue preview is pre-rendered to ANSI text via glamour (markdown) and store
 
 `prefetchIssueDetails` runs in a separate goroutine (launched from the fetch goroutine, after issue list arrives). It fetches full issue details **in parallel** with a semaphore of 5 (`sem := make(chan struct{}, 5)`). Already-cached issues are skipped. This populates previews before the user navigates to them.
 
+When custom commands are configured (`cacheIssueData=true`), issue data is also serialized as JSON and cached at `issue-data/<IDENTIFIER>` for use by the `run-command` hidden command.
+
 ## Terminal Background Detection (OSC 11)
 
 `glamourStyle()` calls `termenv.HasDarkBackground()`, which sends an OSC 11 terminal query. This is:
@@ -42,13 +44,13 @@ The state file mechanism ensures all subsequent reloads (both ctrl-y and ctrl-e)
 
 Runs `linear issue edit-interactive {1}` via `execute()`, which hands the terminal to the subprocess. This enables **nested fzf pickers**: the user picks a field (Status, Priority, Cycle, Assignee, Project, Labels-Add, Labels-Remove, Title, Description), then picks or edits the value. After the edit, fzf reloads the list and refreshes the preview.
 
-### ctrl-w: Launch Claude
+### ctrl-o: Run Command
 
-Uses fzf's `execute()` action to run `linear issue pick-claude-mode`, a hidden command that presents a nested fzf picker of configurable launch modes, then execs into `claude`. When claude exits, fzf resumes (the issue list reloads and the preview refreshes). If only one mode is configured, the picker is skipped.
+Uses fzf's `execute()` action to run `linear issue run-command`, a hidden command that runs user-configured custom commands. When the command exits, fzf resumes (the issue list reloads and the preview refreshes). If only one command is configured, the picker is skipped. If no commands are configured, a help message is shown.
 
-The prompt is pre-rendered during issue prefetch and cached at `claude-prompt/<IDENTIFIER>`. The binding passes `--prompt-file` pointing to the cache; `pick-claude-mode` reads it directly (no shell expansion). Falls back to `--prompt` if the cache file doesn't exist yet.
+Issue data is serialized as JSON during prefetch and cached at `issue-data/<IDENTIFIER>`. The binding passes `--issue-data-file` pointing to the cache, with `--identifier` as a fallback. The `run-command` hidden command reads the JSON, picks a command (if multiple), renders the command template with issue data, and execs it via `/bin/sh`.
 
-The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let's work on linear issue {identifier}`). Supports both legacy `{identifier}` placeholders and Go template syntax (`{{.Title}}`, `{{.State}}`, etc.). See [config-file.md](../configuration/config-file.md) for available template fields.
+Commands are configured in the config file under `interactive.commands`. Each command has a `name` (shown in the picker) and a `command` (a shell command using Go template syntax). See [config-file.md](../configuration/config-file.md) for available template fields.
 
 ### Scroll bindings
 
@@ -76,6 +78,6 @@ The prompt template comes from `Config.Interactive.ClaudePrompt` (default: `Let'
 |------|---------|
 | `cmd/pick.go` | `fzfBrowseIssues`, prefetch, preview cache, glamour rendering |
 | `cmd/issue_edit_interactive.go` | Hidden edit command, field/value pickers |
-| `cmd/issue_pick_claude_mode.go` | Hidden claude mode picker for ctrl-w binding |
+| `cmd/issue_run_command.go` | Hidden custom command runner for ctrl-o binding |
 | `cmd/issue_pick_cycle.go` | Hidden cycle picker command for ctrl-y binding |
 | `cmd/issue_list.go` | `--interactive` flag, reload command builders (static + dynamic) |

@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -293,9 +294,9 @@ func refreshIssueCache(ctx context.Context, client graphql.Client, c *cache.Cach
 
 // prefetchIssueDetails fetches full issue details in parallel and writes
 // formatted output to the cache. Already-cached issues are skipped.
-// When claudePrompt is non-empty, the prompt is also rendered for each issue
-// and cached at claude-prompt/<IDENTIFIER>.
-func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.Cache, identifiers []string, claudePrompt string) {
+// When cacheIssueData is true, issue data is serialized as JSON and cached
+// at issue-data/<IDENTIFIER> for use by custom commands.
+func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.Cache, identifiers []string, cacheIssueData bool) {
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, 5)
 	for _, id := range identifiers {
@@ -311,10 +312,10 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 			}
 			content := formatIssueCache(resp.Issue)
 			_ = c.Set("issues/"+id, content)
-			if claudePrompt != "" {
-				rendered, err := prompt.Render(claudePrompt, prompt.NewIssueData(resp.Issue))
+			if cacheIssueData {
+				data, err := json.Marshal(prompt.NewIssueData(resp.Issue))
 				if err == nil {
-					_ = c.Set("claude-prompt/"+id, rendered)
+					_ = c.Set("issue-data/"+id, string(data))
 				}
 			}
 		})
@@ -329,8 +330,10 @@ func prefetchIssueDetails(ctx context.Context, client graphql.Client, c *cache.C
 // columns controls which columns are displayed; nil means use defaults.
 // cycleStateFile is the path to a temp file holding the current cycle filter
 // value; it enables the ctrl-y cycle switching binding.
+// hasCommands controls whether the ctrl-o custom command binding is enabled
+// and whether issue data is cached for custom commands.
 // Returns the selected identifier, or empty string if cancelled.
-func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]*issueNode, error), c *cache.Cache, cycleHeader string, reloadCmd string, columns []string, cycleStateFile string, claudePrompt string) (string, error) {
+func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues func(context.Context) ([]*issueNode, error), c *cache.Cache, cycleHeader string, reloadCmd string, columns []string, cycleStateFile string, hasCommands bool) (string, error) {
 	// Eagerly detect terminal background style before launching goroutines.
 	// HasDarkBackground sends an OSC 11 query to the terminal; doing it once
 	// here (synchronously, before fzf) avoids concurrent queries whose
@@ -361,7 +364,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		for i, n := range nodes {
 			identifiers[i] = n.Identifier
 		}
-		go prefetchIssueDetails(ctx, client, c, identifiers, claudePrompt)
+		go prefetchIssueDetails(ctx, client, c, identifiers, hasCommands)
 
 		cols := columns
 		if cols == nil {
@@ -384,7 +387,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	)
 
 	// Help line shown in the fzf header.
-	helpLine := `ctrl-e: edit  ctrl-y: switch cycle  ctrl-w: claude  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
+	helpLine := `ctrl-e: edit  ctrl-y: switch cycle  ctrl-o: command  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel`
 	reloadAction := ""
 	if reloadCmd != "" {
 		reloadAction = "+reload(" + reloadCmd + ")"
@@ -410,25 +413,20 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		self, reloadAction,
 	)
 
-	fzfHeader := "ctrl-e: edit  ctrl-y: switch cycle  ctrl-w: claude  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
+	fzfHeader := "ctrl-e: edit  ctrl-y: switch cycle  ctrl-o: command  ctrl-d/u: scroll preview  shift-↑/↓: line by line\nenter: select  esc: cancel"
 	if cycleHeader != "" {
 		fzfHeader = cycleHeader + "\n" + fzfHeader
 	}
 
-	// Build ctrl-w binding to launch claude via the pick-claude-mode hidden command.
+	// Build ctrl-o binding to run a custom command via the run-command hidden command.
 	// execute() suspends fzf and gives the subprocess terminal control for nested
-	// fzf pickers. The hidden command shows a mode picker (if multiple modes are
-	// configured), then execs into claude. When claude exits, fzf resumes.
-	// The prompt is pre-rendered during prefetch and cached at claude-prompt/<ID>.
-	// pick-claude-mode reads it via --prompt-file, falling back to --prompt if
-	// the file doesn't exist (prefetch hasn't completed yet).
-	promptFile := fmt.Sprintf("%s/claude-prompt/{1}", c.Dir)
-	// Fallback uses fzf's {1} placeholder directly since Go templates can't
-	// be rendered without issue data (which isn't available if prefetch missed).
-	fallbackPrompt := shellQuote("Let's work on linear issue {1}")
-	claudeBinding := fmt.Sprintf(
-		`execute(%s issue pick-claude-mode --prompt-file '%s' --prompt %s)%s+refresh-preview`,
-		self, promptFile, fallbackPrompt,
+	// fzf pickers. The hidden command shows a command picker (if multiple commands
+	// are configured), renders the selected command template, then execs it via sh.
+	// Issue data is pre-cached during prefetch at issue-data/<ID>.
+	issueDataFile := fmt.Sprintf("%s/issue-data/{1}", c.Dir)
+	commandBinding := fmt.Sprintf(
+		`execute(%s issue run-command --issue-data-file '%s' --identifier {1})%s+refresh-preview`,
+		self, issueDataFile,
 		reloadAction,
 	)
 
@@ -445,7 +443,7 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 		"--bind", "shift-down:preview-down,shift-up:preview-up",
 		"--bind", "ctrl-y:"+switchCycleBinding,
 		"--bind", "ctrl-e:"+editBinding,
-		"--bind", "ctrl-w:"+claudeBinding,
+		"--bind", "ctrl-o:"+commandBinding,
 	)
 	cmd.Stdin = pr
 	cmd.Env = append(os.Environ(), _glamourStyleEnv+"="+glamourStyle())

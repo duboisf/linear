@@ -37,8 +37,8 @@ func TestConfigEdit_CreatesFileAndOpensEditor(t *testing.T) {
 	}
 
 	got := string(data)
-	if !bytes.Contains(data, []byte("claude_prompt")) {
-		t.Errorf("expected default config to contain claude_prompt, got: %s", got)
+	if !bytes.Contains(data, []byte("commands")) {
+		t.Errorf("expected default config to contain commands, got: %s", got)
 	}
 
 	if stderrStr := stderr.String(); stderrStr == "" {

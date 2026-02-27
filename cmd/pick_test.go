@@ -202,7 +202,7 @@ func TestPrefetchIssueDetails_CacheHit(t *testing.T) {
 	defer server.Close()
 
 	client := graphql.NewClient(server.URL, server.Client())
-	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, "")
+	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, false)
 
 	if called {
 		t.Error("expected no API call for cached issue")
@@ -245,7 +245,7 @@ func TestPrefetchIssueDetails_CacheMiss(t *testing.T) {
 	defer server.Close()
 
 	client := graphql.NewClient(server.URL, server.Client())
-	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, "")
+	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, false)
 
 	// Verify cache was populated.
 	got, ok := c.Get("issues/ENG-1")
@@ -261,7 +261,7 @@ func TestPrefetchIssueDetails_CacheMiss(t *testing.T) {
 	}
 }
 
-func TestPrefetchIssueDetails_ClaudePromptCache(t *testing.T) {
+func TestPrefetchIssueDetails_IssueDataCache(t *testing.T) {
 	t.Parallel()
 
 	dir := t.TempDir()
@@ -289,32 +289,28 @@ func TestPrefetchIssueDetails_ClaudePromptCache(t *testing.T) {
 
 	client := graphql.NewClient(server.URL, server.Client())
 
-	// Test legacy prompt.
-	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, "Work on {identifier}")
+	// cacheIssueData=true should create issue-data cache entry.
+	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, true)
 
-	got, ok := c.Get("claude-prompt/ENG-1")
+	got, ok := c.Get("issue-data/ENG-1")
 	if !ok {
-		t.Fatal("expected claude-prompt cache to be populated")
-	}
-	if got != "Work on ENG-1" {
-		t.Errorf("claude-prompt cache = %q, want %q", got, "Work on ENG-1")
+		t.Fatal("expected issue-data cache to be populated")
 	}
 
-	// Clear cache and test Go template prompt.
-	c2 := cache.New(t.TempDir(), 5*time.Minute)
-	prefetchIssueDetails(context.Background(), client, c2, []string{"ENG-1"}, "{{.Identifier}}: {{.Title}} ({{.Priority}})")
-
-	got2, ok := c2.Get("claude-prompt/ENG-1")
-	if !ok {
-		t.Fatal("expected claude-prompt cache to be populated for Go template")
+	// Verify JSON is valid and contains expected fields.
+	var data map[string]interface{}
+	if err := json.Unmarshal([]byte(got), &data); err != nil {
+		t.Fatalf("issue-data cache is not valid JSON: %v", err)
 	}
-	want := "ENG-1: Test issue (High)"
-	if got2 != want {
-		t.Errorf("claude-prompt cache = %q, want %q", got2, want)
+	if data["Identifier"] != "ENG-1" {
+		t.Errorf("Identifier = %q, want %q", data["Identifier"], "ENG-1")
+	}
+	if data["Title"] != "Test issue" {
+		t.Errorf("Title = %q, want %q", data["Title"], "Test issue")
 	}
 }
 
-func TestPrefetchIssueDetails_NoClaudePromptCache(t *testing.T) {
+func TestPrefetchIssueDetails_NoIssueDataCache(t *testing.T) {
 	t.Parallel()
 
 	dir := t.TempDir()
@@ -342,11 +338,11 @@ func TestPrefetchIssueDetails_NoClaudePromptCache(t *testing.T) {
 
 	client := graphql.NewClient(server.URL, server.Client())
 
-	// Empty prompt should not create claude-prompt cache entry.
-	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, "")
+	// cacheIssueData=false should not create issue-data cache entry.
+	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1"}, false)
 
-	if _, ok := c.Get("claude-prompt/ENG-1"); ok {
-		t.Error("expected no claude-prompt cache when prompt is empty")
+	if _, ok := c.Get("issue-data/ENG-1"); ok {
+		t.Error("expected no issue-data cache when cacheIssueData is false")
 	}
 }
 
@@ -384,7 +380,7 @@ func TestPrefetchIssueDetails_MultipleMixed(t *testing.T) {
 	defer server.Close()
 
 	client := graphql.NewClient(server.URL, server.Client())
-	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1", "ENG-2"}, "")
+	prefetchIssueDetails(context.Background(), client, c, []string{"ENG-1", "ENG-2"}, false)
 
 	// Only ENG-2 should have triggered an API call.
 	if len(calledOps) != 1 {

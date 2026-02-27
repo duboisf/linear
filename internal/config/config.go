@@ -9,20 +9,10 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// DefaultClaudePrompt is the prompt template used when no custom prompt is configured.
-// Uses Go template syntax; see internal/prompt for available fields.
-const DefaultClaudePrompt = "Let's work on linear issue {{.Identifier}}: {{.Title}}"
-
-// ClaudeMode defines a named way to launch claude with specific CLI arguments.
-type ClaudeMode struct {
-	Label string `yaml:"label"`
-	Args  string `yaml:"args"`
-}
-
-// DefaultClaudeModes is used when no custom modes are configured.
-var DefaultClaudeModes = []ClaudeMode{
-	{Label: "Claude"},
-	{Label: "Claude (skip permissions)", Args: "--dangerously-skip-permissions"},
+// Command defines a named custom command for interactive mode.
+type Command struct {
+	Name    string `yaml:"name"`
+	Command string `yaml:"command"`
 }
 
 // Config holds all user configuration loaded from config.yaml.
@@ -32,8 +22,7 @@ type Config struct {
 
 // InteractiveConfig holds settings for interactive (fzf) mode.
 type InteractiveConfig struct {
-	ClaudePrompt string      `yaml:"claude_prompt"`
-	ClaudeModes  []ClaudeMode `yaml:"claude_modes"`
+	Commands []Command `yaml:"commands"`
 }
 
 // Load reads config from $XDG_CONFIG_HOME/linear/config.yaml.
@@ -61,13 +50,6 @@ func Load(configDir func() (string, error)) (*Config, error) {
 		return nil, fmt.Errorf("parsing config file: %w", err)
 	}
 
-	if cfg.Interactive.ClaudePrompt == "" {
-		cfg.Interactive.ClaudePrompt = DefaultClaudePrompt
-	}
-	if len(cfg.Interactive.ClaudeModes) == 0 {
-		cfg.Interactive.ClaudeModes = DefaultClaudeModes
-	}
-
 	return &cfg, nil
 }
 
@@ -82,10 +64,5 @@ func FilePath() string {
 }
 
 func defaults() *Config {
-	return &Config{
-		Interactive: InteractiveConfig{
-			ClaudePrompt: DefaultClaudePrompt,
-			ClaudeModes:  DefaultClaudeModes,
-		},
-	}
+	return &Config{}
 }

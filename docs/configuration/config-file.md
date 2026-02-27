@@ -8,33 +8,26 @@ If the file does not exist, all settings use their default values.
 
 ```yaml
 interactive:
-  claude_prompt: "Let's work on linear issue {{.Identifier}}: {{.Title}}"
-  claude_modes:
-    - label: "Claude"
-    - label: "Claude (skip permissions)"
-      args: "--dangerously-skip-permissions"
+  commands:
+    - name: "Claude"
+      command: "claude \"Work on {{.Identifier}}: {{.Title}}\""
+    - name: "Open in browser"
+      command: "xdg-open {{.URL}}"
 ```
 
 ## Fields
 
-### `interactive.claude_prompt`
+### `interactive.commands`
 
-The prompt template sent to `claude` when pressing `ctrl-w` in interactive mode.
+A list of custom commands available via `ctrl-o` in interactive mode. Each command has a `name` (shown in the picker) and a `command` (a shell command using Go template syntax for issue fields). When pressing `ctrl-o`, a nested fzf picker lets you choose which command to run. If only one command is configured, the picker is skipped.
 
-**Default:** `Let's work on linear issue {{.Identifier}}: {{.Title}}`
+If no commands are configured, pressing `ctrl-o` shows a help message explaining how to set them up.
 
-#### Legacy syntax
-
-The placeholder `{identifier}` is replaced with the selected issue's identifier (e.g., `AIS-123`).
-
-```yaml
-interactive:
-  claude_prompt: "Let's work on linear issue {identifier}"
-```
+**Default:** none (empty list)
 
 #### Go template syntax
 
-If the prompt contains `{{`, it is parsed as a [Go template](https://pkg.go.dev/text/template). This gives access to all issue fields:
+Command strings are parsed as [Go templates](https://pkg.go.dev/text/template), giving access to all issue fields:
 
 | Field        | Description                          | Example                           |
 |-------------|--------------------------------------|-----------------------------------|
@@ -54,35 +47,30 @@ If the prompt contains `{{`, it is parsed as a [Go template](https://pkg.go.dev/
 | DueDate     | Due date string                      | `2026-03-01`                      |
 | Parent      | Parent issue identifier              | `AIS-10`                          |
 
-Example:
+Examples:
 
 ```yaml
 interactive:
-  claude_prompt: "Work on {{.Identifier}}: {{.Title}} ({{.State}}, {{.Priority}} priority){{if .BranchName}}\nBranch: {{.BranchName}}{{end}}"
+  commands:
+    - name: "Claude"
+      command: "claude \"Work on {{.Identifier}}: {{.Title}}\""
+    - name: "Claude (skip permissions)"
+      command: "claude --dangerously-skip-permissions \"Work on {{.Identifier}}: {{.Title}}\""
+    - name: "Open in browser"
+      command: "xdg-open {{.URL}}"
+    - name: "Checkout branch"
+      command: "git checkout -b {{.BranchName}}"
 ```
 
 Go templates support conditionals (`{{if .Field}}...{{end}}`), range loops (`{{range .Labels}}...{{end}}`), and other standard template actions.
 
-### `interactive.claude_modes`
-
-A list of named launch modes for `claude`. Each mode has a `label` (shown in the picker) and optional `args` (extra CLI flags passed to `claude`). When pressing `ctrl-w`, a nested fzf picker lets you choose which mode to use. If only one mode is configured, the picker is skipped.
-
-**Default:**
-
-```yaml
-claude_modes:
-  - label: "Claude"
-  - label: "Claude (skip permissions)"
-    args: "--dangerously-skip-permissions"
-```
-
 ## Editing
 
-Run `linear config edit` to open the config file in your `$VISUAL` or `$EDITOR` (falls back to `vi`). If the file doesn't exist, it is created with default values before opening.
+Run `linear config edit` to open the config file in your `$VISUAL` or `$EDITOR` (falls back to `vi`). If the file doesn't exist, it is created with a commented-out example before opening.
 
 ## Loading Behavior
 
 - Missing file: defaults returned (not an error).
-- Empty `claude_prompt`: falls back to the default.
+- Empty `commands`: no commands available (ctrl-o shows help).
 - Invalid YAML: returns a parse error.
 - Config directory resolution failure: defaults returned.

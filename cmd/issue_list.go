@@ -16,7 +16,6 @@ import (
 
 	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/cache"
-	"github.com/duboisf/linear/internal/config"
 	"github.com/duboisf/linear/internal/format"
 )
 
@@ -117,10 +116,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 					sortIssues(nodes, sortBy)
 					return nodes, nil
 				}
-				claudePrompt := config.DefaultClaudePrompt
-				if opts.Config != nil && opts.Config.Interactive.ClaudePrompt != "" {
-					claudePrompt = opts.Config.Interactive.ClaudePrompt
-				}
+				hasCommands := opts.Config != nil && len(opts.Config.Interactive.Commands) > 0
 				self, _ := os.Executable()
 
 				// Create a temp state file for cycle switching.
@@ -152,7 +148,7 @@ func newIssueListCmd(opts Options) *cobra.Command {
 				}
 
 				dynamicReloadCmd := buildFzfDynamicReloadCmd(self, stateFilePath, statusFilter, labelFilter, user, sortBy, columnFlag, limit)
-				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, dynamicReloadCmd, columns, stateFilePath, claudePrompt)
+				selected, err := fzfBrowseIssues(cmd.Context(), client, fetchIssues, opts.Cache, cycleHeader, dynamicReloadCmd, columns, stateFilePath, hasCommands)
 				if err != nil {
 					return err
 				}
