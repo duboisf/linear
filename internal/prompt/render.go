@@ -123,7 +123,6 @@ func newShellSafeData(d IssueData) shellSafeData {
 
 // templateFuncs are custom functions available in command templates.
 var templateFuncs = template.FuncMap{
-	"sq":  ShellQuote,
 	"raw": func(s string) string { return s },
 }
 
@@ -135,7 +134,7 @@ func IsTemplate(s string) bool {
 // Render renders a prompt template with issue data.
 // All template fields are shell-quoted by default to prevent injection.
 // Use {{.Raw.Field}} for the unquoted value in display-only contexts.
-// The "sq" and "raw" template functions are also available.
+// Use {{.Raw.Field}} for unquoted values. A "raw" template function is also available.
 func Render(tmpl string, data IssueData) (string, error) {
 	if !IsTemplate(tmpl) {
 		return strings.ReplaceAll(tmpl, "{identifier}", data.Identifier), nil

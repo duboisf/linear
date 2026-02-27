@@ -18,7 +18,6 @@ var ExampleContent = []byte(`# Linear CLI configuration
 #
 # All fields are shell-quoted by default (safe for use in shell commands).
 # Use {{.Raw.Field}} to get the unquoted value for display-only contexts.
-# The {{sq .Value}} function is available for quoting arbitrary strings.
 #
 # Available template fields:
 #   {{.Identifier}}  - Issue ID (e.g. AIS-123)
