@@ -9,6 +9,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"slices"
 	"strings"
 	"sync"
@@ -433,9 +434,16 @@ func fzfBrowseIssues(ctx context.Context, client graphql.Client, fetchIssues fun
 	if reloadAction != "" {
 		afterActions = strings.TrimPrefix(reloadAction, "+") + "+refresh-preview"
 	}
+	// Write afterActions to a file so the transform body avoids nested
+	// parentheses that confuse fzf's binding parser (reload(...) inside
+	// transform(...) causes fzf to mismatch the closing paren).
+	afterActionsFile := filepath.Join(c.Dir, "after-actions")
+	if err := os.WriteFile(afterActionsFile, []byte(afterActions), 0o644); err != nil {
+		return "", fmt.Errorf("writing after-actions file: %w", err)
+	}
 	commandBinding := fmt.Sprintf(
-		`execute(%s issue run-command --exec-file '%s' --issue-data-file '%s' --identifier {1})+transform([ -f '%s' ] && echo abort || echo '%s')`,
-		self, execFile, issueDataFile, execFile, afterActions,
+		`execute(%s issue run-command --exec-file '%s' --issue-data-file '%s' --identifier {1})+transform([ -f '%s' ] && echo abort || cat '%s')`,
+		self, execFile, issueDataFile, execFile, afterActionsFile,
 	)
 
 	cmd := exec.Command("fzf",

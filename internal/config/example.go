@@ -71,19 +71,18 @@ interactive:
       exec: true
       command: "git commit -m {{.Identifier}}:"
 
-    # Show a quick summary in the terminal (uses %s with quoted args)
+    # Show a quick summary in the terminal (pipes into less for paging)
     - name: "Summary"
       command: |
-        printf '%s [%s] %s\n%s\n' {{.Identifier}} {{.State}} {{.Priority}} {{.Title}}
+        { printf '%s [%s] %s\n%s\n' {{.Identifier}} {{.State}} {{.Priority}} {{.Title}}
         {{if .Raw.Assignee}}printf 'Assignee: %s\n' {{.Assignee}}
         {{end}}{{if .Raw.DueDate}}printf 'Due: %s\n' {{.DueDate}}
-        {{end}}printf '%s\n' {{.URL}}
-        printf '\nPress enter to continue...' && read _
+        {{end}}printf '%s\n' {{.URL}}; } | less
 
     # Dump every template field to verify what data is available
     - name: "Test all template fields"
       command: |
-        printf 'Identifier:  %s\n' {{.Identifier}}
+        { printf 'Identifier:  %s\n' {{.Identifier}}
         printf 'Title:       %s\n' {{.Title}}
         printf 'Description: %s\n' {{.Description}}
         printf 'URL:         %s\n' {{.URL}}
@@ -97,8 +96,7 @@ interactive:
         printf 'Project:     %s\n' {{.Project}}
         printf 'Labels:      %s\n' {{.Labels}}
         printf 'DueDate:     %s\n' {{.DueDate}}
-        printf 'Parent:      %s\n' {{.Parent}}
-        printf '\nPress enter to continue...' && read _
+        printf 'Parent:      %s\n' {{.Parent}}; } | less
 `)
 
 // DefaultConfigContent is written to config.yaml when it doesn't exist yet.
