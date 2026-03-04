@@ -11,6 +11,7 @@ import (
 
 	"github.com/spf13/cobra"
 
+	"github.com/duboisf/linear/internal/api"
 	"github.com/duboisf/linear/internal/config"
 	"github.com/duboisf/linear/internal/prompt"
 )
@@ -89,9 +90,27 @@ func newIssueRunCommandCmd(opts Options) *cobra.Command {
 				}
 			}
 
-			// Fallback: populate identifier from flag if issue data wasn't loaded.
+			// Fallback: fetch issue from API if cache didn't populate in time.
 			if issueData.Identifier == "" && identifier != "" {
-				issueData.Identifier = identifier
+				client, err := resolveClient(cmd, opts)
+				if err == nil {
+					tty, _ := os.OpenFile("/dev/tty", os.O_WRONLY, 0)
+					if tty != nil {
+						fmt.Fprint(tty, "\033[2mFetching issue data...\033[0m")
+					}
+					resp, err := api.GetIssue(cmd.Context(), client, identifier)
+					if err == nil && resp.Issue != nil {
+						issueData = prompt.NewIssueData(resp.Issue)
+					}
+					if tty != nil {
+						fmt.Fprint(tty, "\r\033[K")
+						tty.Close()
+					}
+				}
+				// Last resort: at least set the identifier.
+				if issueData.Identifier == "" {
+					issueData.Identifier = identifier
+				}
 			}
 
 			selected := commands[0]
